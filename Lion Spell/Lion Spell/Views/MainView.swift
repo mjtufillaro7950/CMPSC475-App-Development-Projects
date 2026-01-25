@@ -24,41 +24,29 @@ struct MainView: View
                 Spacer()
                 ScoreView()
             }
+            
+            FoundWordsView()
+                .padding(.bottom, 20)
             CurrentWordView()
-            Text("Scrollable list of found words")
-            ZStack
-            {
-                RoundedRectangle(cornerRadius: 16)
-                    .frame(height: 50)
-                    .foregroundColor(.cyan)
-                ScrollView(.horizontal)
-                {
-                    HStack
-                    {
-                        ForEach(1...20, id: \.self)
-                        {index in
-                            Text("Word \(index)")
-                        }
-                    }
-                }
-                .padding()
-            }
+                .padding(.bottom, 20)
+            
             //calls the Letter Entry view in another file, passing in the set number of letters in this file
             LetterEntryView(numLetters: $numLetters)
-            
+            //this can def be simplified
             HStack
             {
                 RegButton(text: "Delete", color: .red)
-                
+                    .padding(.trailing, 50)
                 RegButton(text: "Enter", color: .green)
             }
             Spacer()
             HStack
             {
-                RegButton(text: "Shuffle", color: .green)
+                RegButton(text: "Shuffle", color: .purple)
                 Spacer()
-                RegButton(text: "Restart", color: .red)
+                RegButton(text: "Restart", color: .yellow)
             }
+            .padding()
         }
         .padding()
         .background(Color.blue)
@@ -83,10 +71,12 @@ struct RegButton: View
             ZStack
             {
                 RoundedRectangle(cornerRadius: 16)
-                    .frame(width: 70, height: 50)
+                    .frame(width: 100, height: 50)
                     .foregroundColor(color)
                 Text(text)
                     .foregroundColor(.black)
+                    .font(.title2)
+                    .bold()
             }
         }
     }

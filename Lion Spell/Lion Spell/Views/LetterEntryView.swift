@@ -14,7 +14,6 @@ struct LetterEntryView: View
     @Binding var numLetters: Int
     var body: some View
     {
-        Text("\(numLetters) different letters")
         HStack
         {
             ForEach(1...numLetters, id: \.self)
@@ -56,6 +55,7 @@ struct LetterButton: View
                 Text(text)
                     .foregroundColor(.black)
                     .font(.largeTitle)
+                    .bold()
             }
         }
     }

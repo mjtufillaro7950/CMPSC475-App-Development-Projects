@@ -11,10 +11,21 @@ struct CurrentWordView: View
 {
     var body: some View
     {
-        Text("Current Word")
-        RoundedRectangle(cornerRadius: 16)
-            .frame(height: 50)
-            .foregroundColor(.cyan)
+        VStack
+        {
+            Text("Current Word")
+                .font(.headline)
+            ZStack
+            {
+                
+                RoundedRectangle(cornerRadius: 16)
+                    .frame(height: 75)
+                    .foregroundColor(.cyan)
+                Text("Current Word Goes Here!")
+            }
+            Text("Feedback for current word goes here")
+                .font(.caption)
+        }
     }
 }
 
