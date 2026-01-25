@@ -10,8 +10,8 @@ import Foundation
 
 struct ContentView: View
 {
-    //assigns the number of letters given
-    let numLetters = 5
+    //assigns the number of letters given as a State var so it can be passed into other views
+    @State var numLetters = 5
     var body: some View
     {
         VStack
@@ -57,23 +57,8 @@ struct ContentView: View
                 }
                 .padding()
             }
-            Text("5 different letters")
-            HStack
-            {
-                ForEach(1...numLetters, id: \.self)
-                {
-                    index in
-                    //this checks to see if the index is the middle one, and if so, makes the middle box yellow
-                    if index == Int(ceil(Double(numLetters)/2))
-                    {
-                        LetterButton(text: "A", color: .yellow)
-                    }
-                    else
-                    {
-                        LetterButton(text: "A", color: .cyan)
-                    }
-                }
-            }
+            //calls the Letter Entry view in another file, passing in the set number of letters in this file
+            LetterEntryView(numLetters: $numLetters)
             
             HStack
             {
