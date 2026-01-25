@@ -74,7 +74,7 @@ struct ContentView: View
                     {
                         RoundedRectangle(cornerRadius: 16)
                             .frame(width: 50, height: 70)
-                            .foregroundColor(.accentColor)
+                            .foregroundColor(.cyan)
                     }
                 }
             }
@@ -98,8 +98,27 @@ struct ContentView: View
                 }
             }
             Spacer()
+            HStack
+            {
+                ZStack
+                {
+                    RoundedRectangle(cornerRadius: 16)
+                        .frame(width: 70, height: 50)
+                        .foregroundColor(.green)
+                    Text("Shuffle")
+                }
+                Spacer()
+                ZStack
+                {
+                    RoundedRectangle(cornerRadius: 16)
+                        .frame(width: 70, height: 50)
+                        .foregroundColor(.red)
+                    Text("Restart")
+                }
+            }
         }
         .padding()
+        .background(Color.blue)
     }
 }
 
