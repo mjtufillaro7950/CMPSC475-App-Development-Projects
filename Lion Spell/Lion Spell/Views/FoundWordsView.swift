@@ -2,7 +2,7 @@
 //  FoundWordsView.swift
 //  Lion Spell
 //
-//  Created by LiasPub on 1/25/26.
+//  Created by Michael Tufillaro on 1/25/26.
 //
 
 import SwiftUI
