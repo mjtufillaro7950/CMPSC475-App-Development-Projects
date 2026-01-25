@@ -122,6 +122,25 @@ struct ContentView: View
     }
 }
 
+struct regButton: View
+{
+    let text: String
+    let color: Color
+    var body: some View
+    {
+        Button
+        {
+            //this needs to be able to be replaced with a custom action
+            print("Button Pressed!")
+        }
+        label:
+        {
+            Text(text)
+                .frame(width: 70, height: 50)
+                .foregroundColor(color)
+        }
+    }
+}
 #Preview
 {
     ContentView()
