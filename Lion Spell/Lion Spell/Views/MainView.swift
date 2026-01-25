@@ -33,20 +33,7 @@ struct MainView: View
             //calls the Letter Entry view in another file, passing in the set number of letters in this file
             LetterEntryView(numLetters: $numLetters)
             //this can def be simplified
-            HStack
-            {
-                RegButton(text: "Delete", color: .red)
-                    .padding(.trailing, 50)
-                RegButton(text: "Enter", color: .green)
-            }
-            Spacer()
-            HStack
-            {
-                RegButton(text: "Shuffle", color: .purple)
-                Spacer()
-                RegButton(text: "Restart", color: .yellow)
-            }
-            .padding()
+            ButtonsView()
         }
         .padding()
         .background(Color.blue)
@@ -76,7 +63,6 @@ struct RegButton: View
                 Text(text)
                     .foregroundColor(.black)
                     .font(.title2)
-                    .bold()
             }
         }
     }
