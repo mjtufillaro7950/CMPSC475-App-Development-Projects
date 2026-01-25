@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 
-struct ContentView: View
+struct MainView: View
 {
     //assigns the number of letters given as a State var so it can be passed into other views
     @State var numLetters = 5
@@ -18,27 +18,13 @@ struct ContentView: View
         {
             HStack
             {
-                Text("Lion Spell")
+                Text("LION SPELL")
+                    .font(.largeTitle)
+                    .bold()
                 Spacer()
-                VStack
-                {
-                    Text("Score")
-                        .font(.footnote)
-                    ZStack
-                    {
-                        RoundedRectangle(cornerRadius: 16)
-                            .frame(width: 70, height: 50)
-                            .foregroundColor(.cyan)
-                        Text("0")
-                            .font(.title)
-                    }
-                    
-                }
+                ScoreView()
             }
-            Text("Build your word/Current Word")
-            RoundedRectangle(cornerRadius: 16)
-                .frame(height: 50)
-                .foregroundColor(.cyan)
+            CurrentWordView()
             Text("Scrollable list of found words")
             ZStack
             {
@@ -80,7 +66,7 @@ struct ContentView: View
 }
 
 
-//I am going to need to make both of these one thing eventually
+//I might be able to make both button types have one parent
 struct RegButton: View
 {
     let text: String
@@ -106,36 +92,32 @@ struct RegButton: View
     }
 }
 
-struct LetterButton: View
+
+//view that handles the scoreboard in the top right
+struct ScoreView: View
 {
-    let text: String
-    let color: Color
     var body: some View
     {
-        Button
+        VStack
         {
-            //this needs to be able to be replaced with a custom action
-            print("Letter Button Pressed!")
-        }
-        label:
-        {
+            Text("Score")
+                .font(.footnote)
             ZStack
             {
                 RoundedRectangle(cornerRadius: 16)
-                    .frame(width: 50, height: 70)
-                    .foregroundColor(color)
-                Text(text)
-                    .foregroundColor(.black)
-                    .font(.largeTitle)
+                    .frame(width: 70, height: 50)
+                    .foregroundColor(.cyan)
+                Text("0")
+                    .font(.title)
             }
+            
         }
     }
 }
 
 
 
-
 #Preview
 {
-    ContentView()
+    MainView()
 }

@@ -34,6 +34,34 @@ struct LetterEntryView: View
     }
 }
 
+
+struct LetterButton: View
+{
+    let text: String
+    let color: Color
+    var body: some View
+    {
+        Button
+        {
+            //this needs to be able to be replaced with a custom action
+            print("Letter Button Pressed!")
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 16)
+                    .frame(width: 50, height: 70)
+                    .foregroundColor(color)
+                Text(text)
+                    .foregroundColor(.black)
+                    .font(.largeTitle)
+            }
+        }
+    }
+}
+
+
 #Preview {
-    ContentView()
+    MainView()
 }

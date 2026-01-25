@@ -11,7 +11,7 @@ import SwiftUI
 struct Lion_SpellApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
         }
     }
 }
