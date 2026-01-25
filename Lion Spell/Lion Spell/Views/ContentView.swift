@@ -66,55 +66,27 @@ struct ContentView: View
                     //this checks to see if the index is the middle one, and if so, makes the middle box yellow
                     if index == Int(ceil(Double(numLetters)/2))
                     {
-                        RoundedRectangle(cornerRadius: 16)
-                            .frame(width: 50, height: 70)
-                            .foregroundColor(.yellow)
+                        LetterButton(text: "A", color: .yellow)
                     }
                     else
                     {
-                        RoundedRectangle(cornerRadius: 16)
-                            .frame(width: 50, height: 70)
-                            .foregroundColor(.cyan)
+                        LetterButton(text: "A", color: .cyan)
                     }
                 }
             }
             
             HStack
             {
-                ZStack
-                {
-                    RoundedRectangle(cornerRadius: 16)
-                        .frame(width: 70, height: 50)
-                        .foregroundColor(.red)
-                    Text("Delete")
-                }
+                RegButton(text: "Delete", color: .red)
                 
-                ZStack
-                {
-                    RoundedRectangle(cornerRadius: 16)
-                        .frame(width: 70, height: 50)
-                        .foregroundColor(.green)
-                    Text("Enter")
-                }
+                RegButton(text: "Enter", color: .green)
             }
             Spacer()
             HStack
             {
-                ZStack
-                {
-                    RoundedRectangle(cornerRadius: 16)
-                        .frame(width: 70, height: 50)
-                        .foregroundColor(.green)
-                    Text("Shuffle")
-                }
+                RegButton(text: "Shuffle", color: .green)
                 Spacer()
-                ZStack
-                {
-                    RoundedRectangle(cornerRadius: 16)
-                        .frame(width: 70, height: 50)
-                        .foregroundColor(.red)
-                    Text("Restart")
-                }
+                RegButton(text: "Restart", color: .red)
             }
         }
         .padding()
@@ -122,7 +94,9 @@ struct ContentView: View
     }
 }
 
-struct regButton: View
+
+//I am going to need to make both of these one thing eventually
+struct RegButton: View
 {
     let text: String
     let color: Color
@@ -135,12 +109,47 @@ struct regButton: View
         }
         label:
         {
-            Text(text)
-                .frame(width: 70, height: 50)
-                .foregroundColor(color)
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 16)
+                    .frame(width: 70, height: 50)
+                    .foregroundColor(color)
+                Text(text)
+                    .foregroundColor(.black)
+            }
         }
     }
 }
+
+struct LetterButton: View
+{
+    let text: String
+    let color: Color
+    var body: some View
+    {
+        Button
+        {
+            //this needs to be able to be replaced with a custom action
+            print("Letter Button Pressed!")
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 16)
+                    .frame(width: 50, height: 70)
+                    .foregroundColor(color)
+                Text(text)
+                    .foregroundColor(.black)
+                    .font(.largeTitle)
+            }
+        }
+    }
+}
+
+
+
+
 #Preview
 {
     ContentView()
