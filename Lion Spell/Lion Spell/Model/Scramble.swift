@@ -16,7 +16,7 @@ struct Scramble
     // the required letter is just one character
     let requiredLetter: Character
     // the legal words are a list of Strings
-    let legalWords: [String]
+    let legalWords: Set<String>
     
     //initializer for the Scramble
     init()
@@ -32,7 +32,7 @@ struct Scramble
         self.requiredLetter = self.currentLetters[self.currentLetters.count / 2]
         print("Required Letter: \(self.requiredLetter)")
         
-        //creates the list of legal words by calling the function with the current letters and required letter as arguments
+        //creates the set of legal words by calling the function with the current letters and required letter as arguments
         self.legalWords = Scramble.generateLegalWords(currentLetters: self.currentLetters, requiredLetter: self.requiredLetter)
         let firstTwentyWords = self.legalWords.prefix(20)
         print("First 20 Legal Words: \(Array(firstTwentyWords))")
@@ -54,25 +54,21 @@ struct Scramble
     }
     
     //static function that generates a list of legal words given a character array of letters
-    static func generateLegalWords(currentLetters: [Character], requiredLetter: Character) -> [String]
+    static func generateLegalWords(currentLetters: [Character], requiredLetter: Character) -> Set<String>
     {
         //filter the list of all english words, only including ones that:
             // are a subset of the current letters (I.E only use those letters)
             // contain the required letter
         let legalWords = Words.allWords.englishWords.filter {Set($0).isSubset(of: Set(currentLetters)) && Set($0).contains(requiredLetter)}
-        return legalWords
+        // cast to a set so that I can later use .contains to check if words are legal
+        return Set(legalWords)
     }
     
-    
-    //the user must use the letters, the required one at least once, to form a word on the legal words list
-    
-    // from there, need to build a list of legal words that work with the current/required letters
-        // for each word, check to see if its letters are a subset of the user's available letters (including the required one)
-        // if it is, add it to legal words list
+    func isLegal(word: String) -> Bool
+    {
+        return true
+    }
     // tentative function list
-        // generateCurrentLetters()
-        // generateRequiredLetter(currentLetters)
-        // generateLegalWords(currentLetters, requiredLetter)
         // isLegal(word)
             // once a legal list is made, this can be used to check if a guess is accurate
         //shuffle()?
