@@ -20,6 +20,7 @@ struct LetterEntryView: View
             {
                 index in
                 //this checks to see if the index is the middle one, and if so, makes the middle box yellow
+                //TODO: replace this so that it correctly adds the proper letters
                 if index == Int(ceil(Double(numLetters)/2))
                 {
                     LetterButton(text: "A", color: .yellow)
@@ -36,14 +37,13 @@ struct LetterEntryView: View
 
 struct LetterButton: View
 {
-    let text: String
+    let text: Character
     let color: Color
     var body: some View
     {
         Button
         {
-            //this needs to be able to be replaced with a custom action
-            print("Letter Button Pressed!")
+            letterEntryPressed()
         }
         label:
         {
@@ -52,7 +52,7 @@ struct LetterButton: View
                 RoundedRectangle(cornerRadius: 16)
                     .frame(width: 50, height: 70)
                     .foregroundColor(color)
-                Text(text)
+                Text(String(text))
                     .foregroundColor(.black)
                     .font(.largeTitle)
                     .bold()
@@ -61,6 +61,11 @@ struct LetterButton: View
     }
 }
 
+func letterEntryPressed() -> Void
+{
+    //TODO: Make this add the current letter into the currently built word string
+    print("Letter Button Pressed!")
+}
 
 #Preview {
     MainView()

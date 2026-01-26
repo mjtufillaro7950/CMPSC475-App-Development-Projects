@@ -25,9 +25,9 @@ struct MainView: View
                 ScoreView()
             }
             //TODO: REMOVE THIS LATER
-            .onAppear{
-                let scrambleTest = Scramble()
-            }
+//            .onAppear{
+//                let scrambleTest = Scramble()
+//            }
             
             FoundWordsView()
                 .padding(.bottom, 20)
@@ -50,12 +50,13 @@ struct RegButton: View
 {
     let text: String
     let color: Color
+    //lets the program take an function as a parameter which takes no parameters and returns nothing
+    let action: () -> Void
     var body: some View
     {
         Button
         {
-            //this needs to be able to be replaced with a custom action
-            print("Button Pressed!")
+            action()
         }
         label:
         {
