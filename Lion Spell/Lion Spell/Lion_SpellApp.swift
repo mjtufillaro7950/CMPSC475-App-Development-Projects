@@ -8,8 +8,10 @@
 import SwiftUI
 
 @main
-struct Lion_SpellApp: App {
-    var body: some Scene {
+struct Lion_SpellApp: App
+{
+    var body: some Scene
+    {
         WindowGroup {
             MainView()
         }

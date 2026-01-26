@@ -24,6 +24,10 @@ struct MainView: View
                 Spacer()
                 ScoreView()
             }
+            //TODO: REMOVE THIS LATER
+            .onAppear{
+                let scrambleTest = Scramble()
+            }
             
             FoundWordsView()
                 .padding(.bottom, 20)
