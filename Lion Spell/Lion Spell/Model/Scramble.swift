@@ -17,22 +17,25 @@ struct Scramble
     let requiredLetter: Character
     // the legal words are a list of Strings
     let legalWords: [String]
-    //the number of letters the user has to work with
-    let numberOfLetters: Int
     
     //initializer for the Scramble
     init()
     {
         //TODO: REMOVE PRINTS LATER
         print("Scramble is running:")
-        self.numberOfLetters = 5
+        
+        // call function to generate a list of current letters
         self.currentLetters = Scramble.generateCurrentLetters()
         print("Current Letters: \(self.currentLetters)")
-        //TEMP RETURN VALUES
+        
         //pick the middle letter to be the required one
         self.requiredLetter = self.currentLetters[self.currentLetters.count / 2]
         print("Required Letter: \(self.requiredLetter)")
-        self.legalWords = []
+        
+        //creates the list of legal words by calling the function with the current letters and required letter as arguments
+        self.legalWords = Scramble.generateLegalWords(currentLetters: self.currentLetters, requiredLetter: self.requiredLetter)
+        let firstTwentyWords = self.legalWords.prefix(20)
+        print("First 20 Legal Words: \(Array(firstTwentyWords))")
     }
     
     //how to get current letters/required letter?
@@ -40,7 +43,7 @@ struct Scramble
         // randomly pick one of these words, make those letters the current letters, then randomly pick the required one
     static func generateCurrentLetters() -> [Character]
     {
-        //filter the list of all english words to get a list of words that have exactly 5 unique letters in them
+        //filter the list of all english words to get a list of words that have the required amount of unique letters in them
         let fiveUniqueLetterList = Words.allWords.englishWords.filter {Set($0).count == 5}
         // randomly generate an index in that list and pick the word at that index
         let randomIndex = Int.random(in: 0..<fiveUniqueLetterList.count)
@@ -49,6 +52,18 @@ struct Scramble
         let currentLetters: [Character] = Array(Set(randomWord))
         return currentLetters
     }
+    
+    //static function that generates a list of legal words given a character array of letters
+    static func generateLegalWords(currentLetters: [Character], requiredLetter: Character) -> [String]
+    {
+        //filter the list of all english words, only including ones that:
+            // are a subset of the current letters (I.E only use those letters)
+            // contain the required letter
+        let legalWords = Words.allWords.englishWords.filter {Set($0).isSubset(of: Set(currentLetters)) && Set($0).contains(requiredLetter)}
+        return legalWords
+    }
+    
+    
     //the user must use the letters, the required one at least once, to form a word on the legal words list
     
     // from there, need to build a list of legal words that work with the current/required letters
