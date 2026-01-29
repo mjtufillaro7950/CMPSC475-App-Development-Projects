@@ -22,20 +22,20 @@ struct Scramble
     init()
     {
         //TODO: REMOVE PRINTS LATER
-        print("Scramble is running:")
+        //print("Scramble is running:")
         
         // call function to generate a list of current letters
         self.currentLetters = Scramble.generateCurrentLetters()
-        print("Current Letters: \(self.currentLetters)")
+        //print("Current Letters: \(self.currentLetters)")
         
         //pick the middle letter to be the required one
         self.requiredLetter = self.currentLetters[self.currentLetters.count / 2]
-        print("Required Letter: \(self.requiredLetter)")
+        //print("Required Letter: \(self.requiredLetter)")
         
         //creates the set of legal words by calling the function with the current letters and required letter as arguments
         self.legalWords = Scramble.generateLegalWords(currentLetters: self.currentLetters, requiredLetter: self.requiredLetter)
         let firstTwentyWords = self.legalWords.prefix(20)
-        print("First 20 Legal Words: \(Array(firstTwentyWords))")
+        //print("First 20 Legal Words: \(Array(firstTwentyWords))")
     }
     
     //how to get current letters/required letter?

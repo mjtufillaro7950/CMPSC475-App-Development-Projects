@@ -44,4 +44,6 @@ struct FoundWordsView: View
 #Preview
 {
     MainView()
+        .environment(ViewModel())
+    
 }

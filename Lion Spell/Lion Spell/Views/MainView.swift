@@ -10,6 +10,9 @@ import Foundation
 
 struct MainView: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    
     //assigns the number of letters given as a State var so it can be passed into other views
     @State var numLetters = 5
     var body: some View
@@ -45,38 +48,12 @@ struct MainView: View
 }
 
 
-//I might be able to make both button types have one parent
-struct RegButton: View
-{
-    let text: String
-    let color: Color
-    //lets the program take an function as a parameter which takes no parameters and returns nothing
-    let action: () -> Void
-    var body: some View
-    {
-        Button
-        {
-            action()
-        }
-        label:
-        {
-            ZStack
-            {
-                RoundedRectangle(cornerRadius: 16)
-                    .frame(width: 100, height: 50)
-                    .foregroundColor(color)
-                Text(text)
-                    .foregroundColor(.black)
-                    .font(.title2)
-            }
-        }
-    }
-}
-
 
 //view that handles the scoreboard in the top right
 struct ScoreView: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
     var body: some View
     {
         VStack
@@ -88,7 +65,8 @@ struct ScoreView: View
                 RoundedRectangle(cornerRadius: 16)
                     .frame(width: 70, height: 50)
                     .foregroundColor(.cyan)
-                Text("0")
+                // the score checks the viewmodel and updates when the score there updates
+                Text(String(manager.score))
                     .font(.title)
             }
             
@@ -101,4 +79,5 @@ struct ScoreView: View
 #Preview
 {
     MainView()
+        .environment(ViewModel())
 }

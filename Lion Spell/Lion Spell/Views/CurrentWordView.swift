@@ -23,13 +23,15 @@ struct CurrentWordView: View
                     .foregroundColor(.cyan)
                 Text("Current Word Goes Here!")
             }
-            //TODO: update feedback as necessary
+            //TODO: update feedback as necessary when Enter is clicked
             Text("Feedback for current word goes here")
                 .font(.caption)
         }
     }
 }
 
-#Preview {
+#Preview
+{
     MainView()
+        .environment(ViewModel())
 }

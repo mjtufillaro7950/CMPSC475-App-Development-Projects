@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ButtonsView: View
 {
+    
     var body: some View
     {
         HStack
@@ -26,6 +27,34 @@ struct ButtonsView: View
             RegButton(text: "Restart", color: .yellow, action: restartButton)
         }
         .padding()
+    }
+}
+
+//I might be able to make both button types have one parent
+struct RegButton: View
+{
+    let text: String
+    let color: Color
+    //lets the program take an function as a parameter which takes no parameters and returns nothing
+    let action: () -> Void
+    var body: some View
+    {
+        Button
+        {
+            action()
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 16)
+                    .frame(width: 100, height: 50)
+                    .foregroundColor(color)
+                Text(text)
+                    .foregroundColor(.black)
+                    .font(.title2)
+            }
+        }
     }
 }
 
@@ -51,6 +80,7 @@ func shuffleButton() -> Void
 func restartButton() -> Void
 {
     //TODO: start a new game... how? Probably need to create a new Shuffle() object and reassign the current one in the viewmodel
+    //call the newGame function in viewmodel
     print("Restart pressed!")
 }
 
@@ -58,4 +88,5 @@ func restartButton() -> Void
 #Preview
 {
     MainView()
+        .environment(ViewModel())
 }
