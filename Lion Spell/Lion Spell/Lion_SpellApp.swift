@@ -10,10 +10,14 @@ import SwiftUI
 @main
 struct Lion_SpellApp: App
 {
+    // creates an instance of the viewmodel
+    @State var manager: ViewModel = ViewModel()
     var body: some Scene
     {
         WindowGroup {
             MainView()
+            //passes the viewmodel into the view
+                .environment(manager)
         }
     }
 }
