@@ -66,7 +66,8 @@ struct Scramble
     
     func isLegal(word: String) -> Bool
     {
-        return true
+        //returns true if the word passed in is the set of legal words
+        return self.legalWords.contains(word)
     }
     // tentative function list
         // isLegal(word)

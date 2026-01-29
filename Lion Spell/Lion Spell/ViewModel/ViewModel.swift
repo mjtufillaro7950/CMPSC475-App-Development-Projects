@@ -18,14 +18,16 @@ class ViewModel
     //current score, current word being spelled, total words found
     var score: Int = 0
     var currentWord: String = ""
+    var wordsFound: [String] = []
+    //creates an instance of a new Scramble object
+    var scramble: Scramble = Scramble()
     
     //whether the current word at any point is valid, which needs to be updated as soon as a new letter is entered or removed
     init()
     {
-        //TODO: newgame() or something like that, make a new Scramble, reset everything to blank, add the new letters
-        //backSpace
-        //Reset
-        //enter
+        //what needs to be done upon starting a game?
+        //all the viewmodel variables are initialized to their correct values, and the views should read those and update in real time
+        //can access the Scramble variables with scramble.whatever
         
     }
 }
