@@ -16,7 +16,6 @@ struct ButtonsView: View
     {
         HStack
         {
-            //TODO: use for each to avoid having to type these out 4 times in a row
             RegButton(text: "Delete", color: .red, isButtonDisabled: manager.isDeleteDisabled(), action: manager.deleteButton)
                 .padding(.trailing, 50)
             RegButton(text: "Enter", color: .green, isButtonDisabled: manager.isEnterDisabled(), action: manager.enterButton)

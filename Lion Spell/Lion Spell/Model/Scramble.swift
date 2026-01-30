@@ -6,8 +6,6 @@
 //
 
 import Foundation
-//use Words.allWords.englishWords to access the list of all words
-//use .filter to get 5 starting letters
 
 struct Scramble
 {

@@ -14,6 +14,7 @@ struct MainView: View
     @Environment(ViewModel.self) var manager: ViewModel
     
     //assigns the number of letters given as a State var so it can be passed into other views
+    //TODO: will replace this with viewmodel one later
     @State var numLetters = 5
     var body: some View
     {
@@ -35,7 +36,6 @@ struct MainView: View
             
             //calls the Letter Entry view in another file, passing in the set number of letters in this file
             LetterEntryView(numLetters: $numLetters)
-            //this can def be simplified
             ButtonsView()
         }
         .padding()
@@ -55,7 +55,7 @@ struct ScoreView: View
         VStack
         {
             Text("Score")
-                .font(.footnote)
+                .bold()
             ZStack
             {
                 RoundedRectangle(cornerRadius: 16)
