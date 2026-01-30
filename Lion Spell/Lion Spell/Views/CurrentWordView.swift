@@ -36,6 +36,7 @@ struct CurrentWordView: View
             Text(manager.updateFeedback())
                 .font(.headline)
                 .bold()
+                .foregroundColor(.black)
         }
     }
 }
