@@ -24,13 +24,13 @@ struct LetterEntryView: View
                 index in
                 //this checks to see if the index is the middle one, and if so, makes the middle box yellow
                 //TODO: make this work with shuffle
-                if index+1 == Int(ceil(Double(numLetters)/2))
+                if manager.lettersForEntry[index] == manager.scramble.requiredLetter
                 {
-                    LetterButton(letter: manager.scramble.currentLetters[index], color: .yellow)
+                    LetterButton(letter: manager.lettersForEntry[index], color: .yellow)
                 }
                 else
                 {
-                    LetterButton(letter: manager.scramble.currentLetters[index], color: .cyan)
+                    LetterButton(letter: manager.lettersForEntry[index], color: .cyan)
                 }
             }
         }

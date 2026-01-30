@@ -19,12 +19,21 @@ class ViewModel
     var score: Int = 0
     var currentWord: String = ""
     var wordsFound: [String] = []
-    //TODO: CHANGE LATER
     var wordEntryFeedback: String = "Tap letters below to build a word!"
     //creates an instance of a new Scramble object
-    var scramble: Scramble = Scramble()
+    var scramble: Scramble
+    // this stores a mutable copy of the letters that go into the letter entry boxes
+    var lettersForEntry: [Character]
     
-    func deleteLetter()
+    init()
+    {
+        let scramble = Scramble()
+        self.scramble = scramble
+        self.lettersForEntry = scramble.currentLetters
+    }
+    
+    //These functions handle the different buttons
+    func deleteButton()
     {
         //deletes the last letter in the current word
         if self.currentWord.count > 0
@@ -37,6 +46,44 @@ class ViewModel
             self.wordEntryFeedback = "Tap letters below to build a word!"
         }
     }
+    
+    func enterButton() -> Void
+    {
+        //TODO: if the word is not in the legal word list OR if the word has already been entered, send feedback to the user. If it's good, then add it to the found words, give positive feedback, & update score
+        print("Enter pressed!")
+    }
+
+    func shuffleButton() -> Void
+    {
+        //TODO: this will need to be adjusted for when I add multiple possible letter numbers
+        
+        //create an array of the indices that need to be shuffled (all except middle
+        let fiveIndices: [Int] = [0,1,3,4]
+        //create a separate array that consists of those indices randomly shuffled
+        let shuffled: [Int] = fiveIndices.shuffled()
+        
+        //loop through the indices, and for each letter, assign it to its new place
+        for index in 0..<shuffled.count
+        {
+            let originalLetterIndex: Int = fiveIndices[index]
+            let newLetterIndex: Int = shuffled[index]
+            //for each non-center letter in the original array, puts it in a new location in the shuffled array
+            self.lettersForEntry[newLetterIndex] = self.scramble.currentLetters[originalLetterIndex]
+        }
+    }
+
+    func restartButton() -> Void
+    {
+        //TODO: start a new game by resetting all of the init variables
+        print("Restart pressed!")
+    }
+    
+    func isLegal(word: String) -> Bool
+    {
+        //returns true if the word passed in is the set of legal words
+        return self.scramble.legalWords.contains(word)
+    }
+    
     //whether the current word at any point is valid, which needs to be updated as soon as a new letter is entered or removed
 
     //As far as I can tell, I do not need an init rn because I can initialize these variables to their proper starting values

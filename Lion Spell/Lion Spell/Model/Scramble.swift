@@ -21,26 +21,17 @@ struct Scramble
     //initializer for the Scramble
     init()
     {
-        //TODO: REMOVE PRINTS LATER
-        //print("Scramble is running:")
         
         // call function to generate a list of current letters
         self.currentLetters = Scramble.generateCurrentLetters()
-        //print("Current Letters: \(self.currentLetters)")
         
         //pick the middle letter to be the required one
         self.requiredLetter = self.currentLetters[self.currentLetters.count / 2]
-        //print("Required Letter: \(self.requiredLetter)")
         
         //creates the set of legal words by calling the function with the current letters and required letter as arguments
         self.legalWords = Scramble.generateLegalWords(currentLetters: self.currentLetters, requiredLetter: self.requiredLetter)
-        let firstTwentyWords = self.legalWords.prefix(20)
-        //print("First 20 Legal Words: \(Array(firstTwentyWords))")
     }
     
-    //how to get current letters/required letter?
-        // get a list of all words with exactly 5 unique letters (.filter?)
-        // randomly pick one of these words, make those letters the current letters, then randomly pick the required one
     static func generateCurrentLetters() -> [Character]
     {
         //filter the list of all english words to get a list of words that have the required amount of unique letters in them
@@ -63,17 +54,4 @@ struct Scramble
         // cast to a set so that I can later use .contains to check if words are legal
         return Set(legalWords)
     }
-    
-    func isLegal(word: String) -> Bool
-    {
-        //returns true if the word passed in is the set of legal words
-        return self.legalWords.contains(word)
-    }
-    // tentative function list
-        // isLegal(word)
-            // once a legal list is made, this can be used to check if a guess is accurate
-        //shuffle()?
-            //idk if it would go into the model or the view
-    
-    
 }
