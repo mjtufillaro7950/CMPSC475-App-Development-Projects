@@ -9,23 +9,33 @@ import SwiftUI
 
 struct CurrentWordView: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    
     var body: some View
     {
         VStack
         {
-            Text("Current Word")
-                .font(.headline)
+            // I don't know why but if I don't have this here, the rectangle shifts upon text entry
+            Text(" ")
+            
             ZStack
             {
-                //TODO: update this so that it accurately reflects the current running word
                 RoundedRectangle(cornerRadius: 16)
                     .frame(height: 75)
                     .foregroundColor(.cyan)
-                Text("Current Word Goes Here!")
+                
+                //needs to be able to fit 18 letters, since that is the length of the longest possible word that uses 7 or fewer unique letters
+                Text(manager.currentWord)
+                    .textCase(.uppercase)
+                    .bold()
+                    .font(.title)
+                    
             }
-            //TODO: update feedback as necessary when Enter is clicked
-            Text("Feedback for current word goes here")
-                .font(.caption)
+            //updates the user feedback depending on what word the user has entered
+            Text(manager.wordEntryFeedback)
+                .font(.headline)
+                .bold()
         }
     }
 }

@@ -27,7 +27,7 @@ struct FoundWordsView: View
                 {
                     HStack
                     {
-                        //TODO: replace this with a running list of found words. Possible include their point values and possibly change their color if something like pangram
+                        //TODO: replace this with a running list of found words. Possible include their point values
                         ForEach(1...20, id: \.self)
                         {index in
                             Text("Word \(index)")

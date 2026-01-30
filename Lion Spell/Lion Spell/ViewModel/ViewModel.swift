@@ -20,10 +20,23 @@ class ViewModel
     var currentWord: String = ""
     var wordsFound: [String] = []
     //TODO: CHANGE LATER
-    var wordEntryFeedback: String = "DEFAULT WORD ENTRY FEEDBACK"
+    var wordEntryFeedback: String = "Tap letters below to build a word!"
     //creates an instance of a new Scramble object
     var scramble: Scramble = Scramble()
     
+    func deleteLetter()
+    {
+        //deletes the last letter in the current word
+        if self.currentWord.count > 0
+        {
+            self.currentWord.removeLast()
+        }
+        //if the current word is blank, reset the feedback to the default
+        if self.currentWord.count == 0
+        {
+            self.wordEntryFeedback = "Tap letters below to build a word!"
+        }
+    }
     //whether the current word at any point is valid, which needs to be updated as soon as a new letter is entered or removed
 
     //As far as I can tell, I do not need an init rn because I can initialize these variables to their proper starting values

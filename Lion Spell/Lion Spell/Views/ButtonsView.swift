@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ButtonsView: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
     
     var body: some View
     {
@@ -28,11 +30,36 @@ struct ButtonsView: View
         }
         .padding()
     }
+    
+    //TODO: if all of these are just gonna call manager I can probably just pass in the specific function I wanna call instead of having 4 different functions here
+    func deleteButton() -> Void
+    {
+        manager.deleteLetter()
+    }
+
+    func enterButton() -> Void
+    {
+        //TODO: if the word is not in the legal word list OR if the word has already been entered, send feedback to the user. If it's good, then add it to the found words, give positive feedback, & update score
+        print("Enter pressed!")
+    }
+
+    func shuffleButton() -> Void
+    {
+        //TODO: randomly change around the positioning of the letters, making sure to keep the required letter highlighted yellow
+        print("Shuffle pressed!")
+    }
+
+    func restartButton() -> Void
+    {
+        //TODO: start a new game... how? Probably need to create a new Shuffle() object and reassign the current one in the viewmodel
+        //call the newGame function in viewmodel
+        print("Restart pressed!")
+    }
 }
 
-//I might be able to make both button types have one parent
 struct RegButton: View
 {
+    
     let text: String
     let color: Color
     //lets the program take an function as a parameter which takes no parameters and returns nothing
@@ -59,30 +86,6 @@ struct RegButton: View
 }
 
 
-func deleteButton() -> Void
-{
-    //TODO: make this get rid of the last letter entered
-    print("Delete pressed!")
-}
-
-func enterButton() -> Void
-{
-    //TODO: if the word is not in the legal word list OR if the word has already been entered, send feedback to the user. If it's good, then add it to the found words, give positive feedback, & update score
-    print("Enter pressed!")
-}
-
-func shuffleButton() -> Void
-{
-    //TODO: randomly change around the positioning of the letters, making sure to keep the required letter highlighted yellow
-    print("Shuffle pressed!")
-}
-
-func restartButton() -> Void
-{
-    //TODO: start a new game... how? Probably need to create a new Shuffle() object and reassign the current one in the viewmodel
-    //call the newGame function in viewmodel
-    print("Restart pressed!")
-}
 
 
 #Preview
