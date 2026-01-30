@@ -32,6 +32,19 @@ class ViewModel
         self.lettersForEntry = scramble.currentLetters
     }
     
+    //idk if I need this or not
+//    func startNewGame()
+//    {
+//        //resets all variables
+//        self.score = 0
+//        self.currentWord = ""
+//        self.wordsFound = []
+//        self.wordEntryFeedback = "Tap letters below to build a word!"
+//        //creates a new scramble object which makes a new game
+//        self.scramble = Scramble()
+//        self.lettersForEntry = scramble.currentLetters
+//    }
+    
     //These functions handle the different buttons
     func deleteButton()
     {
@@ -55,17 +68,20 @@ class ViewModel
 
     func shuffleButton() -> Void
     {
-        //TODO: this will need to be adjusted for when I add multiple possible letter numbers
-        
-        //create an array of the indices that need to be shuffled (all except middle
+        //create an array of the indices that need to be shuffled (all except middle)
         let fiveIndices: [Int] = [0,1,3,4]
+        //let sixIndices: [Int] = [0,1,2,4,5]
+        //let sevenIndices: [Int] = [0,1,2,4,5,6]
+        
+        //TODO: set this equal to one of these above arrays corresponding to the number of allowed letters
+        let nonMiddleIndices = fiveIndices
         //create a separate array that consists of those indices randomly shuffled
-        let shuffled: [Int] = fiveIndices.shuffled()
+        let shuffled: [Int] = nonMiddleIndices.shuffled()
         
         //loop through the indices, and for each letter, assign it to its new place
         for index in 0..<shuffled.count
         {
-            let originalLetterIndex: Int = fiveIndices[index]
+            let originalLetterIndex: Int = nonMiddleIndices[index]
             let newLetterIndex: Int = shuffled[index]
             //for each non-center letter in the original array, puts it in a new location in the shuffled array
             self.lettersForEntry[newLetterIndex] = self.scramble.currentLetters[originalLetterIndex]
@@ -74,8 +90,14 @@ class ViewModel
 
     func restartButton() -> Void
     {
-        //TODO: start a new game by resetting all of the init variables
-        print("Restart pressed!")
+        //resets all variables
+        self.score = 0
+        self.currentWord = ""
+        self.wordsFound = []
+        self.wordEntryFeedback = "Tap letters below to build a word!"
+        //creates a new scramble object which makes a new game
+        self.scramble = Scramble()
+        self.lettersForEntry = scramble.currentLetters
     }
     
     func isLegal(word: String) -> Bool

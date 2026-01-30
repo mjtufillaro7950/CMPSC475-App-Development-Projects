@@ -22,8 +22,7 @@ struct LetterEntryView: View
             ForEach(0...numLetters-1, id: \.self)
             {
                 index in
-                //this checks to see if the index is the middle one, and if so, makes the middle box yellow
-                //TODO: make this work with shuffle
+                // makes the required letter yellow instead of cyan
                 if manager.lettersForEntry[index] == manager.scramble.requiredLetter
                 {
                     LetterButton(letter: manager.lettersForEntry[index], color: .yellow)
