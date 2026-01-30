@@ -12,14 +12,10 @@ import Foundation
 @Observable
 class ViewModel
 {
-    //TODO: FIRST THINGS FIRST- tie all the views to their proper values so I can check stuff in real time
-    // this will be an "instance" of the game. I need to be able to access the model somehow
-    // make an instance of the Scramble called currentGame, then access it.
-    //what variables related to the game would need to be tracked?
+    var numberOfLetters: Int = 5
     var score: Int = 0
     var currentWord: String = ""
     var wordsFound: [String] = []
-    var wordEntryFeedback: String = "Tap letters below to build a word!"
     //creates an instance of a new Scramble object
     var scramble: Scramble
     // this stores a mutable copy of the letters that go into the letter entry boxes
@@ -31,41 +27,47 @@ class ViewModel
         self.scramble = scramble
         self.lettersForEntry = scramble.currentLetters
     }
+
     
-    //idk if I need this or not
-//    func startNewGame()
-//    {
-//        //resets all variables
-//        self.score = 0
-//        self.currentWord = ""
-//        self.wordsFound = []
-//        self.wordEntryFeedback = "Tap letters below to build a word!"
-//        //creates a new scramble object which makes a new game
-//        self.scramble = Scramble()
-//        self.lettersForEntry = scramble.currentLetters
-//    }
-    
-    //These functions handle the different buttons
+    //deletes the last letter in the current word
     func deleteButton()
     {
-        //deletes the last letter in the current word
-        if self.currentWord.count > 0
-        {
-            self.currentWord.removeLast()
-        }
-        //if the current word is blank, reset the feedback to the default
-        if self.currentWord.count == 0
-        {
-            self.wordEntryFeedback = "Tap letters below to build a word!"
-        }
+        self.currentWord.removeLast()
     }
     
+    // adds a valid word to the list of found words and updates the score
     func enterButton() -> Void
     {
-        //TODO: if the word is not in the legal word list OR if the word has already been entered, send feedback to the user. If it's good, then add it to the found words, give positive feedback, & update score
-        print("Enter pressed!")
+        let currentWord = self.currentWord
+        //add the current word to the list of found words
+        self.wordsFound.append(currentWord)
+        //calculate the score for the current word and update it
+        let currentWordScore = calculateScore(word: currentWord)
+        self.score += currentWordScore
+        //after the word is entered, clear the current word
+        self.currentWord = ""
+    }
+    
+    // given a word, calculate its score
+    func calculateScore(word: String) -> Int
+    {
+        var sum = 0
+        if word.count == 4
+        {
+            sum += 1
+        }
+        else
+        {
+            sum += word.count
+        }
+        if Set(word).count == numberOfLetters
+        {
+            sum += 10
+        }
+        return sum
     }
 
+    
     func shuffleButton() -> Void
     {
         //create an array of the indices that need to be shuffled (all except middle)
@@ -94,38 +96,56 @@ class ViewModel
         self.score = 0
         self.currentWord = ""
         self.wordsFound = []
-        self.wordEntryFeedback = "Tap letters below to build a word!"
         //creates a new scramble object which makes a new game
         self.scramble = Scramble()
         self.lettersForEntry = scramble.currentLetters
     }
     
+    //the disable button needs to be disabled whenever the current word is empty
+    func isDeleteDisabled() -> Bool
+    {
+        return self.currentWord.isEmpty
+    }
+    
+    //returns true if the word passed in is the set of legal words
     func isLegal(word: String) -> Bool
     {
-        //returns true if the word passed in is the set of legal words
         return self.scramble.legalWords.contains(word)
     }
     
-    //whether the current word at any point is valid, which needs to be updated as soon as a new letter is entered or removed
+    //returns true if the inputted word has already been guessed
+    func alreadyGuessed(word: String) -> Bool
+    {
+        return self.wordsFound.contains(word)
+    }
+    
+    //the enable button is disabled if the word is illegal or has already been guessed
+    func isEnterDisabled() -> Bool
+    {
+        let currentWord = self.currentWord
+        return !isLegal(word: currentWord) || alreadyGuessed(word: currentWord)
 
-    //As far as I can tell, I do not need an init rn because I can initialize these variables to their proper starting values
-    //all the viewmodel variables are initialized to their correct values, and the views should read those and update in real time
-    //can access the Scramble variables with scramble.whatever
-    //what functions do I need right now? Buttons
-        //Delete, Enter, Shuffle, Restart
+    }
     
-    //Delete button removes the last letter in currentWord (String(self.currentWord.dropLast())
-    
-    //Enter button checks the current word against the words found and list of valid words. If its valid and hasn't been found, add it to the list and update score. If its bad, update the feedback to tell them
-        //OR, constantly check and update feedback whenever a letter is entered, only letting the user enter when its valid
-    
-    //Shuffle button... TBD
-    
-    //Restart button basically just sets all the variables back to their original starting values, in the process creating a new Scramble() object
-    
-    //updateScore function will read the current word, and determine its point values
-        // 1 point for 4 letter word
-        // if longer than 4 letters, points equal to length
-        // if it uses all 5 letters, extra 10 points
-
+    func updateFeedback() -> String
+    {
+        let currentWord = self.currentWord
+        //depending on the current state of the current word, update the feedback to the user
+        if currentWord.isEmpty
+        {
+            return "Tap letters below to build a word!"
+        }
+        if !isLegal(word: currentWord)
+        {
+            return "Invalid word."
+        }
+        else if alreadyGuessed(word: currentWord)
+        {
+            return "You've already guessed that word!"
+        }
+        else
+        {
+            return "Valid word!"
+        }
+    }
 }

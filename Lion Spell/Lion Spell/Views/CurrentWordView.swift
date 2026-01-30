@@ -33,7 +33,7 @@ struct CurrentWordView: View
                     
             }
             //updates the user feedback depending on what word the user has entered
-            Text(manager.wordEntryFeedback)
+            Text(manager.updateFeedback())
                 .font(.headline)
                 .bold()
         }

@@ -18,25 +18,69 @@ struct FoundWordsView: View
                 .foregroundColor(.cyan)
             VStack
             {
-                Text("FOUND WORDS")
+                Text("Found Words:")
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     .font(.headline)
                     .bold()
                 Spacer()
-                ScrollView(.horizontal)
-                {
-                    HStack
-                    {
-                        //TODO: replace this with a running list of found words. Possible include their point values
-                        ForEach(1...20, id: \.self)
-                        {index in
-                            Text("Word \(index)")
-                        }
-                    }
-                }
+                scrollingWords()
             }
             .padding()
             .frame(height: 100)
+        }
+    }
+}
+
+struct scrollingWords: View
+{
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    
+    var body: some View
+    {
+        ScrollView(.horizontal)
+        {
+            HStack
+            {
+                //loop through each word that has been found (in reverse order)
+                ForEach(manager.wordsFound.reversed(), id: \.self)
+                {
+                    word in
+                    constructFoundWord(word: word, score: manager.calculateScore(word: word))
+                    
+                }
+            }
+        }
+    }
+}
+struct constructFoundWord: View
+{
+    let word: String
+    let score: Int
+    //choose the color of the word and its box depending on if its a pangram or not
+    var colors: (Color, Color)
+    {
+        if score > 10
+        {
+            (.yellow, .black)
+        }
+        else
+        {
+            (.black, .yellow)
+        }
+    }
+    
+    var body: some View
+    {
+        ZStack
+        {
+            RoundedRectangle(cornerRadius: 16)
+                .foregroundColor(colors.0)
+            Text("\(word): +\(score)")
+                .bold()
+                .textCase(.uppercase)
+                .foregroundColor(colors.1)
+                .padding(.horizontal, 10)
         }
     }
 }

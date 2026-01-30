@@ -52,10 +52,6 @@ struct LetterButton: View
             {
                 manager.currentWord += String(letter)
             }
-            else
-            {
-                manager.wordEntryFeedback = "Too Many Characters!"
-            }
         }
         label:
         {

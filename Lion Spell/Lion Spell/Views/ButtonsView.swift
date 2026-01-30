@@ -17,16 +17,16 @@ struct ButtonsView: View
         HStack
         {
             //TODO: use for each to avoid having to type these out 4 times in a row
-            RegButton(text: "Delete", color: .red, action: manager.deleteButton)
+            RegButton(text: "Delete", color: .red, isButtonDisabled: manager.isDeleteDisabled(), action: manager.deleteButton)
                 .padding(.trailing, 50)
-            RegButton(text: "Enter", color: .green, action: manager.enterButton)
+            RegButton(text: "Enter", color: .green, isButtonDisabled: manager.isEnterDisabled(), action: manager.enterButton)
         }
         Spacer()
         HStack
         {
-            RegButton(text: "Shuffle", color: .indigo, action: manager.shuffleButton)
+            RegButton(text: "Shuffle", color: .indigo, isButtonDisabled: false, action: manager.shuffleButton)
             Spacer()
-            RegButton(text: "Restart", color: .yellow, action: manager.restartButton)
+            RegButton(text: "Restart", color: .yellow, isButtonDisabled: false, action: manager.restartButton)
         }
         .padding()
     }
@@ -35,9 +35,9 @@ struct ButtonsView: View
 
 struct RegButton: View
 {
-    
     let text: String
     let color: Color
+    var isButtonDisabled: Bool
     //lets the program take an function as a parameter
     let action: () -> Void
     var body: some View
@@ -58,6 +58,7 @@ struct RegButton: View
                     .font(.title2)
             }
         }
+        .disabled(isButtonDisabled)
     }
 }
 
