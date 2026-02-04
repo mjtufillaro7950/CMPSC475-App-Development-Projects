@@ -14,8 +14,7 @@ struct MainView: View
     @Environment(ViewModel.self) var manager: ViewModel
     
     //assigns the number of letters given as a State var so it can be passed into other views
-    //TODO: will replace this with viewmodel one later
-    @State var numLetters = 5
+
     var body: some View
     {
         VStack
@@ -35,7 +34,9 @@ struct MainView: View
                 .padding(.bottom, 20)
             
             //calls the Letter Entry view in another file, passing in the set number of letters in this file
-            LetterEntryView(numLetters: $numLetters)
+
+            LetterEntryView()
+
             ButtonsView()
         }
         .padding()

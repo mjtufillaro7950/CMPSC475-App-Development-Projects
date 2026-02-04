@@ -13,10 +13,11 @@ struct LetterEntryView: View
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
     
-    //assigns the number of letters used
-    @Binding var numLetters: Int
     var body: some View
     {
+        //assigns number of letters in the word
+        let numLetters: Int = manager.numberOfLetters
+
         HStack
         {
             ForEach(0...numLetters-1, id: \.self)
