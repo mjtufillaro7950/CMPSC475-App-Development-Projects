@@ -14,7 +14,7 @@ class ViewModel
 {
     //TODO: these need to be replaced with an Enum and then put into a preferences file? Then pass that into the scramble
     var numberOfLetters: Int = 5
-    var language = "englishwords"
+    var wordsForCurrentLanguage = Words.allWords.englishWords
     
     
     var score: Int = 0
@@ -27,7 +27,8 @@ class ViewModel
     
     init()
     {
-        let scramble = Scramble()
+        //TODO: fix this later
+        let scramble = Scramble(numberOfLetters: 5, wordsForCurrentLanguage: Words.allWords.englishWords)
         self.scramble = scramble
         self.lettersForEntry = scramble.currentLetters
     }
@@ -97,12 +98,13 @@ class ViewModel
     func restartButton() -> Void
     {
         //resets all variables
-        self.score = 0
-        self.currentWord = ""
-        self.wordsFound = []
-        //creates a new scramble object which makes a new game
-        self.scramble = Scramble()
-        self.lettersForEntry = scramble.currentLetters
+        //TODO: implement this once I get the rest taken care of
+//        self.score = 0
+//        self.currentWord = ""
+//        self.wordsFound = []
+//        //creates a new scramble object which makes a new game
+//        self.scramble = Scramble()
+//        self.lettersForEntry = scramble.currentLetters
     }
     
     //the disable button needs to be disabled whenever the current word is empty

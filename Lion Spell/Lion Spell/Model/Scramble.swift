@@ -17,13 +17,14 @@ struct Scramble
     let legalWords: Set<String>
     
     //TODO: these need to be replaced with a way to take in values- a switch case based on the values in preferences?
-    let numberOfLetters = 5
-    let wordsForCurrentLanguage: [String] = Words.allWords.englishWords
+    let numberOfLetters: Int
+    let wordsForCurrentLanguage: [String]
     
     //initializer for the Scramble
-    init()
+    init(numberOfLetters: Int, wordsForCurrentLanguage: [String])
     {
-        
+        self.numberOfLetters = numberOfLetters
+        self.wordsForCurrentLanguage = wordsForCurrentLanguage
         // call function to generate a list of current letters
         self.currentLetters = Scramble.generateCurrentLetters()
         
