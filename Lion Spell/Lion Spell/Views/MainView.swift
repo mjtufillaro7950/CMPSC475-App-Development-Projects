@@ -5,7 +5,6 @@
 //  Created by Michael Tufillaro on 1/24/26.
 //
 
-//TODO: making absolutely sure that everything is workin as intended
 import SwiftUI
 import Foundation
 
@@ -15,8 +14,6 @@ struct MainView: View
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
     
-    //assigns the number of letters given as a State var so it can be passed into other views
-
     var body: some View
     {
         VStack

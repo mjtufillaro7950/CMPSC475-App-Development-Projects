@@ -16,6 +16,10 @@ struct Scramble
     // the legal words are a list of Strings
     let legalWords: Set<String>
     
+    //TODO: these need to be replaced with a way to take in values- a switch case based on the values in preferences?
+    let numberOfLetters = 5
+    let wordsForCurrentLanguage: [String] = Words.allWords.englishWords
+    
     //initializer for the Scramble
     init()
     {

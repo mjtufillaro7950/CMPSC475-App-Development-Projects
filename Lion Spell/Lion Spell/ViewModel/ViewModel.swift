@@ -12,7 +12,11 @@ import Foundation
 @Observable
 class ViewModel
 {
+    //TODO: these need to be replaced with an Enum and then put into a preferences file? Then pass that into the scramble
     var numberOfLetters: Int = 5
+    var language = "englishwords"
+    
+    
     var score: Int = 0
     var currentWord: String = ""
     var wordsFound: [String] = []
