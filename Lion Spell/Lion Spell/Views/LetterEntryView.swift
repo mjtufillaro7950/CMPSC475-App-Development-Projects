@@ -16,7 +16,7 @@ struct LetterEntryView: View
     var body: some View
     {
         //assigns number of letters in the word
-        let numLetters: Int = manager.numberOfLetters
+        let numLetters: Int = manager.preferences.difficulty.numberOfLetters
 
         HStack
         {

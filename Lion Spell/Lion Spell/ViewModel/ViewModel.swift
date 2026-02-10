@@ -13,10 +13,7 @@ import Foundation
 class ViewModel
 {
     //TODO: these need to be replaced with an Enum and then put into a preferences file? Then pass that into the scramble
-    var numberOfLetters: Int = 5
-    var wordsForCurrentLanguage = Words.allWords.englishWords
-    
-    
+
     var score: Int = 0
     var currentWord: String = ""
     var wordsFound: [String] = []
@@ -25,6 +22,8 @@ class ViewModel
     // this stores a mutable copy of the letters that go into the letter entry boxes
     var lettersForEntry: [Character]
     var preferences: Preferences
+    var numberOfLetters: Int = 5
+    var wordsForCurrentLanguage = Words.allWords.englishWords
     
     init()
     {
@@ -32,7 +31,7 @@ class ViewModel
         let preferences = Preferences()
         self.preferences = preferences
         //passes the number of letters and list of words from the preferences into the Scramble model
-        let scramble = Scramble(numberOfLetters: preferences.difficulty.numberOfLetters, wordsForCurrentLanguage: preferences.language.listOfWords)
+        let scramble = Scramble(numberOfLetters: preferences.difficulty.numberOfLetters, listOfWords: preferences.language.listOfWords)
         self.scramble = scramble
         self.lettersForEntry = scramble.currentLetters
     }
@@ -106,7 +105,7 @@ class ViewModel
         self.currentWord = ""
         self.wordsFound = []
         //creates a new scramble object which makes a new game, using the last used preferences
-        self.scramble = Scramble(numberOfLetters: preferences.difficulty.numberOfLetters, wordsForCurrentLanguage: preferences.language.listOfWords)
+        self.scramble = Scramble(numberOfLetters: preferences.difficulty.numberOfLetters, listOfWords: preferences.language.listOfWords)
         self.lettersForEntry = scramble.currentLetters
     }
     

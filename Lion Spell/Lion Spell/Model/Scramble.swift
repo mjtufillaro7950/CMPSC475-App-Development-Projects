@@ -18,37 +18,37 @@ struct Scramble
     
     //These are passed in from the viewmodel according to the preferences selected by the user
     let numberOfLetters: Int
-    let wordsForCurrentLanguage: [String]
+    let listOfWords: [String]
     
     //initializer for the Scramble
-    init(numberOfLetters: Int, wordsForCurrentLanguage: [String])
+    init(numberOfLetters: Int, listOfWords: [String])
     {
         self.numberOfLetters = numberOfLetters
-        self.wordsForCurrentLanguage = wordsForCurrentLanguage
-        // call function to generate a list of current letters
-        self.currentLetters = Scramble.generateCurrentLetters()
+        self.listOfWords = listOfWords
+        // call function to generate a list of current letters, passing in the number of letters and the list of all words for the current language
+        self.currentLetters = Scramble.generateCurrentLetters(numberOfLetters: numberOfLetters, listOfWords: listOfWords)
         
         //pick the middle letter to be the required one
         self.requiredLetter = self.currentLetters[self.currentLetters.count / 2]
         
         //creates the set of legal words by calling the function with the current letters and required letter as arguments
-        self.legalWords = Scramble.generateLegalWords(currentLetters: self.currentLetters, requiredLetter: self.requiredLetter)
+        self.legalWords = Scramble.generateLegalWords(currentLetters: self.currentLetters, requiredLetter: self.requiredLetter, listOfWords: listOfWords)
     }
     
-    static func generateCurrentLetters() -> [Character]
+    static func generateCurrentLetters(numberOfLetters: Int, listOfWords: [String]) -> [Character]
     {
-        //filter the list of all english words to get a list of words that have the required amount of unique letters in them
-        let fiveUniqueLetterList = Words.allWords.englishWords.filter {Set($0).count == 5}
+        //filter the list of all words to get a list of words that have the required amount of unique letters in them
+        let requiredUniqueLetterList = listOfWords.filter {Set($0).count == numberOfLetters}
         // randomly generate an index in that list and pick the word at that index
-        let randomIndex = Int.random(in: 0..<fiveUniqueLetterList.count)
-        let randomWord = fiveUniqueLetterList[randomIndex]
+        let randomIndex = Int.random(in: 0..<requiredUniqueLetterList.count)
+        let randomWord = requiredUniqueLetterList[randomIndex]
         // cast the word into a set to get rid of any duplicate letters, cast it back to an array, then return it
         let currentLetters: [Character] = Array(Set(randomWord))
         return currentLetters
     }
     
     //static function that generates a list of legal words given a character array of letters
-    static func generateLegalWords(currentLetters: [Character], requiredLetter: Character) -> Set<String>
+    static func generateLegalWords(currentLetters: [Character], requiredLetter: Character, listOfWords: [String]) -> Set<String>
     {
         //filter the list of all english words, only including ones that:
             // are a subset of the current letters (I.E only use those letters)
