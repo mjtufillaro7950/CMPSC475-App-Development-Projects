@@ -7,8 +7,7 @@
 
 import Foundation
 
-//TODO: need to make enums for the languages and "difficulties" (number of letters). Need to be String, CaseIterable, and Identifiable. Look at the classroom code for the one with the same name.
-
+//enum for the difficulty
 enum GameDifficulty: String, CaseIterable, Identifiable
 {
     case easy = "Easy: 5 Letters"
@@ -23,10 +22,41 @@ enum GameDifficulty: String, CaseIterable, Identifiable
     {
         switch self
         {
-            case .easy: return 5
-            case .medium: return 6
-            case .hard: return 7
+        case .easy: return 5
+        case .medium: return 6
+        case .hard: return 7
         }
     }
 }
-//TODO: make a Preferences struct that stores one of each of these and initializes them to a default starting value
+
+//enum for the language choices
+enum LanguageSelection: String, CaseIterable, Identifiable
+{
+    case english = "English"
+    case french = "French"
+    case german = "German"
+    case italian = "Italian"
+    
+    //this sets the id so it is identifiable, equal to its rawValue (the above strings)
+    var id: String{rawValue}
+    
+    //creates a variable that accesses the proper list of words depending on what language is selected
+    var listOfWords: [String]
+    {
+        switch self
+        {
+        case .english: return Words.allWords.englishWords
+        case .french: return Words.allWords.frenchWords
+        case .german: return Words.allWords.germanWords
+        case .italian: return Words.allWords.italianWords
+        }
+    }
+    
+}
+
+//make a Preferences struct that stores one of each of the preferences and initializes them to a default starting value of easy (5 letters) and english
+struct Preferences
+{
+    var difficulty: GameDifficulty = .easy
+    var language: LanguageSelection = .english
+}
