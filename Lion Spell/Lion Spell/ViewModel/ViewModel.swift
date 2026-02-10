@@ -24,11 +24,15 @@ class ViewModel
     var scramble: Scramble
     // this stores a mutable copy of the letters that go into the letter entry boxes
     var lettersForEntry: [Character]
+    var preferences: Preferences
     
     init()
     {
-        //TODO: fix this later
-        let scramble = Scramble(numberOfLetters: 5, wordsForCurrentLanguage: Words.allWords.englishWords)
+        //creates an instance of the Preferances struct with its default values of 5 letters and English
+        let preferences = Preferences()
+        self.preferences = preferences
+        //passes the number of letters and list of words from the preferences into the Scramble model
+        let scramble = Scramble(numberOfLetters: preferences.difficulty.numberOfLetters, wordsForCurrentLanguage: preferences.language.listOfWords)
         self.scramble = scramble
         self.lettersForEntry = scramble.currentLetters
     }
@@ -98,13 +102,12 @@ class ViewModel
     func restartButton() -> Void
     {
         //resets all variables
-        //TODO: implement this once I get the rest taken care of
-//        self.score = 0
-//        self.currentWord = ""
-//        self.wordsFound = []
-//        //creates a new scramble object which makes a new game
-//        self.scramble = Scramble()
-//        self.lettersForEntry = scramble.currentLetters
+        self.score = 0
+        self.currentWord = ""
+        self.wordsFound = []
+        //creates a new scramble object which makes a new game, using the last used preferences
+        self.scramble = Scramble(numberOfLetters: preferences.difficulty.numberOfLetters, wordsForCurrentLanguage: preferences.language.listOfWords)
+        self.lettersForEntry = scramble.currentLetters
     }
     
     //the disable button needs to be disabled whenever the current word is empty

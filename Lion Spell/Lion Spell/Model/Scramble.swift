@@ -16,7 +16,7 @@ struct Scramble
     // the legal words are a list of Strings
     let legalWords: Set<String>
     
-    //TODO: these need to be replaced with a way to take in values- a switch case based on the values in preferences?
+    //These are passed in from the viewmodel according to the preferences selected by the user
     let numberOfLetters: Int
     let wordsForCurrentLanguage: [String]
     

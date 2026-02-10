@@ -58,5 +58,5 @@ enum LanguageSelection: String, CaseIterable, Identifiable
 struct Preferences
 {
     var difficulty: GameDifficulty = .easy
-    var language: LanguageSelection = .english
+    var language: LanguageSelection = .german
 }
