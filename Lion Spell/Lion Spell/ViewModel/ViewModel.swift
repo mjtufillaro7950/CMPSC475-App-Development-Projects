@@ -22,6 +22,13 @@ class ViewModel
     // this stores a mutable copy of the letters that go into the letter entry boxes
     var lettersForEntry: [Character]
     var preferences: Preferences
+    {
+        //whenever one of the preferences is changed, start a new game
+        didSet
+        {
+            restartButton()
+        }
+    }
     
     init()
     {

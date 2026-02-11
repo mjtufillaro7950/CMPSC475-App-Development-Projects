@@ -38,6 +38,7 @@ struct MainView: View
         }
         .padding()
         .background(Color.blue)
+        //this displays the settings sheet if the button is toggled
         .sheet(isPresented: $showSettings)
         {
             SettingsSheetView()
