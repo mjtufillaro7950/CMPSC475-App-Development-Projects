@@ -165,4 +165,19 @@ class ViewModel
             return "Valid word!"
         }
     }
+    
+    //TODO: make a list of functions that calculate the hint stuff: Total possible points, list of all legal words, list of all pangrams, and then list of all words that start with each letter for each length of word from 4 -> longest word
+    //TODO: check to see if this even works tbh
+    func totalPossiblePoints() -> Int
+    {
+        var sum = 0
+        //first get a list of all legal words for the current language
+        for word in self.scramble.legalWords
+        {
+            //for each one, call the calculate score function and add them up
+            sum += calculateScore(word: word)
+        }
+        return sum
+    }
+    //TODO: the latter shouldn't be too too bad, I just need a 3D array- outermost is one per possible word length, middle is one per every possible starting letter, innermost is a list of all words that start with that specific letter and have that many letters
 }
