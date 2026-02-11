@@ -22,9 +22,9 @@ enum GameDifficulty: String, CaseIterable, Identifiable
     {
         switch self
         {
-        case .easy: return 5
-        case .medium: return 6
-        case .hard: return 7
+            case .easy: return 5
+            case .medium: return 6
+            case .hard: return 7
         }
     }
 }
@@ -45,10 +45,10 @@ enum LanguageSelection: String, CaseIterable, Identifiable
     {
         switch self
         {
-        case .english: return Words.allWords.englishWords
-        case .french: return Words.allWords.frenchWords
-        case .german: return Words.allWords.germanWords
-        case .italian: return Words.allWords.italianWords
+            case .english: return Words.allWords.englishWords
+            case .french: return Words.allWords.frenchWords
+            case .german: return Words.allWords.germanWords
+            case .italian: return Words.allWords.italianWords
         }
     }
     

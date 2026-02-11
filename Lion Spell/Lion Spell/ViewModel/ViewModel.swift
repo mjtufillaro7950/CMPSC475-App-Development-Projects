@@ -22,8 +22,6 @@ class ViewModel
     // this stores a mutable copy of the letters that go into the letter entry boxes
     var lettersForEntry: [Character]
     var preferences: Preferences
-    var numberOfLetters: Int = 5
-    var wordsForCurrentLanguage = Words.allWords.englishWords
     
     init()
     {
@@ -68,7 +66,7 @@ class ViewModel
         {
             sum += word.count
         }
-        if Set(word).count == numberOfLetters
+        if Set(word).count == preferences.difficulty.numberOfLetters
         {
             sum += 10
         }
@@ -78,13 +76,17 @@ class ViewModel
     
     func shuffleButton() -> Void
     {
-        //create an array of the indices that need to be shuffled (all except middle)
-        let fiveIndices: [Int] = [0,1,3,4]
-        //let sixIndices: [Int] = [0,1,2,4,5]
-        //let sevenIndices: [Int] = [0,1,2,4,5,6]
+        //assigns the proper indices depending on the set difficulty
+        var nonMiddleIndices: [Int]
+        {
+            switch preferences.difficulty
+            {
+                case .easy: return [0,1,3,4]
+                case .medium: return [0,1,2,4,5]
+                case .hard: return [0,1,2,4,5,6]
+            }
+        }
         
-        //TODO: set this equal to one of these above arrays corresponding to the number of allowed letters
-        let nonMiddleIndices = fiveIndices
         //create a separate array that consists of those indices randomly shuffled
         let shuffled: [Int] = nonMiddleIndices.shuffled()
         

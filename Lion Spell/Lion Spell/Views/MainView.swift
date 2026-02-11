@@ -13,6 +13,8 @@ struct MainView: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
+    //this state variable keeps track of whether or not the settings are being shown
+    @State var showSettings: Bool = false
     
     var body: some View
     {
@@ -31,15 +33,15 @@ struct MainView: View
                 .padding(.bottom, 20)
             CurrentWordView()
                 .padding(.bottom, 20)
-            
-            //calls the Letter Entry view in another file, passing in the set number of letters in this file
-
             LetterEntryView()
-
-            ButtonsView()
+            ButtonsView(showSettings: $showSettings)
         }
         .padding()
         .background(Color.blue)
+        .sheet(isPresented: $showSettings)
+        {
+            SettingsSheetView()
+        }
     }
 }
 
