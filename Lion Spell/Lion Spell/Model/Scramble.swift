@@ -29,8 +29,8 @@ struct Scramble
     //computed property that gets the length of the longest legal word
     var longestLegalWordLength: Int
     {
-        //this finds the longest word in legal words (the ?? part means that if the array is empty it just returns an empty string)
-        let longestWord = self.legalWords.max() ?? ""
+        //this finds the longest word in legal words by comparing each words' number of characters (the ?? part means that if the array is empty it just returns an empty string)
+        let longestWord = self.legalWords.max(by: { $0.count < $1.count }) ?? ""
         return longestWord.count
     }
     
@@ -61,15 +61,21 @@ struct Scramble
     }
     
     //computed property that calculates all legal words that begin with each possible letter
-    //no, this name can not be shortened. It's funny.
-    var listOfLettersAndWordsTheyStart: [(Character, Set<String>)]
+    //this returns a tuple, where the first value is the number of letters, and the second value is an array of tuples containing the starting character and all the words that start with that character and have the current number of letters
+    var wordsByNumAndStart: [(Int, [(Character, Set<String>)])]
     {
-        var output: [(Character, Set<String>)] = []
-        //for each starting letter, add it in a tuple with all legal words that start with that letter, then append it to the output
-        for startingLetter in self.currentLetters
+        var output: [(Int, [(Character, Set<String>)])] = []
+        //first loop through each possible word length from 4 to the longest possible one
+        for wordLength in 4...self.longestLegalWordLength
         {
-            let  wordsThatStartWithThisLetter = listOfWords.filter {$0.first == startingLetter}
-            output.append((startingLetter, Set(wordsThatStartWithThisLetter)))
+            var wordsWithThisNumberOfLetters: [(Character, Set<String>)] = []
+            //for each letter, make a set of all words that start with that letter and have the current number of letters
+            for startingLetter in self.currentLetters
+            {
+                let wordsThatStartWithThisLetter = self.listOfWords.filter {$0.count == wordLength && $0.first == startingLetter}
+                wordsWithThisNumberOfLetters.append((startingLetter, Set(wordsThatStartWithThisLetter)))
+            }
+            output.append((wordLength, wordsWithThisNumberOfLetters))
         }
         return output
     }
