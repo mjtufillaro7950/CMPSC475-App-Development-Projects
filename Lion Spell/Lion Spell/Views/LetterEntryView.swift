@@ -38,6 +38,9 @@ struct LetterEntryView: View
 }
 
 
+
+
+//TODO: update this to use letterButtonShape and position properly with offset
 struct LetterButton: View
 {
     //declare this to access viewmodel from views
