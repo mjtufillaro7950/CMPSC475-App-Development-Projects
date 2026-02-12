@@ -26,8 +26,16 @@ struct Scramble
         return self.legalWords.count
     }
     
-    //computed property that calculates the total number of pangrams
-    var totalPossiblePangrams: Set<String>
+    //computed property that gets the length of the longest legal word
+    var longestLegalWordLength: Int
+    {
+        //this finds the longest word in legal words (the ?? part means that if the array is empty it just returns an empty string)
+        let longestWord = self.legalWords.max() ?? ""
+        return longestWord.count
+    }
+    
+    //computed property that gets all possible pangrams
+    var allPossiblePangrams: Set<String>
     {
         var pangrams: Set<String> = []
         for word in self.legalWords
@@ -52,7 +60,6 @@ struct Scramble
         return sum
     }
     
-    //TODO: make a variable thats a tuple between letters and all legal words that start with that letter
     //computed property that calculates all legal words that begin with each possible letter
     //no, this name can not be shortened. It's funny.
     var listOfLettersAndWordsTheyStart: [(Character, Set<String>)]
@@ -61,11 +68,12 @@ struct Scramble
         //for each starting letter, add it in a tuple with all legal words that start with that letter, then append it to the output
         for startingLetter in self.currentLetters
         {
-            var wordsThatStartWithThisLetter = listOfWords.filter {$0.first == startingLetter}
+            let  wordsThatStartWithThisLetter = listOfWords.filter {$0.first == startingLetter}
             output.append((startingLetter, Set(wordsThatStartWithThisLetter)))
         }
         return output
     }
+    
     
     //initializer for the Scramble
     init(numberOfLetters: Int, listOfWords: [String])

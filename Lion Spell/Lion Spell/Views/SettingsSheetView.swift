@@ -39,7 +39,8 @@ struct HintsView: View
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
     //state variable that controls if the hints are being shown or not
-    @State var showHints = false
+    //TODO: change this to false!!!!!!!
+    @State var showHints = true
     var body: some View
     {
         VStack
@@ -49,27 +50,26 @@ struct HintsView: View
             
             if showHints
             {
-                NavigationLink("Link 1")
+                Text("Total Possible Points: \(manager.scramble.maxPossibleScore)")
+                NavigationLink("Number of Words (\(manager.scramble.numberOfLegalWords))")
                 {
-                    Text("Wow! Link 1!")
-                        .navigationTitle("link 1")
+                    //TODO: replace these with the proper lists of words and pangrams respectively
+                    Text("\(manager.scramble.legalWords)")
+                        .navigationTitle("All Possible Words")
                 }
                 
-                NavigationLink("Link 2")
+                NavigationLink("Total Possible Pangrams (\(manager.scramble.allPossiblePangrams.count))")
                 {
-                    Text("Wow! Link 2!")
-                        .navigationTitle("link 2")
+                    Text("\(manager.scramble.allPossiblePangrams)")
+                        .navigationTitle("All Possible Pangrams")
                 }
+                Text("Words by length:")
+                //TODO: adjust scramble to consider word length in the computed property and then do a foreach and write out all of the values n such
             }
         }
     }
 }
 
-struct TestView: View {
-    var body: some View {
-        Text("uhh test I guest?")
-    }
-}
 
 struct DifficultyPickerView: View
 {
