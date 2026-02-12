@@ -20,11 +20,13 @@ struct Scramble
     let numberOfLetters: Int
     let listOfWords: [String]
     
+    
     //computed property that calculates the number of legal words
     var numberOfLegalWords: Int
     {
         return self.legalWords.count
     }
+    
     
     //computed property that gets the length of the longest legal word
     var longestLegalWordLength: Int
@@ -34,20 +36,22 @@ struct Scramble
         return longestWord.count
     }
     
+    
     //computed property that gets all possible pangrams
-    var allPossiblePangrams: Set<String>
+    var allPossiblePangrams: [String]
     {
-        var pangrams: Set<String> = []
+        var pangrams: [String] = []
         for word in self.legalWords
         {
             //if the word is a pangram, add it to the set
             if Set(word).count == numberOfLetters
             {
-                pangrams.insert(word)
+                pangrams.append(word)
             }
         }
         return pangrams
     }
+    
     
     //computed property that calculates the max possible score for all legal words
     var maxPossibleScore: Int
@@ -60,16 +64,17 @@ struct Scramble
         return sum
     }
     
+    
     //computed property that calculates all legal words that begin with each possible letter
     //this returns an array of tuples. This tuple contains a number of letters, how many words have that number of letters, and then a list of tuples for every letter, in which it contains all of the words that have the required length and start with that letter
-    var wordsByNumAndStart: [(Int, Int, [(Character, Set<String>)])]
+    var wordsByNumAndStart: [(Int, Int, [(Character, [String])])]
     {
-        var output: [(Int, Int, [(Character, Set<String>)])] = []
+        var output: [(Int, Int, [(Character, [String])])] = []
         //first loop through each possible word length from 4 to the longest possible one
         for wordLength in 4...self.longestLegalWordLength
         {
             //keeps a running tab of the number of words for the current number of letters
-            var wordsWithThisNumberOfLetters: [(Character, Set<String>)] = []
+            var wordsWithThisNumberOfLetters: [(Character, [String])] = []
             var numberOfWordsForCurrentLength: Int = 0
             //for each letter, make a set of all words that start with that letter and have the current number of letters
             for startingLetter in self.currentLetters
@@ -79,7 +84,8 @@ struct Scramble
                 //only append this if there is at least one word that starts with this letter
                 if wordsThatStartWithThisLetter.count > 0
                 {
-                    wordsWithThisNumberOfLetters.append((startingLetter, Set(wordsThatStartWithThisLetter)))
+                    wordsWithThisNumberOfLetters.append((startingLetter, Array(wordsThatStartWithThisLetter)))
+                    
                     numberOfWordsForCurrentLength += wordsThatStartWithThisLetter.count
                 }
             }

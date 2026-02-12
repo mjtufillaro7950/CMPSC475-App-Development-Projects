@@ -16,8 +16,8 @@ struct SettingsSheetView: View
         //wrap everything in a navigation stack so the hints can use navigation links
         NavigationStack
         {
-            //make the view horizontally scrollable
-            ScrollView(.vertical)
+            //make the view vertically scrollable
+            ScrollView
             {
                 VStack
                 {
@@ -41,6 +41,7 @@ struct HintsView: View
     //state variable that controls if the hints are being shown or not
     //TODO: change this to false!!!!!!!
     @State var showHints = true
+
     var body: some View
     {
         VStack
@@ -56,13 +57,13 @@ struct HintsView: View
                 NavigationLink("Number of Words (\(manager.scramble.numberOfLegalWords))")
                 {
                     //TODO: replace these with the proper lists of words and pangrams respectively
-                    Text("\(manager.scramble.legalWords)")
+                    GridDisplayView(listOfWords: Array(manager.scramble.legalWords))
                         .navigationTitle("All Possible Words")
                 }
                 
                 NavigationLink("Total Possible Pangrams (\(manager.scramble.allPossiblePangrams.count))")
                 {
-                    Text("\(manager.scramble.allPossiblePangrams)")
+                    GridDisplayView(listOfWords: Array(manager.scramble.allPossiblePangrams))
                         .navigationTitle("All Possible Pangrams")
                 }
                 Text("Words by length:")
@@ -80,13 +81,20 @@ struct HintsView: View
                     {
                         HStack
                         {
-                            ForEach(letterGroups,id: \.0)
+                            ForEach(letterGroups, id: \.0)
                             {
                                 letterTuple in
                                 let currentLetter = letterTuple.0
-                                let setOfWords = letterTuple.1
-                                
-                                Text("\(currentLetter): \(setOfWords.count)")
+                                let listOfWords = letterTuple.1
+                                //TODO: this  causes it to take so long it doesn't load, so rip to the time I spend doing it
+//                                //also include a grid display of all relavent words
+//                                NavigationLink("\(currentLetter): \(listOfWords.count)")
+//                                {
+//                                    GridDisplayView(listOfWords: listOfWords)
+//                                        .navigationTitle("\(numberOfLetters)-Letter Words That Start With \"\(currentLetter.upperCased())\"")
+//                                }
+                                //TODO: replace this with a good lookin' view
+                                Text("\(currentLetter): \(listOfWords.count)")
                                     .textCase(.uppercase)
                             }
                         }
@@ -98,6 +106,30 @@ struct HintsView: View
     }
 }
 
+
+//use a scrollable lazy vertial grid to display an array of words
+struct GridDisplayView: View
+{
+    let listOfWords: [String]
+    //declare 3 GridItems so the grid forms a 3-column display
+    let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+    //use a scrollable lazy vertial grid to display the words
+    var body: some View
+    {
+        ScrollView
+        {
+            LazyVGrid(columns: columns)
+            {
+                ForEach(listOfWords, id: \.self)
+                {
+                    word in
+                    Text(word)
+                        .textCase(.uppercase)
+                }
+            }
+        }
+    }
+}
 
 struct DifficultyPickerView: View
 {
