@@ -50,10 +50,10 @@ struct Scramble
     //static function that generates a list of legal words given a character array of letters
     static func generateLegalWords(currentLetters: [Character], requiredLetter: Character, listOfWords: [String]) -> Set<String>
     {
-        //filter the list of all english words, only including ones that:
+        //filter the list of all words in the current language, only including ones that:
             // are a subset of the current letters (I.E only use those letters)
             // contain the required letter
-        let legalWords = Words.allWords.englishWords.filter {Set($0).isSubset(of: Set(currentLetters)) && Set($0).contains(requiredLetter)}
+        let legalWords = listOfWords.filter {Set($0).isSubset(of: Set(currentLetters)) && Set($0).contains(requiredLetter)}
         // cast to a set so that I can later use .contains to check if words are legal
         return Set(legalWords)
     }

@@ -11,16 +11,30 @@ struct SettingsSheetView: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
+    //state variable that controls if the hints are being shown or not
+    @State var showHints = false
     //need to make a state value for the difficulty>
     var body: some View
     {
         //TODO: for right now, just add pickers for difficulty and language. Make sure they toggle a new game when selected and accurately change stuff
-        VStack
+        ScrollView(.vertical)
         {
-            DifficultyPickerView()
-            LanguagePickerView()
+            VStack
+            {
+                Text("Choose Difficulty:")
+                DifficultyPickerView()
+                Text("Choose Language:")
+                LanguagePickerView()
+                //Toggle that triggers the hints to appear
+                Toggle("Show Hints:", isOn: $showHints)
+                
+                if showHints
+                {
+                    Text("ayyyy the hints be showin yo")
+                }
+            }
+            .padding()
         }
-        .padding()
     }
 }
 
@@ -94,6 +108,15 @@ struct LanguagePickerView: View
 
 #Preview
 {
-    MainView()
-        .environment(ViewModel())
+//    MainView()
+//        .environment(ViewModel())
+    VStack
+    {
+        EmptyView()
+    }
+    .sheet(isPresented: .constant(true))
+    {
+        SettingsSheetView()
+            .environment(ViewModel())
+    }
 }

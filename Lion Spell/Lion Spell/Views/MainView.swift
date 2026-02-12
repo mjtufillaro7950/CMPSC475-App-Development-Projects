@@ -8,7 +8,6 @@
 import SwiftUI
 import Foundation
 
-//THIS IS THE MAIN VIEW
 struct MainView: View
 {
     //declare this to access viewmodel from views
