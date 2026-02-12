@@ -61,21 +61,33 @@ struct Scramble
     }
     
     //computed property that calculates all legal words that begin with each possible letter
-    //this returns a tuple, where the first value is the number of letters, and the second value is an array of tuples containing the starting character and all the words that start with that character and have the current number of letters
-    var wordsByNumAndStart: [(Int, [(Character, Set<String>)])]
+    //this returns an array of tuples. This tuple contains a number of letters, how many words have that number of letters, and then a list of tuples for every letter, in which it contains all of the words that have the required length and start with that letter
+    var wordsByNumAndStart: [(Int, Int, [(Character, Set<String>)])]
     {
-        var output: [(Int, [(Character, Set<String>)])] = []
+        var output: [(Int, Int, [(Character, Set<String>)])] = []
         //first loop through each possible word length from 4 to the longest possible one
         for wordLength in 4...self.longestLegalWordLength
         {
+            //keeps a running tab of the number of words for the current number of letters
             var wordsWithThisNumberOfLetters: [(Character, Set<String>)] = []
+            var numberOfWordsForCurrentLength: Int = 0
             //for each letter, make a set of all words that start with that letter and have the current number of letters
             for startingLetter in self.currentLetters
             {
-                let wordsThatStartWithThisLetter = self.listOfWords.filter {$0.count == wordLength && $0.first == startingLetter}
-                wordsWithThisNumberOfLetters.append((startingLetter, Set(wordsThatStartWithThisLetter)))
+                let wordsThatStartWithThisLetter = self.legalWords.filter {$0.count == wordLength && $0.first == startingLetter}
+                
+                //only append this if there is at least one word that starts with this letter
+                if wordsThatStartWithThisLetter.count > 0
+                {
+                    wordsWithThisNumberOfLetters.append((startingLetter, Set(wordsThatStartWithThisLetter)))
+                    numberOfWordsForCurrentLength += wordsThatStartWithThisLetter.count
+                }
             }
-            output.append((wordLength, wordsWithThisNumberOfLetters))
+            //don't append if there aren't any words with this number of letters
+            if numberOfWordsForCurrentLength > 0
+            {
+                output.append((wordLength, numberOfWordsForCurrentLength, wordsWithThisNumberOfLetters))
+            }
         }
         return output
     }

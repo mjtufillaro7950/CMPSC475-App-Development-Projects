@@ -47,9 +47,11 @@ struct HintsView: View
         {
             //Toggle that triggers the hints to appear
             Toggle("Show Hints:", isOn: $showHints)
-            
             if showHints
             {
+                
+                //TODO: Make a custom reusable view to display the lists of word/pangrams. Additionally, put all this stuff in its own separated view.
+                
                 Text("Total Possible Points: \(manager.scramble.maxPossibleScore)")
                 NavigationLink("Number of Words (\(manager.scramble.numberOfLegalWords))")
                 {
@@ -64,7 +66,33 @@ struct HintsView: View
                         .navigationTitle("All Possible Pangrams")
                 }
                 Text("Words by length:")
-                //TODO: adjust scramble to consider word length in the computed property and then do a foreach and write out all of the values n such
+
+                //this accesses the manager to find the number of words for each length and starting letter, and does a ForEach on every word length
+                ForEach(manager.scramble.wordsByNumAndStart, id: \.0)
+                {
+                    lengthTuple in
+                    let numberOfLetters = lengthTuple.0
+                    let numberOfWords = lengthTuple.1
+                    let letterGroups = lengthTuple.2
+                    
+                    //for each number of letters, display how many words start with each letter
+                    DisclosureGroup("\(numberOfLetters)-Letter Words: \(numberOfWords)")
+                    {
+                        HStack
+                        {
+                            ForEach(letterGroups,id: \.0)
+                            {
+                                letterTuple in
+                                let currentLetter = letterTuple.0
+                                let setOfWords = letterTuple.1
+                                
+                                Text("\(currentLetter): \(setOfWords.count)")
+                                    .textCase(.uppercase)
+                            }
+                        }
+                        .padding()
+                    }
+                }
             }
         }
     }
