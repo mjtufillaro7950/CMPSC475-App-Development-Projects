@@ -11,30 +11,63 @@ struct SettingsSheetView: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
-    //state variable that controls if the hints are being shown or not
-    @State var showHints = false
-    //need to make a state value for the difficulty>
     var body: some View
     {
-        //TODO: for right now, just add pickers for difficulty and language. Make sure they toggle a new game when selected and accurately change stuff
-        ScrollView(.vertical)
+        //wrap everything in a navigation stack so the hints can use navigation links
+        NavigationStack
         {
-            VStack
+            //make the view horizontally scrollable
+            ScrollView(.vertical)
             {
-                Text("Choose Difficulty:")
-                DifficultyPickerView()
-                Text("Choose Language:")
-                LanguagePickerView()
-                //Toggle that triggers the hints to appear
-                Toggle("Show Hints:", isOn: $showHints)
-                
-                if showHints
+                VStack
                 {
-                    Text("ayyyy the hints be showin yo")
+                    Text("Choose Difficulty:")
+                    DifficultyPickerView()
+                    Text("Choose Language:")
+                    LanguagePickerView()
+                    HintsView()
+                }
+                .padding()
+            }
+        }
+    }
+}
+
+
+struct HintsView: View
+{
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    //state variable that controls if the hints are being shown or not
+    @State var showHints = false
+    var body: some View
+    {
+        VStack
+        {
+            //Toggle that triggers the hints to appear
+            Toggle("Show Hints:", isOn: $showHints)
+            
+            if showHints
+            {
+                NavigationLink("Link 1")
+                {
+                    Text("Wow! Link 1!")
+                        .navigationTitle("link 1")
+                }
+                
+                NavigationLink("Link 2")
+                {
+                    Text("Wow! Link 2!")
+                        .navigationTitle("link 2")
                 }
             }
-            .padding()
         }
+    }
+}
+
+struct TestView: View {
+    var body: some View {
+        Text("uhh test I guest?")
     }
 }
 

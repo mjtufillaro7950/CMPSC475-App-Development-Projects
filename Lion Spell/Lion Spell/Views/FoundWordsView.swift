@@ -46,7 +46,7 @@ struct scrollingWords: View
                 ForEach(manager.wordsFound.reversed(), id: \.self)
                 {
                     word in
-                    constructFoundWord(word: word, score: manager.calculateScore(word: word))
+                    constructFoundWord(word: word, score: manager.scramble.calculateScore(word: word))
                     
                 }
             }
