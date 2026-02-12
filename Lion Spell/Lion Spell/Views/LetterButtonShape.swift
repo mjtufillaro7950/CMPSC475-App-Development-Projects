@@ -15,6 +15,9 @@ struct LetterButtonShape: Shape
     func path(in rect: CGRect) -> Path
     {
         var path = Path()
+        //declara variables so I don't have to type it out every time
+        let width = rect.width
+        let height = rect.height
         //switch statement depending on the difficulty
         switch manager.preferences.difficulty
         {
@@ -30,9 +33,29 @@ struct LetterButtonShape: Shape
             path.addLine(to: CGPoint(x: rect.minX, y: rect.midY))
             //then close subpath (finish last line)
             path.closeSubpath()
+            
         case .medium:
             //make a pentagon
-            return path
+            //declare offsets in order to properly position the lines
+            //the distance from the sides that the upper left/right points need to be
+            let upperOffset = width * 0.25
+            //the distance from the sides that the bottom left/right points need to be
+            let lowerOffset = width * 0.25
+            //how far from the top the upper 2 points are
+            let upperHeight = height * 0.25
+            //start at top middle
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            //move to upper right point
+            path.addLine(to: CGPoint(x: rect.maxX - upperOffset, y: rect.minY + upperHeight))
+            //lower right point
+            path.addLine(to: CGPoint(x: rect.maxX - lowerOffset, y: rect.maxY))
+            //lower left point
+            path.addLine(to: CGPoint(x: rect.minX + lowerOffset, y: rect.maxY))
+            //upper left point
+            path.addLine(to: CGPoint(x: rect.minX + upperOffset, y: rect.minY + upperHeight))
+            //then close subpath (finish last line)
+            path.closeSubpath()
+            
         case .hard:
             //make a hexagon
             return path
@@ -49,9 +72,16 @@ struct PreviewView: View
     
     var body: some View
     {
-        LetterButtonShape()
-            .foregroundColor(.purple)
-            .frame(width: 90, height: 90)
+        ZStack
+        {
+            Rectangle()
+                .foregroundColor(.gray)
+                .frame(width: 90, height: 90)
+            LetterButtonShape()
+                .foregroundColor(.purple)
+                .frame(width: 90, height: 90)
+        }
+        
     }
 }
 

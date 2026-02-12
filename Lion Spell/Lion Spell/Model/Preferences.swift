@@ -57,6 +57,6 @@ enum LanguageSelection: String, CaseIterable, Identifiable
 //make a Preferences struct that stores one of each of the preferences and initializes them to a default starting value of easy (5 letters) and english
 struct Preferences
 {
-    var difficulty: GameDifficulty = .easy
+    var difficulty: GameDifficulty = .medium
     var language: LanguageSelection = .english
 }
