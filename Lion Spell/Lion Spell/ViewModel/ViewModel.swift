@@ -63,31 +63,11 @@ class ViewModel
         //add the current word to the list of found words
         self.wordsFound.append(currentWord)
         //calculate the score for the current word and update it
-        let currentWordScore = calculateScore(word: currentWord)
+        let currentWordScore = self.scramble.calculateScore(word: currentWord)
         self.score += currentWordScore
         //after the word is entered, clear the current word
         self.currentWord = ""
     }
-    
-    // given a word, calculate its score
-    func calculateScore(word: String) -> Int
-    {
-        var sum = 0
-        if word.count == 4
-        {
-            sum += 1
-        }
-        else
-        {
-            sum += word.count
-        }
-        if Set(word).count == preferences.difficulty.numberOfLetters
-        {
-            sum += 10
-        }
-        return sum
-    }
-
     
     func shuffleButton() -> Void
     {
@@ -173,33 +153,5 @@ class ViewModel
             return "Valid word!"
         }
     }
-    
-    //TODO: make a list of functions that calculate the hint stuff: Total possible points, list of all legal words, list of all pangrams, and then list of all words that start with each letter for each length of word from 4 -> longest word
-    
-    //TODO: I need to make this run before the user opens the hints tab/when the user changes settings and the game resets- trigger it when the settings button is pressed and in the didset?
-    
-//    //function that updates the variables that assist with the hint section
-//    func updateHintVars(scramble: Scramble, preferences: Preferences) -> Void
-//    {
-//        //first get a list of all legal words for the current language
-//        for word in scramble.legalWords
-//        {
-//            //for each one, call the calculate score function and add them up
-//            self.totalPossiblePoints += calculateScore(word: word)
-//            //if the word is a pangram, add it to the set
-//            if Set(word).count == preferences.difficulty.numberOfLetters
-//            {
-//                self.allPossiblePangrams.insert(word)
-//            }
-//        }
-//    }
-    
-    
-    func getAllLegalWords() -> Set<String>
-    {
-        return self.scramble.legalWords
-    }
-    
-    //TODO: the latter shouldn't be too too bad, I just need a 3D array- outermost is one per possible word length, middle is one per every possible starting letter, innermost is a list of all words that start with that specific letter and have that many letters
     
 }

@@ -20,6 +20,53 @@ struct Scramble
     let numberOfLetters: Int
     let listOfWords: [String]
     
+    //computed property that calculates the number of legal words
+    var numberOfLegalWords: Int
+    {
+        return self.legalWords.count
+    }
+    
+    //computed property that calculates the total number of pangrams
+    var totalPossiblePangrams: Set<String>
+    {
+        var pangrams: Set<String> = []
+        for word in self.legalWords
+        {
+            //if the word is a pangram, add it to the set
+            if Set(word).count == numberOfLetters
+            {
+                pangrams.insert(word)
+            }
+        }
+        return pangrams
+    }
+    
+    //computed property that calculates the max possible score for all legal words
+    var maxPossibleScore: Int
+    {
+        var sum = 0
+        for word in self.legalWords
+        {
+            sum += self.calculateScore(word: word)
+        }
+        return sum
+    }
+    
+    //TODO: make a variable thats a tuple between letters and all legal words that start with that letter
+    //computed property that calculates all legal words that begin with each possible letter
+    //no, this name can not be shortened. It's funny.
+    var listOfLettersAndWordsTheyStart: [(Character, Set<String>)]
+    {
+        var output: [(Character, Set<String>)] = []
+        //for each starting letter, add it in a tuple with all legal words that start with that letter, then append it to the output
+        for startingLetter in self.currentLetters
+        {
+            var wordsThatStartWithThisLetter = listOfWords.filter {$0.first == startingLetter}
+            output.append((startingLetter, Set(wordsThatStartWithThisLetter)))
+        }
+        return output
+    }
+    
     //initializer for the Scramble
     init(numberOfLetters: Int, listOfWords: [String])
     {
@@ -56,5 +103,24 @@ struct Scramble
         let legalWords = listOfWords.filter {Set($0).isSubset(of: Set(currentLetters)) && Set($0).contains(requiredLetter)}
         // cast to a set so that I can later use .contains to check if words are legal
         return Set(legalWords)
+    }
+    
+    // given a word, calculate its score
+    func calculateScore(word: String) -> Int
+    {
+        var sum = 0
+        if word.count == 4
+        {
+            sum += 1
+        }
+        else
+        {
+            sum += word.count
+        }
+        if Set(word).count == self.numberOfLetters
+        {
+            sum += 10
+        }
+        return sum
     }
 }
