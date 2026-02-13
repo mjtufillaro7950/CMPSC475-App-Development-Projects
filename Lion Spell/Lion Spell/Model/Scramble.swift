@@ -36,7 +36,6 @@ struct Scramble
         return longestWord.count
     }
     
-    
     //computed property that gets all possible pangrams
     var allPossiblePangrams: [String]
     {
@@ -44,7 +43,7 @@ struct Scramble
         for word in self.legalWords
         {
             //if the word is a pangram, add it to the set
-            if Set(word).count == numberOfLetters
+            if self.isPangram(word: word)
             {
                 pangrams.append(word)
             }
@@ -154,5 +153,14 @@ struct Scramble
             sum += 10
         }
         return sum
+    }
+    
+    func isPangram(word: String) -> Bool
+    {
+        if Set(word).count == self.numberOfLetters
+        {
+            return true
+        }
+        return false
     }
 }

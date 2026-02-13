@@ -55,12 +55,16 @@ struct scrollingWords: View
 }
 struct constructFoundWord: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    
     let word: String
     let score: Int
     //choose the color of the word and its box depending on if its a pangram or not
     var colors: (Color, Color)
     {
-        if score > 10
+        //if the word is a pangram, make it yellow and black instead of black and yellow
+        if manager.scramble.isPangram(word: word)
         {
             (.yellow, .black)
         }

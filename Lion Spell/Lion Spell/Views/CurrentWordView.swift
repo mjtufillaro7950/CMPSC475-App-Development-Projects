@@ -25,7 +25,7 @@ struct CurrentWordView: View
                     .frame(height: 75)
                     .foregroundColor(.cyan)
                 
-                //needs to be able to fit 18 letters, since that is the length of the longest possible word that uses 7 or fewer unique letters
+                //TODO: I need to make each letter appear in its own little box, with the required letter being its own color
                 Text(manager.currentWord)
                     .textCase(.uppercase)
                     .bold()

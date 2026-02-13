@@ -21,9 +21,9 @@ struct LetterEntryView: View
     {
         switch manager.preferences.difficulty
         {
-        case .easy: return 65
-        case .medium: return 55
-        case .hard: return 60
+        case .easy: return 62
+        case .medium: return 71
+        case .hard: return 75
         }
     }
     
@@ -40,6 +40,19 @@ struct LetterEntryView: View
     var endAngle: Angle
     {
         return self.startAngle + .degrees(360)
+    }
+    
+    //for some reason I cannot figure out, the pentagons specifically are all shifted about 2 units further to the left than they should be. this is my fix because it would be too much work to find the error
+    var extraXOffset: Double
+    {
+        switch manager.preferences.difficulty {
+        case .easy:
+            return 0
+        case .medium:
+            return 2.5
+        case .hard:
+            return 0
+        }
     }
     
     
@@ -67,38 +80,19 @@ struct LetterEntryView: View
                 
                 //calculate the proper offset depending on the starting angle, ending angle, and number of shapes being placed
                 let angle = startAngle + deltaAngle * Double(index)
-                let xOffset = cos(angle.radians) * radius
+                let xOffset = cos(angle.radians) * radius + extraXOffset
                 let yOffset = sin(angle.radians) * radius
-                
-                //TODO: if the difficulty is medium im gonna have to rotate the pentagon, which will need to be done in such a way that it doesn't also rotate the text on the letters. Might need to move the text part of it out here.
+
                 LetterButton(letter: nonRequiredLetters[index], color: .cyan, isRequired: false)
                     .offset(x: xOffset, y: yOffset)
                 
             }
         }
-//        HStack
-//        {
-//            ForEach(manager.lettersForEntry, id: \.self)
-//            {
-//                letter in
-//                // makes the required letter yellow instead of cyan
-//                if letter == manager.scramble.requiredLetter
-//                {
-//                    LetterButton(letter: letter, color: .yellow)
-//                }
-//                else
-//                {
-//                    LetterButton(letter: letter, color: .cyan)
-//                }
-//            }
-//        }
     }
 }
 
 
 
-
-//TODO: update this to use letterButtonShape and position properly with zstack + offset
 struct LetterButton: View
 {
     //declare this to access viewmodel from views
@@ -106,16 +100,9 @@ struct LetterButton: View
     let letter: Character
     let color: Color
     let isRequired: Bool
-    var buttonSize: CGFloat
-    {
-        switch manager.preferences.difficulty
-        {
-        case .easy: return 80
-        case .medium: return 60
-        case .hard: return 60
-        }
-    }
+    let buttonSize: CGFloat = 80
     
+    //the non-required letter pentagons need to be rotated 36 degrees to line up with the middle one
     var rotationDegrees: Angle
     {
         if !isRequired && manager.preferences.difficulty == .medium
@@ -128,7 +115,31 @@ struct LetterButton: View
         }
     }
     
-    //TODO: make a computed value to adjust font choice and size
+    //similarly, the non-required pentagons text is slightly off so it needs to be adjusted
+    var textXOffset: CGFloat
+    {
+        if !isRequired && manager.preferences.difficulty == .medium
+        {
+            return -2
+        }
+        else
+        {
+            return 0
+        }
+    }
+    
+    //all pentagons need to have their text shifted slightly down
+    var textYOffset: CGFloat
+    {
+        if manager.preferences.difficulty == .medium
+        {
+            return 4
+        }
+        else
+        {
+            return 0
+        }
+    }
     
     var body: some View
     {
@@ -144,19 +155,22 @@ struct LetterButton: View
         {
             ZStack
             {
-                //TODO: might need to adjust the size/font depending on what difficulty is selected
                 //if the letter isn't required and the shape is a pentagon, the pentagon needs to be rotated by 36 degrees to fit the required shape
-                LetterButtonShape()
+                LetterButtonShape(difficulty: manager.preferences.difficulty)
                     .frame(width: buttonSize, height: buttonSize)
                     .foregroundColor(color)
                     .rotationEffect(rotationDegrees)
                 Text(String(letter))
                     .foregroundColor(.black)
-                    .font(.title)
+                    .font(.system(size: 40, weight: .heavy, design: .rounded))
                     .bold()
                     .textCase(.uppercase)
+                    .offset(x: textXOffset, y: textYOffset)
             }
         }
+        //contentShape makes it so the button's hitbox is the shape itself and not a rectangle, which was causing issues with the diamond shaped buttons
+        .contentShape(LetterButtonShape(difficulty: manager.preferences.difficulty))
+        
     }
 }
 

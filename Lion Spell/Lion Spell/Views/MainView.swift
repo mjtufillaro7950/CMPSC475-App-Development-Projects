@@ -15,6 +15,8 @@ struct MainView: View
     //this state variable keeps track of whether or not the settings are being shown
     @State var showSettings: Bool = false
     
+    //TODO: clear room in foundwords/currentword so I can make the letter entry buttons bigger
+    
     var body: some View
     {
         VStack
@@ -29,9 +31,7 @@ struct MainView: View
             }
             
             FoundWordsView()
-                .padding(.bottom, 20)
             CurrentWordView()
-                .padding(.bottom, 20)
             Spacer()
             LetterEntryView()
             Spacer()

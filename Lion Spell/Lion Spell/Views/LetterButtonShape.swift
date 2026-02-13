@@ -10,8 +10,7 @@ import SwiftUI
 //custom letterButtonShape struct that changes depending on the number of letters
 struct LetterButtonShape: Shape
 {
-    //declare this to access viewmodel from views
-    @Environment(ViewModel.self) var manager: ViewModel
+    let difficulty: GameDifficulty
     func path(in rect: CGRect) -> Path
     {
         var path = Path()
@@ -19,7 +18,7 @@ struct LetterButtonShape: Shape
         let width = rect.width
         let height = rect.height
         //switch statement depending on the difficulty
-        switch manager.preferences.difficulty
+        switch difficulty
         {
         case .easy:
             //make a diamond
@@ -82,32 +81,4 @@ struct LetterButtonShape: Shape
         }
         return path
     }
-}
-
-//test view to display the shape compared to a square
-struct PreviewView: View
-{
-    //declare this to access viewmodel from views
-    @Environment(ViewModel.self) var manager: ViewModel
-    
-    var body: some View
-    {
-        let length: CGFloat = 150
-        ZStack
-        {
-            Rectangle()
-                .foregroundColor(.gray)
-                .frame(width: length, height: length)
-            LetterButtonShape()
-                .foregroundColor(.purple)
-                .frame(width: length, height: length)
-        }
-        
-    }
-}
-
-#Preview
-{
-    PreviewView()
-        .environment(ViewModel())
 }
