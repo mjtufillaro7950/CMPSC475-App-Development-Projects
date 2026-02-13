@@ -32,7 +32,9 @@ struct MainView: View
                 .padding(.bottom, 20)
             CurrentWordView()
                 .padding(.bottom, 20)
+            Spacer()
             LetterEntryView()
+            Spacer()
             ButtonsView(showSettings: $showSettings)
         }
         .padding()

@@ -21,7 +21,7 @@ struct ButtonsView: View
                 .padding(.trailing, 50)
             RegButton(text: "Enter", color: .green, isButtonDisabled: manager.isEnterDisabled(), action: manager.enterButton)
         }
-        Spacer()
+        //TODO: adjust the spacing of the buttons depending on how the letter entry stuff looks
         HStack
         {
             RegButton(text: "Shuffle", color: .indigo, isButtonDisabled: false, action: manager.shuffleButton)

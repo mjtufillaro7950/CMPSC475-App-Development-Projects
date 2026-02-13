@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-//TODO: custom letterButtonShape struct that changes depending on the number of letters
+//custom letterButtonShape struct that changes depending on the number of letters
 struct LetterButtonShape: Shape
 {
     //declare this to access viewmodel from views

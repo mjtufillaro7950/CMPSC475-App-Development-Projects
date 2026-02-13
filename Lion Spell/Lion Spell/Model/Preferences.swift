@@ -27,6 +27,16 @@ enum GameDifficulty: String, CaseIterable, Identifiable
             case .hard: return 7
         }
     }
+    
+    //need to make a few computed properties for the purposes of placing the letter buttons, depending on the difficulty/shape of the buttons
+    //TODO: make button size, radius, startAngle, and endAngle be computed properties of Preferences
+//    var radius: CGFloat = 50
+//    let startAngle: Angle = .degrees(45)
+//    let endAngle: Angle = .degrees(405)
+    
+    
+    
+    
 }
 
 //enum for the language choices

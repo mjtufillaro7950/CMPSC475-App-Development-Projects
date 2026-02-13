@@ -12,8 +12,6 @@ import Foundation
 @Observable
 class ViewModel
 {
-    //TODO: these need to be replaced with an Enum and then put into a preferences file? Then pass that into the scramble
-
     var score: Int = 0
     var currentWord: String = ""
     var wordsFound: [String] = []
@@ -152,6 +150,15 @@ class ViewModel
         {
             return "Valid word!"
         }
+    }
+    
+    //returns a list of characters equal to the list of available characters without the required one.
+    func getNonRequiredLetters() -> [Character]
+    {
+        //use array slice to slice everything before the middle digit, everything after the middle digit, then add them together
+        let firstHalf = self.lettersForEntry[0..<self.scramble.currentLetters.count/2]
+        let secondHalf = self.lettersForEntry[(self.scramble.currentLetters.count/2 + 1)...]
+        return Array(firstHalf + secondHalf)
     }
     
 }
