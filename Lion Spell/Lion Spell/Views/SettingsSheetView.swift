@@ -22,13 +22,18 @@ struct SettingsSheetView: View
                 VStack
                 {
                     Text("Choose Difficulty:")
+                        .bold()
+                        .foregroundColor(.black)
                     DifficultyPickerView()
                     Text("Choose Language:")
+                        .bold()
+                        .foregroundColor(.black)
                     LanguagePickerView()
                     HintsView()
                 }
                 .padding()
             }
+            .background(DesignConstants.lighterColor)
         }
     }
 }
@@ -39,7 +44,9 @@ struct HintsView: View
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
     //state variable that controls if the hints are being shown or not
-    //TODO: change this to false!!!!!!!
+    
+    //TODO: change this to false!!!!!
+    
     @State var showHints = true
 
     var body: some View
@@ -48,25 +55,18 @@ struct HintsView: View
         {
             //Toggle that triggers the hints to appear
             Toggle("Show Hints:", isOn: $showHints)
+                .tint(DesignConstants.accentColorOne)
+                .bold()
             if showHints
             {
+                PossiblePointsView()
+
+                NumberOfWordsView()
                 
-                //TODO: Make a custom reusable view to display the lists of word/pangrams. Additionally, put all this stuff in its own separated view.
+                NumberOfPangramsView()
+                .padding(.bottom, 20)
                 
-                Text("Total Possible Points: \(manager.scramble.maxPossibleScore)")
-                NavigationLink("Number of Words (\(manager.scramble.numberOfLegalWords))")
-                {
-                    //TODO: replace these with the proper lists of words and pangrams respectively
-                    GridDisplayView(listOfWords: Array(manager.scramble.legalWords))
-                        .navigationTitle("All Possible Words")
-                }
-                
-                NavigationLink("Total Possible Pangrams (\(manager.scramble.allPossiblePangrams.count))")
-                {
-                    GridDisplayView(listOfWords: Array(manager.scramble.allPossiblePangrams))
-                        .navigationTitle("All Possible Pangrams")
-                }
-                Text("Words by length:")
+                Text("Words by length and starting letter:")
 
                 //this accesses the manager to find the number of words for each length and starting letter, and does a ForEach on every word length
                 ForEach(manager.scramble.wordsByNumAndStart, id: \.0)
@@ -107,6 +107,74 @@ struct HintsView: View
 }
 
 
+struct PossiblePointsView: View
+{
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    var body: some View
+    {
+        ZStack
+        {
+            RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                .foregroundColor(DesignConstants.mainColor)
+                .frame(height: 30)
+            Text("Total Possible Points: \(manager.scramble.maxPossibleScore)")
+                .bold()
+        }
+        
+    }
+}
+
+
+struct NumberOfWordsView: View
+{
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    var body: some View
+    {
+        ZStack
+        {
+            RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                .foregroundColor(DesignConstants.accentColorOne)
+                .frame(height: 30)
+            //creates a link to the separate page where it shows all legal words
+            NavigationLink("Number of Words (\(manager.scramble.numberOfLegalWords))                                  >")
+            {
+                GridDisplayView(listOfWords: Array(manager.scramble.legalWords))
+                    .navigationTitle("All Possible Words")
+            }
+            .foregroundColor(.black)
+            .bold()
+        }
+    }
+}
+
+
+struct NumberOfPangramsView: View
+{
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    
+    var body: some View
+    {
+        ZStack
+        {
+            RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                .foregroundColor(DesignConstants.accentColorOne)
+                .frame(height: 30)
+            //creates a link to page where it shows all pangrams
+            NavigationLink("Total Possible Pangrams (\(manager.scramble.allPossiblePangrams.count))                        >")
+            {
+                GridDisplayView(listOfWords: Array(manager.scramble.allPossiblePangrams))
+                    .navigationTitle("All Possible Pangrams")
+            }
+            .foregroundColor(.black)
+            .bold()
+        }
+    }
+}
+
+
 //use a scrollable lazy vertial grid to display an array of words
 struct GridDisplayView: View
 {
@@ -123,13 +191,38 @@ struct GridDisplayView: View
                 ForEach(listOfWords, id: \.self)
                 {
                     word in
-                    Text(word)
-                        .textCase(.uppercase)
+                    //creates a rounded rectangle to house the word
+                    ZStack
+                    {
+                        RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                            .frame(height: 50)
+                            .foregroundColor(DesignConstants.lighterColor)
+                        
+                        //makes it scrollable so long words can still fit
+                        ScrollView(.horizontal)
+                        {
+                            HStack
+                            {
+                                Spacer()
+                                Text(word)
+                                    .textCase(.uppercase)
+                                    .bold()
+                                    .font(.default)
+                                    .foregroundColor(.black)
+                                    .multilineTextAlignment(.center)
+                                Spacer()
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                    }
                 }
             }
         }
+        .padding()
+        .background(DesignConstants.mainColor)
     }
 }
+
 
 struct DifficultyPickerView: View
 {
@@ -163,8 +256,10 @@ struct DifficultyPickerView: View
             }
         }
         .pickerStyle(.segmented)
+        .colorMultiply(DesignConstants.accentColorOne)
     }
 }
+
 
 struct LanguagePickerView: View
 {
@@ -195,6 +290,7 @@ struct LanguagePickerView: View
             }
         }
         .pickerStyle(.segmented)
+        .colorMultiply(DesignConstants.accentColorOne)
     }
 }
 
