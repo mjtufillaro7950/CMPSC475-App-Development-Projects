@@ -11,7 +11,7 @@ struct CurrentWordView: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
-    
+    let currentWordHeight: CGFloat = 75
     var body: some View
     {
         VStack
@@ -21,12 +21,12 @@ struct CurrentWordView: View
             
             ZStack
             {
-                RoundedRectangle(cornerRadius: 16)
-                    .frame(height: 75)
-                    .foregroundColor(.cyan)
+                RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                    .frame(height: currentWordHeight)
+                    .foregroundColor(DesignConstants.lighterColor)
                 
-                //TODO: I need to make each letter appear in its own little box, with the required letter being its own color
                 Text(manager.currentWord)
+                    .foregroundColor(.black)
                     .textCase(.uppercase)
                     .bold()
                     .font(.title)

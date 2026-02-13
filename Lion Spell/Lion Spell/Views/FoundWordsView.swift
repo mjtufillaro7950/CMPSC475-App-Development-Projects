@@ -9,13 +9,14 @@ import SwiftUI
 
 struct FoundWordsView: View
 {
+    let height: CGFloat = 100
     var body: some View
     {
         ZStack
         {
-            RoundedRectangle(cornerRadius: 16)
-                .frame(height: 100)
-                .foregroundColor(.cyan)
+            RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                .frame(height: height)
+                .foregroundColor(DesignConstants.lighterColor)
             VStack
             {
                 Text("Found Words:")
@@ -23,15 +24,15 @@ struct FoundWordsView: View
                     .font(.headline)
                     .bold()
                 Spacer()
-                scrollingWords()
+                ScrollingWords()
             }
             .padding()
-            .frame(height: 100)
+            .frame(height: height)
         }
     }
 }
 
-struct scrollingWords: View
+struct ScrollingWords: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
@@ -66,19 +67,20 @@ struct constructFoundWord: View
         //if the word is a pangram, make it yellow and black instead of black and yellow
         if manager.scramble.isPangram(word: word)
         {
-            (.yellow, .black)
+            (DesignConstants.accentColorOne, .black)
         }
         else
         {
-            (.black, .yellow)
+            (.black, DesignConstants.accentColorOne)
         }
     }
     
     var body: some View
     {
+        //use the proper coloring depending on the above lines
         ZStack
         {
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
                 .foregroundColor(colors.0)
             Text("\(word): +\(score)")
                 .bold()

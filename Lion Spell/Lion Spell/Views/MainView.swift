@@ -15,8 +15,6 @@ struct MainView: View
     //this state variable keeps track of whether or not the settings are being shown
     @State var showSettings: Bool = false
     
-    //TODO: clear room in foundwords/currentword so I can make the letter entry buttons bigger
-    
     var body: some View
     {
         VStack
@@ -26,6 +24,7 @@ struct MainView: View
                 Text("LION SPELL")
                     .font(.largeTitle)
                     .bold()
+                    .foregroundColor(.black)
                 Spacer()
                 ScoreView()
             }
@@ -38,7 +37,7 @@ struct MainView: View
             ButtonsView(showSettings: $showSettings)
         }
         .padding()
-        .background(Color.blue)
+        .background(DesignConstants.mainColor)
         //this displays the settings sheet if the button is toggled
         .sheet(isPresented: $showSettings)
         {
@@ -60,14 +59,16 @@ struct ScoreView: View
         {
             Text("Score")
                 .bold()
+                .foregroundColor(.black)
             ZStack
             {
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
                     .frame(width: 70, height: 50)
-                    .foregroundColor(.cyan)
-                // the score checks the viewmodel and updates when the score there updates
+                    .foregroundColor(DesignConstants.lighterColor)
+                // the score checks the viewmodel and updates when the score updates
                 Text(String(manager.score))
                     .font(.title)
+                    .foregroundColor(.black)
             }
             
         }

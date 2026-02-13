@@ -20,8 +20,6 @@ class ViewModel
     // this stores a mutable copy of the letters that go into the letter entry boxes
     var lettersForEntry: [Character]
     var allLegalWords: Set<String>
-//    var allPossiblePangrams: Set<String>
-//    var totalPossiblePoints: Int
     
     //THIS NEEDS TO STAY DIRECTLY ABOVE THE DIDSET
     var preferences: Preferences
@@ -52,11 +50,10 @@ class ViewModel
         self.currentWord.removeLast()
     }
     
+    
     // adds a valid word to the list of found words and updates the score
     func enterButton() -> Void
     {
-        //TODO: get rid of this
-        //print("Total possible points: \(self.totalPossiblePoints())")
         let currentWord = self.currentWord
         //add the current word to the list of found words
         self.wordsFound.append(currentWord)
@@ -133,7 +130,7 @@ class ViewModel
     func updateFeedback() -> String
     {
         let currentWord = self.currentWord
-        //depending on the current state of the current word, update the feedback to the user
+        //depending on the state of the current word, update the feedback to the user
         if currentWord.isEmpty
         {
             return "Tap letters below to build a word!"
@@ -152,7 +149,7 @@ class ViewModel
         }
     }
     
-    //returns a list of characters equal to the list of available characters without the required one.
+    //returns a list of all non required letters
     func getNonRequiredLetters() -> [Character]
     {
         //use array slice to slice everything before the middle digit, everything after the middle digit, then add them together

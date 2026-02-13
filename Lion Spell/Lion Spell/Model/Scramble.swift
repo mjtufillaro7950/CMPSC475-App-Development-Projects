@@ -157,10 +157,6 @@ struct Scramble
     
     func isPangram(word: String) -> Bool
     {
-        if Set(word).count == self.numberOfLetters
-        {
-            return true
-        }
-        return false
+        return Set(word).count == self.numberOfLetters
     }
 }

@@ -12,23 +12,31 @@ struct ButtonsView: View
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
     @Binding var showSettings: Bool
+    let buttonSpacing: CGFloat = 50
+    
+    let enterColor: Color = DesignConstants.accentColorTwo
+    let deleteColor: Color = DesignConstants.accentColorTwo
+    let shuffleColor: Color = DesignConstants.accentColorOne
+    let restartColor: Color = DesignConstants.accentColorOne
+    
     var body: some View
     {
         //for all four types of buttons, feed it display text, a color, a condition if it needs to be disabled, and an action to take once it is pressed
         HStack
         {
-            RegButton(text: "Delete", color: .red, isButtonDisabled: manager.isDeleteDisabled(), action: manager.deleteButton)
-                .padding(.trailing, 50)
-            RegButton(text: "Enter", color: .green, isButtonDisabled: manager.isEnterDisabled(), action: manager.enterButton)
+            RegButton(text: "Delete", color: deleteColor, isButtonDisabled: manager.isDeleteDisabled(), action: manager.deleteButton)
+                .padding(.trailing, buttonSpacing)
+            RegButton(text: "Enter", color: enterColor, isButtonDisabled: manager.isEnterDisabled(), action: manager.enterButton)
         }
-        //TODO: adjust the spacing of the buttons depending on how the letter entry stuff looks
+
         HStack
         {
-            RegButton(text: "Shuffle", color: .indigo, isButtonDisabled: false, action: manager.shuffleButton)
+            //these buttons do not need to be disabled so just pass false
+            RegButton(text: "Shuffle", color: shuffleColor, isButtonDisabled: false, action: manager.shuffleButton)
             Spacer()
             SettingsButton(showSettings: $showSettings)
             Spacer()
-            RegButton(text: "Restart", color: .yellow, isButtonDisabled: false, action: manager.restartButton)
+            RegButton(text: "Restart", color: restartColor, isButtonDisabled: false, action: manager.restartButton)
         }
         .padding()
     }
@@ -37,11 +45,16 @@ struct ButtonsView: View
 
 struct RegButton: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    
     let text: String
     let color: Color
     var isButtonDisabled: Bool
     //lets the program take an function as a parameter
     let action: () -> Void
+    let buttonWidth: CGFloat = 100
+    let buttonHeight: CGFloat = 50
     var body: some View
     {
         Button
@@ -52,9 +65,10 @@ struct RegButton: View
         {
             ZStack
             {
-                RoundedRectangle(cornerRadius: 16)
-                    .frame(width: 100, height: 50)
-                    .foregroundColor(color)
+                RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                    .frame(width: buttonWidth, height: buttonHeight)
+                    //make the button be gray if it is disabled, otherwise use its passed in color
+                    .foregroundColor(isButtonDisabled ? Color.gray.opacity(0.6) : color)
                 Text(text)
                     .foregroundColor(.black)
                     .font(.title2)
@@ -71,6 +85,7 @@ struct SettingsButton: View
     @Environment(ViewModel.self) var manager: ViewModel
     //pass down state var again
     @Binding var showSettings: Bool
+    let gearSize: CGFloat = 50
     var body: some View
     {
         Button
@@ -84,15 +99,12 @@ struct SettingsButton: View
             Image(systemName: "gear")
                 .font(.title2)
                 .foregroundColor(.white)
-                .frame(width: 50, height: 50)
+                .frame(width: gearSize, height: gearSize)
                 .background(Circle().fill(.black))
                 
         }
     }
 }
-
-
-
 
 #Preview
 {

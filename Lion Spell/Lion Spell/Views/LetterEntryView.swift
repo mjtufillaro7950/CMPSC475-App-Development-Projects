@@ -12,11 +12,8 @@ struct LetterEntryView: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
-    
-    //make button size, radius, startAngle, and endAngle be computed properties depending on preferences
-    //TODO: update these later depending on what the build needs.
-    
-    
+
+    //computed properties for radius, angles, and offset depending on the difficulty
     var radius: CGFloat
     {
         switch manager.preferences.difficulty
@@ -56,9 +53,6 @@ struct LetterEntryView: View
     }
     
     
-    //var radius: CGFloat = 50
-    //let startAngle: Angle = .degrees(45)
-    //let endAngle: Angle = .degrees(405)
     private var deltaAngle: Angle
     {
         .degrees((endAngle.degrees - startAngle.degrees) / Double(manager.scramble.numberOfLetters - 1))
@@ -69,7 +63,7 @@ struct LetterEntryView: View
         ZStack
         {
             //first place the required letter
-            LetterButton(letter: manager.scramble.requiredLetter, color: .yellow, isRequired: true)
+            LetterButton(letter: manager.scramble.requiredLetter, color: DesignConstants.accentColorOne, isRequired: true)
             //call helper method to get a list of the other non-required letters
             let nonRequiredLetters = manager.getNonRequiredLetters()
             
@@ -83,7 +77,7 @@ struct LetterEntryView: View
                 let xOffset = cos(angle.radians) * radius + extraXOffset
                 let yOffset = sin(angle.radians) * radius
 
-                LetterButton(letter: nonRequiredLetters[index], color: .cyan, isRequired: false)
+                LetterButton(letter: nonRequiredLetters[index], color: DesignConstants.lighterColor, isRequired: false)
                     .offset(x: xOffset, y: yOffset)
                 
             }
