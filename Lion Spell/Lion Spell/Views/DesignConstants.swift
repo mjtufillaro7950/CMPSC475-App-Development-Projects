@@ -2,7 +2,7 @@
 //  DesignConstants.swift
 //  Lion Spell
 //
-//  Created by LiasPub on 2/13/26.
+//  Created by Michael Tufillaro on 2/13/26.
 //
 
 import SwiftUI
@@ -20,9 +20,22 @@ struct DesignConstants
     static let accentColorOne: Color = .yellow
     static let accentColorTwo: Color = .green
     static let cornerRadius: CGFloat = 16
+    
+    //helper method that helps determine the color of the current letter being entered
+    static func currentLetterColors(character: Character, requiredLetter: Character) -> (Color, Color)
+    {
+        if (character == requiredLetter)
+        {
+            return (DesignConstants.accentColorOne, .black)
+        }
+        else
+        {
+            return (.black, DesignConstants.accentColorOne)
+        }
+    }
 }
 
-//TODO: test colors
+//test colors
 struct testView: View
 {
     var body: some View

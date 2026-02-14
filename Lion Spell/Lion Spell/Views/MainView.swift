@@ -25,6 +25,13 @@ struct MainView: View
                     .font(.largeTitle)
                     .bold()
                     .foregroundColor(.black)
+                    .background(
+                        RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                            .foregroundColor(DesignConstants.accentColorOne)
+                            .frame(width: 200, height: 75)
+                    )
+                    .padding(.leading, 6)
+                
                 Spacer()
                 ScoreView()
             }
@@ -74,7 +81,6 @@ struct ScoreView: View
         }
     }
 }
-
 
 
 #Preview

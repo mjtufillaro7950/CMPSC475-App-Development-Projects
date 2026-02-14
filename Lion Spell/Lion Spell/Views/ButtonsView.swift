@@ -14,10 +14,10 @@ struct ButtonsView: View
     @Binding var showSettings: Bool
     let buttonSpacing: CGFloat = 50
     
-    let enterColor: Color = DesignConstants.accentColorTwo
-    let deleteColor: Color = DesignConstants.accentColorTwo
-    let shuffleColor: Color = DesignConstants.accentColorOne
-    let restartColor: Color = DesignConstants.accentColorOne
+    let enterColor: Color = DesignConstants.accentColorOne
+    let deleteColor: Color = .gray
+    let shuffleColor: Color = .gray
+    let restartColor: Color = .gray
     
     var body: some View
     {
@@ -68,7 +68,7 @@ struct RegButton: View
                 RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
                     .frame(width: buttonWidth, height: buttonHeight)
                     //make the button be gray if it is disabled, otherwise use its passed in color
-                    .foregroundColor(isButtonDisabled ? Color.gray.opacity(0.6) : color)
+                    .foregroundColor(isButtonDisabled ? Color.gray.opacity(0.4) : color)
                 Text(text)
                     .foregroundColor(.black)
                     .font(.title2)

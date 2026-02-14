@@ -43,11 +43,9 @@ struct HintsView: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
+    let frameHeight: CGFloat = 30
     //state variable that controls if the hints are being shown or not
-    
-    //TODO: change this to false!!!!!
-    
-    @State var showHints = true
+    @State var showHints = false
 
     var body: some View
     {
@@ -59,75 +57,23 @@ struct HintsView: View
                 .bold()
             if showHints
             {
-                PossiblePointsView()
+                PossiblePointsView(frameHeight: frameHeight)
 
-                NumberOfWordsView()
+                NumberOfWordsView(frameHeight: frameHeight)
                 
-                NumberOfPangramsView()
+                NumberOfPangramsView(frameHeight: frameHeight)
                 .padding(.bottom, 20)
                 
-                Text("Words by length and starting letter:")
-
-                //this accesses the manager to find the number of words for each length and starting letter, and does a ForEach on every word length
-                ForEach(manager.scramble.wordsByNumAndStart, id: \.0)
-                {
-                    lengthTuple in
-                    let numberOfLetters = lengthTuple.0
-                    let numberOfWords = lengthTuple.1
-                    let letterGroups = lengthTuple.2
-                    
-                    //for each number of letters, display how many words start with each letter
-                    DisclosureGroup("\(numberOfLetters)-Letter Words: \(numberOfWords)")
-                    {
-                        HStack
-                        {
-                            ForEach(letterGroups, id: \.0)
-                            {
-                                letterTuple in
-                                let currentLetter = letterTuple.0
-                                let listOfWords = letterTuple.1
-                                //TODO: this  causes it to take so long it doesn't load, so rip to the time I spend doing it
-//                                //also include a grid display of all relavent words
-//                                NavigationLink("\(currentLetter): \(listOfWords.count)")
-//                                {
-//                                    GridDisplayView(listOfWords: listOfWords)
-//                                        .navigationTitle("\(numberOfLetters)-Letter Words That Start With \"\(currentLetter.upperCased())\"")
-//                                }
-                                //TODO: replace this with a good lookin' view
-                                Text("\(currentLetter): \(listOfWords.count)")
-                                    .textCase(.uppercase)
-                            }
-                        }
-                        .padding()
-                    }
-                }
+                WordsByNumberAndLetterView()
             }
         }
     }
 }
 
-
+//displays the total possible points
 struct PossiblePointsView: View
 {
-    //declare this to access viewmodel from views
-    @Environment(ViewModel.self) var manager: ViewModel
-    var body: some View
-    {
-        ZStack
-        {
-            RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
-                .foregroundColor(DesignConstants.mainColor)
-                .frame(height: 30)
-            Text("Total Possible Points: \(manager.scramble.maxPossibleScore)")
-                .bold()
-        }
-        
-    }
-}
-
-
-struct NumberOfWordsView: View
-{
+    var frameHeight: CGFloat
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
     var body: some View
@@ -136,9 +82,30 @@ struct NumberOfWordsView: View
         {
             RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
                 .foregroundColor(DesignConstants.accentColorOne)
-                .frame(height: 30)
+                .frame(height: frameHeight)
+            Text("Total Possible Points: \(manager.scramble.maxPossibleScore)")
+                .bold()
+        }
+        
+    }
+}
+
+
+//displays the total number of words and links to a page to show them
+struct NumberOfWordsView: View
+{
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    var frameHeight: CGFloat
+    var body: some View
+    {
+        ZStack
+        {
+            RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                .foregroundColor(DesignConstants.accentColorOne)
+                .frame(height: frameHeight)
             //creates a link to the separate page where it shows all legal words
-            NavigationLink("Number of Words (\(manager.scramble.numberOfLegalWords))                                  >")
+            NavigationLink("Total Number of Legal Words (\(manager.scramble.numberOfLegalWords))   >")
             {
                 GridDisplayView(listOfWords: Array(manager.scramble.legalWords))
                     .navigationTitle("All Possible Words")
@@ -150,10 +117,12 @@ struct NumberOfWordsView: View
 }
 
 
+//displays the number of pangrams and links to a page to see them
 struct NumberOfPangramsView: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
+    var frameHeight: CGFloat
     
     var body: some View
     {
@@ -161,9 +130,9 @@ struct NumberOfPangramsView: View
         {
             RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
                 .foregroundColor(DesignConstants.accentColorOne)
-                .frame(height: 30)
+                .frame(height: frameHeight)
             //creates a link to page where it shows all pangrams
-            NavigationLink("Total Possible Pangrams (\(manager.scramble.allPossiblePangrams.count))                        >")
+            NavigationLink("Total Possible Pangrams (\(manager.scramble.allPossiblePangrams.count))   >")
             {
                 GridDisplayView(listOfWords: Array(manager.scramble.allPossiblePangrams))
                     .navigationTitle("All Possible Pangrams")
@@ -197,23 +166,18 @@ struct GridDisplayView: View
                         RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
                             .frame(height: 50)
                             .foregroundColor(DesignConstants.lighterColor)
-                        
-                        //makes it scrollable so long words can still fit
-                        ScrollView(.horizontal)
+                        HStack
                         {
-                            HStack
-                            {
-                                Spacer()
-                                Text(word)
-                                    .textCase(.uppercase)
-                                    .bold()
-                                    .font(.default)
-                                    .foregroundColor(.black)
-                                    .multilineTextAlignment(.center)
-                                Spacer()
-                            }
-                            .frame(maxWidth: .infinity)
+                            Spacer()
+                            Text(word)
+                                .textCase(.uppercase)
+                                .bold()
+                                .font(.default)
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
+                            Spacer()
                         }
+                        .frame(maxWidth: .infinity)
                     }
                 }
             }
@@ -294,6 +258,63 @@ struct LanguagePickerView: View
     }
 }
 
+
+struct WordsByNumberAndLetterView: View
+{
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    var body: some View
+    {
+        
+        Text("Words by length and starting letter:")
+            .bold()
+
+        //this accesses the manager to find the number of words for each length and starting letter, and does a ForEach on every word length
+        ForEach(manager.scramble.wordsByNumAndStart, id: \.0)
+        {
+            lengthTuple in
+            let numberOfLetters = lengthTuple.0
+            let numberOfWords = lengthTuple.1
+            let letterGroups = lengthTuple.2
+            
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                    .foregroundColor(DesignConstants.mainColor)
+                //for each number of letters, display how many words start with each letter
+                DisclosureGroup("\(numberOfLetters)-Letter Words: \(numberOfWords)")
+                {
+                    ScrollView(.horizontal)
+                    {
+                        HStack
+                        {
+                            ForEach(letterGroups, id: \.0)
+                            {
+                                letterTuple in
+                                let currentLetter = letterTuple.0
+                                let listOfWords = letterTuple.1
+                                
+                                ZStack
+                                {
+                                    RoundedRectangle(cornerRadius: DesignConstants.cornerRadius)
+                                        .foregroundColor(DesignConstants.lighterColor)
+                                        .frame(width: 50)
+                                    Text("\(String(currentLetter)): \(listOfWords.count)")
+                                        .textCase(.uppercase)
+                                        .font(.body)
+                                }
+                            }
+                        }
+                    }
+                }
+                .foregroundColor(.black)
+                .bold()
+                .font(.title3)
+                .padding(10)
+            }
+        }
+    }
+}
 
 #Preview
 {

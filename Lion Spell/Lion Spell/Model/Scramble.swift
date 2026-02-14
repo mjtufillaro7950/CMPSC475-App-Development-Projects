@@ -113,6 +113,7 @@ struct Scramble
         self.legalWords = Scramble.generateLegalWords(currentLetters: self.currentLetters, requiredLetter: self.requiredLetter, listOfWords: listOfWords)
     }
     
+    
     static func generateCurrentLetters(numberOfLetters: Int, listOfWords: [String]) -> [Character]
     {
         //filter the list of all words to get a list of words that have the required amount of unique letters in them
@@ -125,6 +126,7 @@ struct Scramble
         return currentLetters
     }
     
+    
     //static function that generates a list of legal words given a character array of letters
     static func generateLegalWords(currentLetters: [Character], requiredLetter: Character, listOfWords: [String]) -> Set<String>
     {
@@ -135,6 +137,7 @@ struct Scramble
         // cast to a set so that I can later use .contains to check if words are legal
         return Set(legalWords)
     }
+    
     
     // given a word, calculate its score
     func calculateScore(word: String) -> Int
@@ -154,6 +157,7 @@ struct Scramble
         }
         return sum
     }
+    
     
     func isPangram(word: String) -> Bool
     {
