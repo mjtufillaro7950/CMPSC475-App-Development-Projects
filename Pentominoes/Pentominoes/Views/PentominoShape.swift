@@ -14,6 +14,7 @@ struct PentominoShape: Shape
     
     func path(in rect: CGRect) -> Path
     {
+        //TODO: I can probably copy and paste all of this into a shared func because from what I understand, PuzzleShape and PentominoShape have the same logic for building individual paths
         var path = Path()
         //calculate the width and height of each block depending on the rect size and width/height of the outline
         let blockWidth: CGFloat = rect.width / CGFloat(pentominoOutline.size.width)
