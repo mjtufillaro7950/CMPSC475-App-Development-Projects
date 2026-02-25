@@ -16,10 +16,20 @@ class GameManager
     var puzzleOutlines: [PuzzleOutline] = []
     var pentominoOutlines: [PentominoOutline] = []
     //The solutions in the provided JSON file are formatted as dictionaries mapping a puzzle name to its solutions, which are a dict mapping a piece name to its correct position
-    //TODO: make this a list?
     var solutions: [String: [String: Position]] = [:]
-    //TODO: make helper methods that decode the different JSON files and then map them to the different arrays n stuff
     
+    
+    init()
+    {
+        //call helper methods to decode JSON files and initialize data
+        self.pentominoOutlines = loadPentominoOutlines()
+        self.puzzleOutlines = loadPuzzleOutlines()
+        self.solutions = loadSolutions()
+        
+        print("Pentomino outlines count: \(pentominoOutlines.count)")
+        print("Puzzle outlines count: \(puzzleOutlines.count)")
+        print("Solutions count: \(solutions.count)")
+    }
     //in order to do JSON decoding like in LionSpell, the data types need to be codable. Therefore, make codable versions of all necessary ones
     private struct CodablePoint: Codable
     {
@@ -63,8 +73,20 @@ class GameManager
         }
     }
     
+    private struct CodablePosition: Codable
+    {
+        let x: Int
+        let y: Int
+        //here orientation is a string because in the JSON file that is how they are represented
+        let orientation: String
+        enum CodingKeys: String, CodingKey
+        {
+            case x, y, orientation
+        }
+    }
+    
     //load the outline data and return a list of pentomino outlines
-    private func loadPentominoOutines()
+    private func loadPentominoOutlines() -> [PentominoOutline]
     {
         //do what was done in LionSpell, load data from JSON files and format it into the proper arrays
         guard
@@ -74,8 +96,7 @@ class GameManager
         else {
             //safe fallback so it doesn't crash, shouldnt happen
             print("Somthing went wrong when decoding Pentomino Outlines")
-            self.pentominoOutlines = []
-            return
+            return []
         }
         //if it decoded properly, for each element in the codable pentomino outline, build a proper PentominoOutline and add it to the list
         var outlines: [PentominoOutline] = []
@@ -94,12 +115,12 @@ class GameManager
             outlines.append(outline)
         }
         //after all outlines have been added to the list of outlines, update class variable
-        self.pentominoOutlines = outlines
+        return outlines
     }
     
     
     //do pretty much the same thing for loading the puzzle outlines
-    private func loadPuzzleOutlines()
+    private func loadPuzzleOutlines() -> [PuzzleOutline]
     {
         //do what was done in LionSpell, load data from JSON files and format it into the proper arrays
         guard
@@ -109,8 +130,7 @@ class GameManager
         else {
             //safe fallback so it doesn't crash, shouldn't happen
             print("Somthing went wrong when decoding Puzzle Outlines")
-            self.puzzleOutlines = []
-            return
+            return []
         }
         //if it decoded properly, for each element in the codable puzzle outline, build a proper PuzzleOutline and add it to the list
         var outputOutlines: [PuzzleOutline] = []
@@ -137,6 +157,46 @@ class GameManager
             outputOutlines.append(tempOutline)
         }
         //after all outlines have been added to the list of outlines, update class variable
-        self.puzzleOutlines = outputOutlines
+        return outputOutlines
+    }
+    
+    //similar process again here
+    private func loadSolutions() -> [String: [String: Position]]
+    {
+        //do what was done in LionSpell, load data from JSON files and format it into the proper arrays
+        guard
+            let url = Bundle.main.url(forResource: "Solutions", withExtension: "json"),
+            let data = try? Data(contentsOf: url),
+            //the data type here needs to match the data type of the solutions in the JSON
+            let decoded = try? JSONDecoder().decode([String: [String: CodablePosition]].self, from: data)
+        else {
+            //safe fallback so it doesn't crash, shouldn't happen
+            print("Somthing went wrong when decoding Solutions")
+            return [:]
+        }
+        
+        var outputSolutions: [String: [String: Position]] = [:]
+        
+        //loop through each puzzle
+        for (puzzleName, solutionDict) in decoded
+        {
+            //need to convert from CodablePosition dict to regular Position dict
+            var convertedSolution: [String: Position] = [:]
+            //loop through each piece in the solution
+            for (pieceName, codablePosition) in solutionDict
+            {
+                //convert the string representation of the orientation into an orientation with rawValue
+                //needs the default case of .up here for some reason
+                let orientation = Orientation(rawValue: codablePosition.orientation) ?? .up
+                //build the proper position
+                let position = Position(x: codablePosition.x, y: codablePosition.y, orientation: orientation)
+                //add the new pieceName: position pair to the inner dict
+                convertedSolution[pieceName] = position
+            }
+            //add the puzzle name: solution pair to the outer dict
+            outputSolutions[puzzleName] = convertedSolution
+        }
+        //update class variable with output
+        return outputSolutions
     }
 }
