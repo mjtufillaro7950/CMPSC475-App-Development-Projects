@@ -56,10 +56,10 @@ class GameManager
     {
         let name: String
         let size: CodableSize
-        let outline: [[CodablePoint]]
+        let outlines: [[CodablePoint]]
         enum CodingKeys: String, CodingKey
         {
-            case name, size, outline
+            case name, size, outlines
         }
     }
     
@@ -97,9 +97,46 @@ class GameManager
         self.pentominoOutlines = outlines
     }
     
+    
     //do pretty much the same thing for loading the puzzle outlines
     private func loadPuzzleOutlines()
     {
-        
+        //do what was done in LionSpell, load data from JSON files and format it into the proper arrays
+        guard
+            let url = Bundle.main.url(forResource: "PuzzleOutlines", withExtension: "json"),
+            let data = try? Data(contentsOf: url),
+            let decoded = try? JSONDecoder().decode([CodablePuzzleOutline].self, from: data)
+        else {
+            //safe fallback so it doesn't crash, shouldn't happen
+            print("Somthing went wrong when decoding Puzzle Outlines")
+            self.puzzleOutlines = []
+            return
+        }
+        //if it decoded properly, for each element in the codable puzzle outline, build a proper PuzzleOutline and add it to the list
+        var outputOutlines: [PuzzleOutline] = []
+        for decodedPuzzOutline in decoded
+        {
+            //make this a double nested array of points instead of single nested
+            var outlines: [[Point]] = []
+            //loop through each outline in the decoded puzzle outline
+            for outline in decodedPuzzOutline.outlines
+            {
+                //for each outline, add the list of points to an inner array
+                var points: [Point] = []
+                for point in outline
+                {
+                    points.append(Point(x: point.x, y: point.y))
+                }
+                //append the inner array to the outer array
+                outlines.append(points)
+            }
+            //fetches the size from the decoded points codablesize
+            let size = Size(width: decodedPuzzOutline.size.width, height: decodedPuzzOutline.size.height)
+            //creates a new PuzzleOutline object using the fetched data and appends it to the output list
+            let tempOutline = PuzzleOutline(name: decodedPuzzOutline.name, size: size, outlines: outlines)
+            outputOutlines.append(tempOutline)
+        }
+        //after all outlines have been added to the list of outlines, update class variable
+        self.puzzleOutlines = outputOutlines
     }
 }
