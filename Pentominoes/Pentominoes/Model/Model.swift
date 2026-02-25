@@ -46,7 +46,8 @@ struct Piece  {
 struct Position  {
     var x : Int = 0
     var y : Int = 0
-    //TODO: extend with orientation information 
+    //TODO: extend with orientation information (done?)
+    var orientation: Orientation = .up
 }
 
 

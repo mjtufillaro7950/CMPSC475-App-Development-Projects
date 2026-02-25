@@ -15,6 +15,7 @@ struct PentominoesApp: App
         WindowGroup
         {
             MainView()
+            //TODO: declare viewmodel thing
         }
     }
 }

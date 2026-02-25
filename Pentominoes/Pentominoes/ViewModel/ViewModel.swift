@@ -6,3 +6,100 @@
 //
 
 import Foundation
+
+//create viewmodel manager
+@Observable
+class GameManager
+{
+    //create an array of pieces and outlines which essentially serve as the model for the app
+    var pieces: [Piece] = []
+    var puzzleOutlines: [PuzzleOutline] = []
+    var pentominoOutlines: [PentominoOutline] = []
+    //The solutions in the provided JSON file are formatted as dictionaries mapping a puzzle name to its solutions, which are a dict mapping a piece name to its correct position
+    //TODO: make this a list?
+    var solutions: [String: [String: Position]] = [:]
+    //TODO: make helper methods that decode the different JSON files and then map them to the different arrays n stuff
+    
+    //in order to do JSON decoding like in LionSpell, the data types need to be codable. Therefore, make codable versions of all necessary ones
+    private struct CodablePoint: Codable
+    {
+        let x: Int
+        let y: Int
+        enum CodingKeys: String, CodingKey
+        {
+            case x, y
+        }
+    }
+    
+    private struct CodableSize: Codable
+    {
+        let width: Int
+        let height: Int
+        enum CodingKeys: String, CodingKey
+        {
+            case width, height
+        }
+    }
+    
+    private struct CodablePentominoOutline: Codable
+    {
+        let name: String
+        let size: CodableSize
+        let outline: [CodablePoint]
+        enum CodingKeys: String, CodingKey
+        {
+            case name, size, outline
+        }
+    }
+    
+    private struct CodablePuzzleOutline: Codable
+    {
+        let name: String
+        let size: CodableSize
+        let outline: [[CodablePoint]]
+        enum CodingKeys: String, CodingKey
+        {
+            case name, size, outline
+        }
+    }
+    
+    //load the outline data and return a list of pentomino outlines
+    private func loadPentominoOutines()
+    {
+        //do what was done in LionSpell, load data from JSON files and format it into the proper arrays
+        guard
+            let url = Bundle.main.url(forResource: "PentominoOutlines", withExtension: "json"),
+            let data = try? Data(contentsOf: url),
+            let decoded = try? JSONDecoder().decode([CodablePentominoOutline].self, from: data)
+        else {
+            //safe fallback so it doesn't crash, shouldnt happen
+            print("Somthing went wrong when decoding Pentomino Outlines")
+            self.pentominoOutlines = []
+            return
+        }
+        //if it decoded properly, for each element in the codable pentomino outline, build a proper PentominoOutline and add it to the list
+        var outlines: [PentominoOutline] = []
+        for decodedPentOutline in decoded
+        {
+            var points: [Point] = []
+            //this builds a list of regular Points from the list of codable points
+            for point in decodedPentOutline.outline
+            {
+                points.append(Point(x: point.x, y: point.y))
+            }
+            //fetches the size from the decoded points codablesize
+            let size = Size(width: decodedPentOutline.size.width, height: decodedPentOutline.size.height)
+            //creates a new PentominoOutline object using the fetched data and appends it to the output list
+            let outline = PentominoOutline(name: decodedPentOutline.name, size: size, outline: points)
+            outlines.append(outline)
+        }
+        //after all outlines have been added to the list of outlines, update class variable
+        self.pentominoOutlines = outlines
+    }
+    
+    //do pretty much the same thing for loading the puzzle outlines
+    private func loadPuzzleOutlines()
+    {
+        
+    }
+}
