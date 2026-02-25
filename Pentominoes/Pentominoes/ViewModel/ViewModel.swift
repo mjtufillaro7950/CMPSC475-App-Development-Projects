@@ -2,7 +2,7 @@
 //  ViewModel.swift
 //  Pentominoes
 //
-//  Created by LiasPub on 2/24/26.
+//  Created by Michael Tufillaro on 2/24/26.
 //
 
 import Foundation
@@ -22,12 +22,26 @@ class ViewModel
     init()
     {
         //call helper methods in separate file to decode JSON files and initialize data
-        self.pentominoOutlines = loadPentominoOutlines()
-        self.puzzleOutlines = loadPuzzleOutlines()
         self.solutions = loadSolutions()
-        //TODO: how to intialize pieces? loop thru pentominoOutlines, for each one, initialize its location to be... idk whereever its starting position is supposed to be
+        self.puzzleOutlines = loadPuzzleOutlines()
+        let pentominoOutlines = loadPentominoOutlines()
+        self.pentominoOutlines = pentominoOutlines
+        //pass list of outlines into helper function to get a list of pieces (outline + position)
+        self.pieces = piecesInit(pentominoOutlines: pentominoOutlines)
     }
     
-    
+    //helper function that makes a list of all pieces with custom intialized positons
+    func piecesInit(pentominoOutlines: [PentominoOutline]) -> [Piece]
+    {
+        //TODO: for now, initial positions are just gonna be the default of (0, 0, .up) until I figure out something better
+        let position: Position = Position()
+        
+        var pieces: [Piece] = []
+        for pentominoOutline in pentominoOutlines
+        {
+            pieces.append(Piece(position: position, outline: pentominoOutline))
+        }
+        return pieces
+    }
     
 }
