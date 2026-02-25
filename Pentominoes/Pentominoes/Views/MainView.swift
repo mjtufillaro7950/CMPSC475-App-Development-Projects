@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct MainView: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
     var body: some View
     {
         VStack
@@ -25,4 +28,5 @@ struct MainView: View
 #Preview
 {
     MainView()
+        .environment(ViewModel())
 }

@@ -9,7 +9,7 @@ import Foundation
 
 //create viewmodel manager
 @Observable
-class GameManager
+class ViewModel
 {
     //create an array of pieces and outlines which essentially serve as the model for the app
     var pieces: [Piece] = []
@@ -25,11 +25,9 @@ class GameManager
         self.pentominoOutlines = loadPentominoOutlines()
         self.puzzleOutlines = loadPuzzleOutlines()
         self.solutions = loadSolutions()
-        
-        print("Pentomino outlines count: \(pentominoOutlines.count)")
-        print("Puzzle outlines count: \(puzzleOutlines.count)")
-        print("Solutions count: \(solutions.count)")
     }
+    
+    
     //in order to do JSON decoding like in LionSpell, the data types need to be codable. Therefore, make codable versions of all necessary ones
     private struct CodablePoint: Codable
     {
@@ -84,6 +82,7 @@ class GameManager
             case x, y, orientation
         }
     }
+    
     
     //load the outline data and return a list of pentomino outlines
     private func loadPentominoOutlines() -> [PentominoOutline]
