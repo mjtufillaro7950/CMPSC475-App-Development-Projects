@@ -18,6 +18,9 @@ class ViewModel
     //The solutions in the provided JSON file are formatted as dictionaries mapping a puzzle name to its solutions, which are a dict mapping a piece name to its correct position
     var solutions: [String: [String: Position]] = [:]
     
+    //set a consistent block size of 40 units to be used in all instances of placing/building anything that uses the grid
+    let blockSize: CGFloat = 40
+    
     
     init()
     {

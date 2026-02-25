@@ -12,14 +12,16 @@ import SwiftUI
 struct GridShape: Shape
 {
     //need to pass in the number of rows and columns
-    let rows: Int
-    let columns: Int
+    let rows: CGFloat
+    let columns: CGFloat
+    
     func path(in rect: CGRect) -> Path
     {
         var path = Path()
         //the spacing between each row and column depends on the rectangles size and the number of rows/columns
-        let rowSpacing: CGFloat = rect.height / CGFloat(rows)
-        let columnSpacing: CGFloat = rect.width / CGFloat(columns)
+        let rowSpacing: CGFloat = rect.height / rows
+        let columnSpacing: CGFloat = rect.width / columns
+        
         //use stride to make horizontal lines
         for y in stride(from: 0, through: rect.height, by: rowSpacing)
         {
@@ -27,6 +29,7 @@ struct GridShape: Shape
             path.move(to: CGPoint(x: 0, y: y))
             path.addLine(to: CGPoint(x: rect.width, y: y))
         }
+        
         //same thing for vertical lines
         for x in stride(from: 0, through: rect.width, by: columnSpacing)
         {
@@ -38,21 +41,27 @@ struct GridShape: Shape
 }
 
 
+//view used in preview
 struct GridPreview: View
 {
     let n: CGFloat = 14
     let m: CGFloat = 14
-    let gridSize: CGFloat = 40
     //computed values that calculate the necessary grid size and width
-    var gridWidth: CGFloat { gridSize * n }
-    var gridHeight: CGFloat { gridSize * m }
+    var gridWidth: CGFloat
+    {
+        return manager.blockSize * n
+    }
+    var gridHeight: CGFloat
+    {
+        return manager.blockSize * m
+    }
     var body: some View
     {
         VStack
         {
             Spacer()
             Text("Grid Shape:")
-            GridShape(rows: Int(n), columns: Int(m))
+            GridShape(rows: n, columns: m)
                 .stroke(.black, lineWidth: 1)
                 .frame(width: gridWidth, height: gridHeight)
             Spacer()
