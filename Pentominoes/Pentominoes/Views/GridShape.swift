@@ -44,6 +44,9 @@ struct GridShape: Shape
 //view used in preview
 struct GridPreview: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
+    
     let n: CGFloat = 14
     let m: CGFloat = 14
     //computed values that calculate the necessary grid size and width
