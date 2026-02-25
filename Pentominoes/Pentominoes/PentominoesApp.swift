@@ -14,7 +14,7 @@ struct PentominoesApp: App
     {
         WindowGroup
         {
-            ContentView()
+            MainView()
         }
     }
 }
