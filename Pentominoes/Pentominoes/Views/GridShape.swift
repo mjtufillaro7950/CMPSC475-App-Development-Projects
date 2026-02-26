@@ -11,7 +11,7 @@ import SwiftUI
 //create the GridShape struct
 struct GridShape: Shape
 {
-    //need to pass in the number of rows and columns
+    //need to pass in the number of rows and columns in the grid
     let rows: CGFloat
     let columns: CGFloat
     
@@ -22,7 +22,7 @@ struct GridShape: Shape
         let rowSpacing: CGFloat = rect.height / rows
         let columnSpacing: CGFloat = rect.width / columns
         
-        //use stride to make horizontal lines
+        //use stride to make horizontal lines- moves in equal intervals across the entire rectangle
         for y in stride(from: 0, through: rect.height, by: rowSpacing)
         {
             //for each y equally spaced from 0 to the max, draw a line horizontally across
@@ -75,4 +75,5 @@ struct GridPreview: View
 #Preview
 {
     GridPreview()
+        .environment(ViewModel())
 }

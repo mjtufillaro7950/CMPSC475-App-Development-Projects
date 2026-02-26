@@ -10,23 +10,62 @@ import SwiftUI
 
 struct PuzzleShape: Shape
 {
+    //pass in a puzzle outline
+    let puzzleOutline: PuzzleOutline
+    
     func path(in rect: CGRect) -> Path
     {
-        var path = Path()
-        //similar to last one, except I have to make a new path value for each outline and then use addPath func to combine them into one path
-        //if it returns path and its consistent, can I use reusable code for pentomino and puzzle?? maybe
-        return path
+        //since puzzles can have holes, its necessary to generate an path for each continuous outline and then add them together
+        var totalPath = Path()
+        let outlineWidth: Int = puzzleOutline.size.width
+        let outlineHeight: Int = puzzleOutline.size.height
+        //loop through each Outline in the puzzle shapes Outlines
+        for outline in puzzleOutline.outlines
+        {
+            //for each outline that makes up the puzzle, call helper method to create a path for it
+            let currentPath = buildPathFromOutline(outline: outline, outlineWidth: outlineWidth, outlineHeight: outlineHeight, in: rect)
+            
+            //then, add the current path to the combined path
+            totalPath.addPath(currentPath)
+        }
+        //once all paths have been combined, return it
+        return totalPath
     }
 }
+
+
 struct PuzzlePreview: View
 {
+    //declare this to access viewmodel from views
+    @Environment(ViewModel.self) var manager: ViewModel
     var body: some View
     {
-        Text("Puzzle Shape")
+        VStack
+        {
+            Spacer()
+            Text("Puzzle Shapes:")
+            //for each puzzle outline, make a puzzle shape
+            ScrollView
+            {
+                ForEach(manager.puzzleOutlines, id: \.name)
+                {
+                    outline in
+                    PuzzleShape(puzzleOutline: outline)
+                        //the frame size is the width/height in number of blocks multiplied by the size of the blocks
+                        .stroke(.black, lineWidth: 5)
+                        .frame(width: manager.blockSize * CGFloat(outline.size.width), height: manager.blockSize * CGFloat(outline.size.height))
+                        .padding()
+                        //.foregroundColor(.purple)
+                }
+            }
+            Spacer()
+        }
     }
 }
+
 
 #Preview
 {
     PuzzlePreview()
+        .environment(ViewModel())
 }

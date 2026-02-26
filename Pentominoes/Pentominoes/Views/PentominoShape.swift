@@ -14,32 +14,12 @@ struct PentominoShape: Shape
     
     func path(in rect: CGRect) -> Path
     {
-        //TODO: I can probably copy and paste all of this into a shared func because from what I understand, PuzzleShape and PentominoShape have the same logic for building individual paths
-        var path = Path()
-        //calculate the width and height of each block depending on the rect size and width/height of the outline
-        let blockWidth: CGFloat = rect.width / CGFloat(pentominoOutline.size.width)
-        let blockHeight: CGFloat = rect.height / CGFloat(pentominoOutline.size.height)
-        //the first point needs to be different, keep bool to tell
-        var isFirst = true
-        //loop through each outline, which is an array of points
-        for point in pentominoOutline.outline
-        {
-            //find the x and y coordinates of the next point on the shape depending on the block size and the x/y values of the outline's current point
-            let currentX = CGFloat(point.x) * blockWidth
-            let currentY = CGFloat(point.y) * blockHeight
-            //if its the first point in the shape, move to the starting position
-            if isFirst
-            {
-                path.move(to: CGPoint(x: currentX, y: currentY))
-            }
-            //otherwise move to the next point
-            else
-            {
-                path.addLine(to: CGPoint(x: currentX, y: currentY))
-            }
-            //ensure that isFirst is false after the first pass
-            isFirst = false
-        }
+        //call helper function to create the path for the pentomino
+        let outline = pentominoOutline.outline
+        let outlineWidth = pentominoOutline.size.width
+        let outlineHeight = pentominoOutline.size.height
+        
+        let path = buildPathFromOutline(outline: outline, outlineWidth: outlineWidth, outlineHeight: outlineHeight, in: rect)
         return path
     }
 }
