@@ -12,15 +12,15 @@ import SwiftUI
 struct GridShape: Shape
 {
     //need to pass in the number of rows and columns in the grid
-    let rows: CGFloat
-    let columns: CGFloat
+    let gridRows: CGFloat
+    let gridColumns: CGFloat
     
     func path(in rect: CGRect) -> Path
     {
         var path = Path()
         //the spacing between each row and column depends on the rectangles size and the number of rows/columns
-        let rowSpacing: CGFloat = rect.height / rows
-        let columnSpacing: CGFloat = rect.width / columns
+        let rowSpacing: CGFloat = rect.height / gridRows
+        let columnSpacing: CGFloat = rect.width / gridColumns
         
         //use stride to make horizontal lines- moves in equal intervals across the entire rectangle
         for y in stride(from: 0, through: rect.height, by: rowSpacing)
@@ -41,12 +41,13 @@ struct GridShape: Shape
 }
 
 
-//view used in preview
+//Preview struct for testing purposes
 struct GridPreview: View
 {
     //declare this to access viewmodel from views
     @Environment(ViewModel.self) var manager: ViewModel
     
+    //represents the width/height of a n x m block grid
     let n: CGFloat = 14
     let m: CGFloat = 14
     //computed values that calculate the necessary grid size and width
@@ -64,7 +65,7 @@ struct GridPreview: View
         {
             Spacer()
             Text("Grid Shape:")
-            GridShape(rows: n, columns: m)
+            GridShape(gridRows: n, gridColumns: m)
                 .stroke(.black, lineWidth: 1)
                 .frame(width: gridWidth, height: gridHeight)
             Spacer()

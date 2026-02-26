@@ -1,5 +1,5 @@
 //
-//  ShapePathBuilder.swift
+//  BuildPathFromOutline.swift
 //  Pentominoes
 //
 //  Created by Michael Tufillaro on 2/25/26.

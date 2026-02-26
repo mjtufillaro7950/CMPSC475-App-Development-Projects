@@ -34,6 +34,7 @@ struct PuzzleShape: Shape
 }
 
 
+//Preview struct for testing purposes
 struct PuzzlePreview: View
 {
     //declare this to access viewmodel from views
@@ -52,6 +53,7 @@ struct PuzzlePreview: View
                     outline in
                     PuzzleShape(puzzleOutline: outline)
                         //the frame size is the width/height in number of blocks multiplied by the size of the blocks
+                        .fill(Color.purple)
                         .stroke(.black, lineWidth: 5)
                         .frame(width: manager.blockSize * CGFloat(outline.size.width), height: manager.blockSize * CGFloat(outline.size.height))
                         .padding()

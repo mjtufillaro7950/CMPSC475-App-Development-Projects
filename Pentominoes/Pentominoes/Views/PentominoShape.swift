@@ -25,6 +25,7 @@ struct PentominoShape: Shape
 }
 
 
+//Preview struct for testing purposes
 struct PentominoPreview: View
 {
     //declare this to access viewmodel from views
