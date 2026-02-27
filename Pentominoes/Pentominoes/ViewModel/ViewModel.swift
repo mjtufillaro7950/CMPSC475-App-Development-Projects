@@ -21,6 +21,7 @@ class ViewModel
     //set a consistent block size of 40 units to be used in all instances of placing/building anything that uses the grid
     let blockSize: CGFloat = 40
     
+    //stores the names of the images of the puzzles in the assets
     let puzzleImageNames: [String] = ["Board0", "Board1", "Board2", "Board3", "Board4", "Board5", "Board6", "Board7"]
     
     
@@ -48,5 +49,19 @@ class ViewModel
         }
         return pieces
     }
+    
+    
+    func resetButton() -> Void
+    {
+        //TODO: this
+        print("Reset")
+    }
+    
+    func solveButton() -> Void
+    {
+        //TODO: this
+        print("Solve")
+    }
+    
     
 }
