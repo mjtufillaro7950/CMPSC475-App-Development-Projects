@@ -2,7 +2,7 @@
 //  SideEnum.swift
 //  Pentominoes
 //
-//  Created by LiasPub on 2/26/26.
+//  Created by Michael Tufillaro on 2/26/26.
 //
 
 import Foundation
@@ -34,6 +34,7 @@ enum Side
         }
     }
     
+    //TODO: figure out a way to make these values not be hardcoded?
     var loopIndex: (Int, Int)
     {
         switch self

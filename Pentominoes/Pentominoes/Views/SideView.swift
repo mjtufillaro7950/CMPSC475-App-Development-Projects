@@ -37,18 +37,37 @@ struct PuzzleImages: View
     //parameter that determines which side the view is building
     let side: Side
     
+    
     var body: some View
     {
         //loop through and add the puzzle images
         ForEach(side.loopIndex.0...side.loopIndex.1, id: \.self)
         {
             index in
-            Image(manager.puzzleImageNames[index])
-                .resizable()
-                .frame(width: 120, height: 120)
+            let currentPuzzleName = PuzzleNames.allCases[index]
+            let imageName = currentPuzzleName.imageName
+            let isSelected = manager.isSelectedPuzzle(puzzleName: currentPuzzleName.rawValue)
+            //make a button that looks like the image
+            Button
+            {
+                //pass the current puzzle name into the manager
+                manager.puzzleButton(puzzleName: currentPuzzleName.rawValue)
+            }
+            label:
+            {
+                //TODO: figure out how to make button turn transparent and disabled when its selected
+                Image(imageName)
+                    .resizable()
+                    .frame(width: 120, height: 120)
+                //if the current puzzle is selected, make it transparent
+                .opacity(isSelected ? 0.3 : 1.0)
+            }
+            //disable button if its already selected
+            .disabled(isSelected)
         }
     }
 }
+
 
 struct ButtonView: View
 {
