@@ -44,7 +44,7 @@ struct PentominoPreview: View
                     outline in
                     PentominoShape(pentominoOutline: outline)
                         //the frame size is the width/height in number of blocks multiplied by the size of the blocks
-                        .frame(width: manager.blockSize * CGFloat(outline.size.width), height: manager.blockSize * CGFloat(outline.size.height))
+                        .frame(width: manager.unitToViewCoord(coord: outline.size.width), height: manager.unitToViewCoord(coord: outline.size.height))
                         .foregroundColor(.purple)
                 }
             }

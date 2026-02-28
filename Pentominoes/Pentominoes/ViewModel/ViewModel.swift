@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 //create viewmodel manager
 @Observable
@@ -25,10 +24,6 @@ class ViewModel
     //stores the names of the images of the puzzles in the assets
     //let puzzleImageNames: [String] = ["Board0", "Board1", "Board2", "Board3", "Board4", "Board5", "Board6", "Board7"]
     
-    //TODO: enum that translates a puzzle's image name into its actual puzzle name?
-    //TODO: keep track of whichever button is selected. Then, update the different buttons views depending on which is
-    
-    //TODO: idk what to initialize this to
     var selectedPuzzle: String = "blank"
     
     
@@ -47,6 +42,7 @@ class ViewModel
     func piecesInit(pentominoOutlines: [PentominoOutline]) -> [Piece]
     {
         //TODO: for now, initial positions are just gonna be the default of (0, 0, .up) until I figure out something better
+        //TODO: I will need to make a list of positions based on whatever the initial position is
         let position: Position = Position()
         
         var pieces: [Piece] = []
@@ -83,40 +79,5 @@ class ViewModel
         print("Solve")
     }
     
-    
-    //function that returns the right color for the given piece outline
-    func PieceColor(pentominoOutline: PentominoOutline) -> Color
-    {
-        switch pentominoOutline.name
-        {
-            case "X": return .red
-                
-            case "P": return .green
-                
-            case "F": return .blue
-                
-            case "W": return .yellow
-                
-            case "Z": return .cyan
-                
-            case "U": return .indigo
-                
-            case "V": return .mint
-                
-            case "T": return .orange
-                
-            case "L": return .pink
-                
-            case "Y": return .teal
-                
-            case "N": return .gray
-                
-            case "I": return .purple
-            
-            default:
-                print("Error! Wrong Name for Outline")
-                return .black
-        }
-    }
     
 }
