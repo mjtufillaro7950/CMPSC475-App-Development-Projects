@@ -55,7 +55,7 @@ struct PuzzleImages: View
             }
             label:
             {
-                //TODO: figure out how to make button turn transparent and disabled when its selected
+                //TODO: remove constants eventually
                 Image(imageName)
                     .resizable()
                     .frame(width: 120, height: 120)

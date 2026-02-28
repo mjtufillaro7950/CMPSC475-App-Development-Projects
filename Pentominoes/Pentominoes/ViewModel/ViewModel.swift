@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 //create viewmodel manager
 @Observable
@@ -28,7 +29,7 @@ class ViewModel
     //TODO: keep track of whichever button is selected. Then, update the different buttons views depending on which is
     
     //TODO: idk what to initialize this to
-    var selectedPuzzleName: String = "blank"
+    var selectedPuzzle: String = "blank"
     
     
     init()
@@ -59,19 +60,20 @@ class ViewModel
     func puzzleButton(puzzleName: String) -> Void
     {
         //TODO: this?
-        self.selectedPuzzleName = puzzleName
+        self.selectedPuzzle = puzzleName
         print("Puzzle Selected: \(puzzleName)")
     }
     
     //function that returns whether a puzzle is the selected one
     func isSelectedPuzzle(puzzleName: String) -> Bool
     {
-        return self.selectedPuzzleName == puzzleName
+        return self.selectedPuzzle == puzzleName
     }
     
     func resetButton() -> Void
     {
         //TODO: this
+        //self.selectedPuzzle = "blank"
         print("Reset")
     }
     
@@ -81,5 +83,40 @@ class ViewModel
         print("Solve")
     }
     
+    
+    //function that returns the right color for the given piece outline
+    func PieceColor(pentominoOutline: PentominoOutline) -> Color
+    {
+        switch pentominoOutline.name
+        {
+            case "X": return .red
+                
+            case "P": return .green
+                
+            case "F": return .blue
+                
+            case "W": return .yellow
+                
+            case "Z": return .cyan
+                
+            case "U": return .indigo
+                
+            case "V": return .mint
+                
+            case "T": return .orange
+                
+            case "L": return .pink
+                
+            case "Y": return .teal
+                
+            case "N": return .gray
+                
+            case "I": return .purple
+            
+            default:
+                print("Error! Wrong Name for Outline")
+                return .black
+        }
+    }
     
 }
