@@ -24,14 +24,14 @@ class ViewModel
     //set the size of the grid (always 14x14)
     let numRows = 14
     let numCols = 14
-    
-    //stores the names of the images of the puzzles in the assets
-    //let puzzleImageNames: [String] = ["Board0", "Board1", "Board2", "Board3", "Board4", "Board5", "Board6", "Board7"]
-    
+     
     //initialize the starting selected puzzle to the blank one
     var selectedPuzzle: String = "blank"
     
     var startingCoordinates: [(Int, Int)] = []    
+    
+    //variables that store stuff for tap and drag functionality
+    var draggedPieceIndex: Int = -1
     
     init()
     {
@@ -132,5 +132,44 @@ class ViewModel
             }
         }
         return self.puzzleOutlines[0]
+    }
+    
+    //function that gets the index of a piece in the array of Pieces, returning -1 if it does not exist
+    func getPieceIndex(piece: Piece) -> Int
+    {
+        let targetName = piece.outline.name
+        for index in 0..<self.pieces.count
+        {
+            if self.pieces[index].outline.name == targetName
+            {
+                return index
+            }
+        }
+        return -1
+    }
+
+    
+    //when a drag is started, set the proper values
+    func startDrag(piece: Piece)
+    {
+        //set the index of the currently dragged piece in the piece array
+        self.draggedPieceIndex = getPieceIndex(piece: piece)
+    }
+    
+    func endDrag(at location: CGPoint)
+    {
+        //calculate the proper unit square of the final position
+        let newX = Int(location.x / self.blockSize)
+        let newY = Int(location.y / self.blockSize)
+        
+        //update the piece's position in the array
+        if self.draggedPieceIndex != -1
+        {
+            self.pieces[self.draggedPieceIndex].position.x = newX
+            self.pieces[self.draggedPieceIndex].position.y = newY
+        }
+        
+        //clear drag state
+        self.draggedPieceIndex = -1
     }
 }

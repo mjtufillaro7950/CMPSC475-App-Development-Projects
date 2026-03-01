@@ -56,13 +56,54 @@ struct PieceView: View
         }
     }
     
+    //state var for handling dragging
+    @State private var dragOffset: CGSize = .zero
+    @State private var isDragging: Bool = false
+    
     var body: some View
     {
+        //call helper func to get the position of the piece in terms of a CGPoint (non-unit values)
+        let translatedPosition = manager.pieceToCGPoint(piece: piece)
+        
+        //Handle drag (mostly copied from class code)
+        let dragGesture = DragGesture()
+            .onChanged
+            {
+                value in
+                
+                withAnimation
+                {
+                    isDragging = true
+                }
+                
+                dragOffset = value.translation
+                //call viewmodel to start drag
+                manager.startDrag(piece: piece)
+            
+            }
+            .onEnded
+            {
+                value in
+                withAnimation
+                {
+                    isDragging = false
+                }
+                
+                //calculate the end position and call end drag
+                let finalX = translatedPosition.x + value.translation.width
+                let finalY = translatedPosition.y + value.translation.height
+                let finalPoint = CGPoint(x: finalX, y: finalY)
+                manager.endDrag(at: finalPoint)
+                //reset Offset to 0
+                dragOffset = .zero
+                
+            }
+        
+        
+        
         //calculate the proper width and height of the piece based on the block size and the size of the piece
         let pieceWidth = manager.unitToViewCoord(coord: piece.outline.size.width)
         let pieceHeight = manager.unitToViewCoord(coord: piece.outline.size.height)
-        //call helper func to get the position of the piece in terms of a CGPoint (non-unit values)
-        let translatedPosition = manager.pieceToCGPoint(piece: piece)
         //make a pentominoView based on the Piece's outline, and sized correctly
         PentominoView(pentominoOutline: piece.outline)
             //size the piece depending on its width and height
@@ -73,6 +114,14 @@ struct PieceView: View
             .rotation3DEffect(zRotationDegrees, axis: (x: 0, y: 0, z: 1))
             //position the piece properly using the Piece's position value
             .position(translatedPosition)
+            //ensures the piece is animated in real time instead of snapping
+            .offset(dragOffset)
+            //while dragging, the piece should be scaled up 20%
+            .scaleEffect(isDragging ? 1.2 : 1)
+            //this ensure the piece goes over other pieces while being dragged
+            .zIndex(isDragging ? 100 : 0)
+            //TODO: need to replace with combined gesture?
+            .gesture(dragGesture)
         
     }
 }
