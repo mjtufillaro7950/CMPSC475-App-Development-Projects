@@ -31,23 +31,7 @@ class ViewModel
     //initialize the starting selected puzzle to the blank one
     var selectedPuzzle: String = "blank"
     
-    //TODO: the initial starting coordinates for the pieces. Since they have irregular widths, this is just hardcoded
-    let startingCoordinates: [(Int, Int)] =
-        [
-            (0,15),
-            (4,15),
-            (8,15),
-            (12,15),
-            (0,21),
-            (4,21),
-            (8,21),
-            (12,21),
-            (0,27),
-            (4,27),
-            (8,27),
-            (12,27)
-        ]
-    
+    var startingCoordinates: [(Int, Int)] = []    
     
     init()
     {
@@ -56,6 +40,7 @@ class ViewModel
         self.puzzleOutlines = loadPuzzleOutlines()
         let pentominoOutlines = loadPentominoOutlines()
         self.pentominoOutlines = pentominoOutlines
+        self.startingCoordinates = getStartingCoordinates()
         //pass list of outlines into helper function to get a list of pieces (outline + position)
         self.pieces = piecesInit(pentominoOutlines: pentominoOutlines)
     }
@@ -107,5 +92,45 @@ class ViewModel
         print("Solve")
     }
     
+    func getStartingCoordinates() -> [(Int, Int)]
+    {
+//        let startingCoordinates: [(Int, Int)] =
+//            [
+//                (0,15),
+//                (4,15),
+//                (8,15),
+//                (12,15),
+//                (0,21),
+//                (4,21),
+//                (8,21),
+//                (12,21),
+//                (0,27),
+//                (4,27),
+//                (8,27),
+//                (12,27)
+//            ]
+        
+        var startingCoordinates: [(Int, Int)] = []
+        for y in stride(from: 15, through: 27, by: 6)
+        {
+            for x in stride(from: 0, through: 12, by: 4)
+            {
+                startingCoordinates.append((x,y))
+            }
+        }
+        return startingCoordinates
+    }
     
+    //function that gets the outline with a given name, defaulting to the first if one is not given
+    func getPuzzleOutlineFromName(puzzleName: String) -> PuzzleOutline
+    {
+        for outline in self.puzzleOutlines
+        {
+            if outline.name == puzzleName
+            {
+                return outline
+            }
+        }
+        return self.puzzleOutlines[0]
+    }
 }

@@ -57,7 +57,6 @@ struct PuzzlePreview: View
                         .stroke(.black, lineWidth: 5)
                         .frame(width: manager.blockSize * CGFloat(outline.size.width), height: manager.blockSize * CGFloat(outline.size.height))
                         .padding()
-                        //.foregroundColor(.purple)
                 }
             }
             Spacer()

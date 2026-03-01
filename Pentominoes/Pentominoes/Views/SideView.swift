@@ -75,7 +75,13 @@ struct ButtonView: View
     @Environment(ViewModel.self) var manager: ViewModel
     //parameter that determines which side the view is building
     let side: Side
-
+    
+    //disable the solve button when the selected puzzle is blank
+    var isBlank: Bool
+    {
+        return (side == .right) && (manager.selectedPuzzle == "blank")
+    }
+    
     //get the corresponding function from manager
     var buttonFunction: () -> Void
     {
@@ -85,6 +91,7 @@ struct ButtonView: View
             case .right: return manager.solveButton
         }
     }
+    
     var body: some View
     {
         Button
@@ -102,8 +109,11 @@ struct ButtonView: View
                 Text(side.buttonText)
                     .foregroundColor(.black)
             }
+            //if the button is disabled, make it transparent
+            .opacity(isBlank ? 0.3 : 1.0)
             
         }
+        .disabled(isBlank)
     }
 }
 
