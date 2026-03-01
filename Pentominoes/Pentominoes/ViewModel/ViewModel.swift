@@ -28,7 +28,25 @@ class ViewModel
     //stores the names of the images of the puzzles in the assets
     //let puzzleImageNames: [String] = ["Board0", "Board1", "Board2", "Board3", "Board4", "Board5", "Board6", "Board7"]
     
+    //initialize the starting selected puzzle to the blank one
     var selectedPuzzle: String = "blank"
+    
+    //TODO: the initial starting coordinates for the pieces. Since they have irregular widths, this is just hardcoded
+    let startingCoordinates: [(Int, Int)] =
+        [
+            (0,15),
+            (4,15),
+            (8,15),
+            (12,15),
+            (0,21),
+            (4,21),
+            (8,21),
+            (12,21),
+            (0,27),
+            (4,27),
+            (8,27),
+            (12,27)
+        ]
     
     
     init()
@@ -47,14 +65,18 @@ class ViewModel
     {
         //TODO: for now, initial positions are just gonna be the default of (0, 0, .up) until I figure out something better
         //TODO: I will need to make a list of positions based on whatever the initial position is
-        var position: Position = Position()
+        //var position: Position = Position()
         //TODO: for testing purposes
-        position.orientation = .right
+        //position.orientation = .right
         
         var pieces: [Piece] = []
-        for pentominoOutline in pentominoOutlines
+        //loop through every piece
+        for index in 0..<pentominoOutlines.count
         {
-            pieces.append(Piece(position: position, outline: pentominoOutline))
+            //get the outline and the starting position for each piece
+            let pentominoOutline = pentominoOutlines[index]
+            let startingPosition = Position(x: startingCoordinates[index].0, y: startingCoordinates[index].1, orientation: .up)
+            pieces.append(Piece(position: startingPosition, outline: pentominoOutline))
         }
         return pieces
     }

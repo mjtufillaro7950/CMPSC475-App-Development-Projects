@@ -29,38 +29,23 @@ struct MiddleView: View
             //TODO: make title look fancy
             Text("PENTOMINOES")
             //TODO: pieces need to be within this ZStack somehow
-            ZStack
+            ZStack(alignment: .topLeading)
             {
                 //TODO: make this look pretty
                 GridShape(gridRows: CGFloat(manager.numRows), gridColumns: CGFloat(manager.numCols))
                     .stroke(.black, lineWidth: 1)
                     .frame(width: gridWidth, height: gridHeight)
+                
+                //for each outline, make a pentomino shape
+                ForEach(manager.pieces, id: \.outline.name)
+                {
+                    piece in
+                    PieceView(piece: piece)
+                }
             }
             Spacer()
         }
         .padding()
-        
-        
-        
-//        //test pieceView and rotation stuff
-//        
-//        VStack()
-//        {
-//            ScrollView()
-//            {
-//                //for each outline, make a pentomino shape
-//                ForEach(manager.pieces, id: \.outline.name)
-//                {
-//                    piece in
-//                    PieceView(piece: piece)
-//                }
-//                Spacer()
-//            }
-//          }
-
-        
-        
-        
     }
 }
 
