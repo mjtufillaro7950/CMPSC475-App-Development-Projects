@@ -16,8 +16,9 @@ struct MiddleView: View
     {
         VStack
         {
-            //TODO: make title look fancy
             Text("PENTOMINOES")
+                .bold()
+                .font(.largeTitle)
             ZStack(alignment: .topLeading)
             {
                 BoardView()

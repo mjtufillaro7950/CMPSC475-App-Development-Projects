@@ -22,6 +22,7 @@ struct MainView: View
             Spacer()
             SideView(side: .right)
         }
+        .background(.blue)
     }
 }
 

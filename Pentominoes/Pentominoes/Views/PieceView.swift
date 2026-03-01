@@ -133,9 +133,6 @@ struct PieceView: View
         let pieceWidth = manager.unitToViewCoord(coord: piece.outline.size.width)
         let pieceHeight = manager.unitToViewCoord(coord: piece.outline.size.height)
         
-        //TODO: check to see if a piece is in the right position for the current puzzle. if it is, then make it transparent
-        
-        
         //make a pentominoView based on the Piece's outline, and sized correctly
         PentominoView(pentominoOutline: piece.outline)
             //size the piece depending on its width and height

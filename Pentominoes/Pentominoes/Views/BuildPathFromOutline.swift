@@ -17,6 +17,7 @@ func buildPathFromOutline(outline: Outline, outlineWidth: Int, outlineHeight: In
     let blockHeight: CGFloat = rect.height / CGFloat(outlineHeight)
     //the first point needs to be different, keep bool to tell
     var isFirst = true
+    
     //loop through each outline, which is an array of points
     for point in outline
     {
@@ -33,7 +34,6 @@ func buildPathFromOutline(outline: Outline, outlineWidth: Int, outlineHeight: In
         {
             path.addLine(to: CGPoint(x: currentX, y: currentY))
         }
-        //ensure that isFirst is false after the first pass
         isFirst = false
     }
     return path

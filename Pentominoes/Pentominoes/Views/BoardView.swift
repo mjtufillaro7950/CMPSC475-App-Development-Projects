@@ -2,7 +2,7 @@
 //  BoardView.swift
 //  Pentominoes
 //
-//  Created by LiasPub on 3/1/26.
+//  Created by Michael Tufillaro on 3/1/26.
 //
 
 import SwiftUI
@@ -44,10 +44,10 @@ struct BoardView: View
     {
         ZStack
         {
-            //TODO: make this look pretty
             GridShape(gridRows: CGFloat(manager.numRows), gridColumns: CGFloat(manager.numCols))
                 .stroke(.black, lineWidth: 1)
                 .frame(width: gridWidth, height: gridHeight)
+                .background(.white)
             
             //overlay the PuzzleShape for the currently selected puzzle
             if manager.selectedPuzzle != "blank"
@@ -61,7 +61,6 @@ struct BoardView: View
                         style: FillStyle(eoFill: true)
                     )
                     .frame(width: puzzleWidth, height: puzzleHeight)
-                
             }
         }
     }

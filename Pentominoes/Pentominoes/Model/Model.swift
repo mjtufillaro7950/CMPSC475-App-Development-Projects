@@ -48,13 +48,11 @@ struct Position {
     var y : Int = 0
     var orientation: Orientation = .up
     
-    //
 }
 
 
 // This Orientation type is identical to UIImage.Orientation.  We define it to avoid needing UIKit in the model.  See documentation for this type to see what each value means in terms of rotations and flips.
-//TODO: remove CaseIterable if not needed
-enum Orientation : String, CaseIterable {
+enum Orientation : String {
     case up, left, down, right
     case upMirrored, leftMirrored, downMirrored, rightMirrored
 }

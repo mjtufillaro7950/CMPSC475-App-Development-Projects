@@ -34,7 +34,6 @@ enum Side
         }
     }
     
-    //TODO: figure out a way to make these values not be hardcoded?
     var loopIndex: (Int, Int)
     {
         switch self

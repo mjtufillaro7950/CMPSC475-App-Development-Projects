@@ -112,6 +112,8 @@ struct ButtonView: View
                     .foregroundColor(side.buttonColor)
                 Text(side.buttonText)
                     .foregroundColor(.black)
+                    .bold()
+                    .font(.title)
             }
             //if the button is disabled, make it transparent
             .opacity(isBlank ? 0.3 : 1.0)
