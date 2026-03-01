@@ -43,12 +43,12 @@ struct Piece  {
 //Mark:- Pieces Model
 // identifies placement of a single pentomino on a board, including x/y coordinate and its rotations.
 //Order of rotations matters - X, Y, then Z.  Uses unit coordinates on a 14 x 14 board
-struct Position  {
+struct Position {
     var x : Int = 0
     var y : Int = 0
     var orientation: Orientation = .up
     
-    //add mutating functions to change 
+    //
 }
 
 

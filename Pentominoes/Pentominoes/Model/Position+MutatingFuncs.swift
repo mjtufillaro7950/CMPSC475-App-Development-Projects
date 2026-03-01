@@ -10,7 +10,6 @@ import Foundation
 //extend position with mutating funcs to change orientation
 extension Position
 {
-    //if rotating clockwise, switch to next orientaton
     mutating func rotateClockwise()
     {
         switch orientation
@@ -19,14 +18,13 @@ extension Position
             case .right: orientation = .down
             case .down: orientation = .left
             case .left: orientation = .up
-            case .upMirrored: orientation = .leftMirrored
-            case .leftMirrored: orientation = .downMirrored
-            case .downMirrored: orientation = .rightMirrored
-            case .rightMirrored: orientation = .upMirrored
+            case .upMirrored: orientation = .rightMirrored
+            case .rightMirrored: orientation = .downMirrored
+            case .downMirrored: orientation = .leftMirrored
+            case .leftMirrored: orientation = .upMirrored
         }
     }
     
-    //if flipping, swap to opposite orientation
     mutating func flip()
     {
         switch orientation

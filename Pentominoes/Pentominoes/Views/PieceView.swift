@@ -47,11 +47,11 @@ struct PieceView: View
         {
             case .up, .upMirrored, .downMirrored:
                 return .degrees(0)
-            case .right, .leftMirrored:
+            case .right, .rightMirrored:
                 return .degrees(90)
             case .down:
                 return .degrees(180)
-            case .left, .rightMirrored:
+            case .left, .leftMirrored:
                 return .degrees(270)
         }
     }
@@ -88,7 +88,7 @@ struct PieceView: View
                     isDragging = false
                 }
                 
-                //calculate the end position and call end drag
+                //calculate the end position and call endDrag
                 let finalX = translatedPosition.x + value.translation.width
                 let finalY = translatedPosition.y + value.translation.height
                 let finalPoint = CGPoint(x: finalX, y: finalY)
@@ -133,6 +133,9 @@ struct PieceView: View
         let pieceWidth = manager.unitToViewCoord(coord: piece.outline.size.width)
         let pieceHeight = manager.unitToViewCoord(coord: piece.outline.size.height)
         
+        //TODO: check to see if a piece is in the right position for the current puzzle. if it is, then make it transparent
+        
+        
         //make a pentominoView based on the Piece's outline, and sized correctly
         PentominoView(pentominoOutline: piece.outline)
             //size the piece depending on its width and height
@@ -151,6 +154,8 @@ struct PieceView: View
             .zIndex(isDragging ? 100 : 0)
             //add the gestures so tapping/dragging/long pressing works
             .gesture(combinedGesture)
+            //make the piece transparent if its in the proper location for the current puzzle
+            .opacity(manager.isInSolutionPosition(piece: piece) ? 0.5 : 1)
     }
 }
 

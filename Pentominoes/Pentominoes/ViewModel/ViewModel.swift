@@ -75,14 +75,39 @@ class ViewModel
     
     func resetButton() -> Void
     {
-        //TODO: make all the pieces go back to their starting positions with an animation
-        print("Reset")
+        for index in 0..<pieces.count
+        {
+            let currentStartingCoordinates = startingCoordinates[index]
+            //for each piece, update its Position to its starting one
+            let startingPosition = Position(x: currentStartingCoordinates.0, y: currentStartingCoordinates.1, orientation: .up)
+            pieces[index].position = startingPosition
+        }
     }
     
     func solveButton() -> Void
     {
-        //TODO: make all the pieces go to their ending positions with an animation
-        print("Solve")
+        for index in 0..<pieces.count
+        {
+            //for each piece, update its Position to its proper one for the current puzzle
+            let solutionPosition = self.getSolutionPosition(piece: pieces[index])
+            pieces[index].position = solutionPosition
+        }
+    }
+    
+    
+    //function that checks if a piece is in its solution position
+    func isInSolutionPosition(piece: Piece) -> Bool
+    {
+        //if the selected puzzle is the blank one, there is no solution so always return false
+        if self.selectedPuzzle == "blank"
+        {
+            return false
+        }
+        let solutionPosition = self.getSolutionPosition(piece: piece)
+        let sameX = (piece.position.x == solutionPosition.x)
+        let sameY = (piece.position.y == solutionPosition.y)
+        let sameOrientation = (piece.position.orientation == solutionPosition.orientation)
+        return sameX && sameY && sameOrientation
     }
     
     func getStartingCoordinates() -> [(Int, Int)]
@@ -195,5 +220,12 @@ class ViewModel
         {
             print("Error: draggedPieceIndex = -1")
         }
+    }
+    
+    func getSolutionPosition(piece: Piece) -> Position
+    {
+        let puzzleSolution = self.solutions[self.selectedPuzzle]
+        //the ! mean that it aborts execution if its nil (it won't be)
+        return puzzleSolution![piece.outline.name]!
     }
 }

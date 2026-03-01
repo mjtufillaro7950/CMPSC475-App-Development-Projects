@@ -96,7 +96,11 @@ struct ButtonView: View
     {
         Button
         {
-            buttonFunction()
+            //do animation when resetting/solving
+            withAnimation(.easeInOut(duration: 1))
+            {
+                buttonFunction()
+            }
         }
         label:
         {
