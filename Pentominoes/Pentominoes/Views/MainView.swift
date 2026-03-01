@@ -17,8 +17,9 @@ struct MainView: View
         HStack
         {
             SideView(side: .left)
-            //middle view goes here
-            Text("PENTOMINOES")
+            Spacer()
+            MiddleView()
+            Spacer()
             SideView(side: .right)
         }
     }

@@ -10,6 +10,8 @@ import Foundation
 //extends viewmodel to clean up code
 extension ViewModel
 {
+    
+    
     //in order to do JSON decoding like in LionSpell, the data types need to be codable. Therefore, make codable versions of all necessary ones
     private struct CodablePoint: Codable
     {

@@ -8,7 +8,6 @@
 import SwiftUI
 
 
-//TODO: pass in a Piece, make a PentominoView, sized properly. Position based on the piece's Position property, converting from unit coordinates to view  coordinates (in viewmodel)?
 struct PieceView: View
 {
     //declare this to access viewmodel from views

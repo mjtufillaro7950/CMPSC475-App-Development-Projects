@@ -97,7 +97,7 @@ struct ButtonView: View
             {
                 //TODO: make buttons look pretty here
                 RoundedRectangle(cornerRadius: CGFloat(16))
-                    .frame(width: 160, height: 80)
+                    .frame(width: 120, height: 80)
                     .foregroundColor(side.buttonColor)
                 Text(side.buttonText)
                     .foregroundColor(.black)

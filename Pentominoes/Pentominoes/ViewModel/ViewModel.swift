@@ -21,6 +21,10 @@ class ViewModel
     //set a consistent block size of 40 units to be used in all instances of placing/building anything that uses the grid
     let blockSize: CGFloat = 40
     
+    //set the size of the grid (always 14x14)
+    let numRows = 14
+    let numCols = 14
+    
     //stores the names of the images of the puzzles in the assets
     //let puzzleImageNames: [String] = ["Board0", "Board1", "Board2", "Board3", "Board4", "Board5", "Board6", "Board7"]
     
@@ -43,7 +47,9 @@ class ViewModel
     {
         //TODO: for now, initial positions are just gonna be the default of (0, 0, .up) until I figure out something better
         //TODO: I will need to make a list of positions based on whatever the initial position is
-        let position: Position = Position()
+        var position: Position = Position()
+        //TODO: for testing purposes
+        position.orientation = .right
         
         var pieces: [Piece] = []
         for pentominoOutline in pentominoOutlines
