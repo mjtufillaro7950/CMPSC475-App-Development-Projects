@@ -47,6 +47,8 @@ struct Position  {
     var x : Int = 0
     var y : Int = 0
     var orientation: Orientation = .up
+    
+    //add mutating functions to change 
 }
 
 

@@ -79,7 +79,6 @@ struct PieceView: View
                 dragOffset = value.translation
                 //call viewmodel to start drag
                 manager.startDrag(piece: piece)
-            
             }
             .onEnded
             {
@@ -96,14 +95,44 @@ struct PieceView: View
                 manager.endDrag(at: finalPoint)
                 //reset Offset to 0
                 dragOffset = .zero
-                
             }
         
+        //handle tap
+        let tapGesture = TapGesture()
+            .onEnded
+            {
+                //need to adjust the index of the Piece in viewmodel, then reset when done
+                manager.draggedPieceIndex = manager.getPieceIndex(piece: piece)
+                //do rotation with animation
+                withAnimation(.easeIn(duration: 0.5))
+                {
+                    manager.rotatePiece(piece: piece)
+                }
+                manager.draggedPieceIndex = -1
+            }
         
+        //handle long press
+        let longPressGesture = LongPressGesture(minimumDuration: 0.5)
+            .onEnded
+            {
+                //as far as I can tell I don't need this value here but it threw a fit if I didn't include it
+                idk in
+                manager.draggedPieceIndex = manager.getPieceIndex(piece: piece)
+                //do flip with animation
+                withAnimation(.easeIn(duration: 0.5))
+                {
+                    manager.flipPiece(piece: piece)
+                }
+                manager.draggedPieceIndex = -1
+            }
+        
+        //drag gesture takes priority, then long press, then tap
+        let combinedGesture = dragGesture.exclusively(before: longPressGesture.exclusively(before: tapGesture))
         
         //calculate the proper width and height of the piece based on the block size and the size of the piece
         let pieceWidth = manager.unitToViewCoord(coord: piece.outline.size.width)
         let pieceHeight = manager.unitToViewCoord(coord: piece.outline.size.height)
+        
         //make a pentominoView based on the Piece's outline, and sized correctly
         PentominoView(pentominoOutline: piece.outline)
             //size the piece depending on its width and height
@@ -120,9 +149,8 @@ struct PieceView: View
             .scaleEffect(isDragging ? 1.2 : 1)
             //this ensure the piece goes over other pieces while being dragged
             .zIndex(isDragging ? 100 : 0)
-            //TODO: need to replace with combined gesture?
-            .gesture(dragGesture)
-        
+            //add the gestures so tapping/dragging/long pressing works
+            .gesture(combinedGesture)
     }
 }
 

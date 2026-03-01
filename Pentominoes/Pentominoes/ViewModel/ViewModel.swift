@@ -48,12 +48,6 @@ class ViewModel
     //helper function that makes a list of all pieces with custom intialized positons
     func piecesInit(pentominoOutlines: [PentominoOutline]) -> [Piece]
     {
-        //TODO: for now, initial positions are just gonna be the default of (0, 0, .up) until I figure out something better
-        //TODO: I will need to make a list of positions based on whatever the initial position is
-        //var position: Position = Position()
-        //TODO: for testing purposes
-        //position.orientation = .right
-        
         var pieces: [Piece] = []
         //loop through every piece
         for index in 0..<pentominoOutlines.count
@@ -81,14 +75,13 @@ class ViewModel
     
     func resetButton() -> Void
     {
-        //TODO: this
-        //self.selectedPuzzle = "blank"
+        //TODO: make all the pieces go back to their starting positions with an animation
         print("Reset")
     }
     
     func solveButton() -> Void
     {
-        //TODO: this
+        //TODO: make all the pieces go to their ending positions with an animation
         print("Solve")
     }
     
@@ -168,8 +161,39 @@ class ViewModel
             self.pieces[self.draggedPieceIndex].position.x = newX
             self.pieces[self.draggedPieceIndex].position.y = newY
         }
+        else
+        {
+            print("Error: draggedPieceIndex = -1")
+        }
         
         //clear drag state
         self.draggedPieceIndex = -1
+    }
+    
+    //helper functions that adjust the orientation of a piece using extended Position functions
+    func rotatePiece(piece: Piece)
+    {
+        if self.draggedPieceIndex != -1
+        {
+            //rotate the piece clockwise- up goes to right, right goes to down, etc
+            self.pieces[self.draggedPieceIndex].position.rotateClockwise()
+        }
+        else
+        {
+            print("Error: draggedPieceIndex = -1")
+        }
+    }
+    
+    func flipPiece(piece: Piece)
+    {
+        if self.draggedPieceIndex != -1
+        {
+            //flip the piece's orientation- up goes to upMirrored, right goes to rightMirrored, etc
+            self.pieces[self.draggedPieceIndex].position.flip()
+        }
+        else
+        {
+            print("Error: draggedPieceIndex = -1")
+        }
     }
 }

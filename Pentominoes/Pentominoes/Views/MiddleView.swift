@@ -18,7 +18,6 @@ struct MiddleView: View
         {
             //TODO: make title look fancy
             Text("PENTOMINOES")
-            //TODO: need to overlay the current board onto the grid
             ZStack(alignment: .topLeading)
             {
                 BoardView()
