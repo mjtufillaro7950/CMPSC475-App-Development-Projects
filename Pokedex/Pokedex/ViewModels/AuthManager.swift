@@ -33,7 +33,7 @@ class AuthManager
     }
     
     
-    func setUser(email: String, _ token: String)
+    func setUser(email: String, token: String)
     {
         //set authenticated user's credentials to parameters
         self.accessToken = token
