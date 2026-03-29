@@ -38,6 +38,9 @@ class NetworkManager {
     func setCapture(for pokemonId: Int, isCaptured: Bool) async throws {
         //TODO: implement capture/release of Pokemon using API endpoints pokemon/{id}/capture and pokemon/{id}/release
     }
+    
+    //NetworkError Enum taken from class code
+    
 }
 
 
