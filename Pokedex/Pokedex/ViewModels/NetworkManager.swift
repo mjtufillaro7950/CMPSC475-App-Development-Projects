@@ -19,7 +19,8 @@ class NetworkManager
     var loginEmail: String = ""
     var loginPassword: String = ""
     
-    func configure(with authManager: AuthManager) {
+    func configure(with authManager: AuthManager)
+    {
         //provide access to authManager singlton (single source of truth)
         self.authManager = authManager
     }
