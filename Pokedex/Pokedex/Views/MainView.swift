@@ -2,14 +2,17 @@
 //  ContentView.swift
 //  Pokedex
 //
-//  Created by LiasPub on 3/23/26.
+//  Created by Michael Tufillaro on 3/23/26.
 //
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
+struct MainView: View
+{
+    var body: some View
+    {
+        VStack
+        {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
@@ -19,6 +22,7 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
+#Preview
+{
+    MainView()
 }

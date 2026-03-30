@@ -25,7 +25,8 @@ class NetworkManager
     }
     
     
-    //Implement API request for user login- largely taken from class code with some modifications
+    //Implement API request for user login
+    //pretty much all of the code in NetworkManager is taken from class code in Taskly with some modifications
     func login() async throws
     {
         //fetches the right url for the Swagger website using the network managers ip address (need to do NetworkManager.ipAddress because it's not static)
@@ -59,6 +60,55 @@ class NetworkManager
         if httpResponse.statusCode == 401
         {
             throw NetworkError.invalidCredentials
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else
+        {
+            throw NetworkError.httpError(statusCode: httpResponse.statusCode)
+        }
+        
+        //attempt to deode the data from the response into a TokenResponse
+        let decoder = JSONDecoder()
+        let tokenResponse = try decoder.decode(TokenResponse.self, from: data)
+        //instead of returning the tokenResponse, set User in authmanager
+        authManager?.setUser(email: tokenResponse.user.email, token: tokenResponse.accessToken)
+    }
+    
+    //add signup code which is the same as login but with a different url
+    func signup() async throws
+    {
+        //uses signup url instead of login
+        guard let url = URL(string: "\(NetworkManager.ipAddress)/auth/signup") else
+        {
+            throw NetworkError.invalidURL
+        }
+        
+        //use passed in data to create the payload
+        let payload = LoginRequest(email: self.loginEmail, password: self.loginPassword)
+        
+        //build a request for a login
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        //enode the request as a JSON
+        let encoder = JSONEncoder()
+        request.httpBody = try encoder.encode(payload)
+        
+        //send the request and wait for a response
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        //Throw errors if the response is not correct one way or another
+        guard let httpResponse = response as? HTTPURLResponse else
+        {
+            throw NetworkError.invalidResponse
+        }
+        
+        //email already registered error instead of invalid credentials error
+        if httpResponse.statusCode == 401
+        {
+            throw NetworkError.emailAlreadyRegistered
         }
         
         guard (200...299).contains(httpResponse.statusCode) else
@@ -170,9 +220,7 @@ class NetworkManager
     {
         //implement capture/release of Pokemon using API endpoints pokemon/{id}/capture and pokemon/{id}/release
         //depending on isCaptured, change the endpoint of the URL
-        var capturedEndpoint: String
-        if isCaptured {capturedEndpoint = "capture"}
-        else {capturedEndpoint = "release"}
+        let capturedEndpoint = isCaptured ? "capture" : "release"
         
         //set up the URL to the right endpoint
         guard let url = URL(string: "\(NetworkManager.ipAddress)/pokemon/\(pokemonId)/\(capturedEndpoint)") else

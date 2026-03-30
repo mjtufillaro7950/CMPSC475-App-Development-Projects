@@ -6,9 +6,12 @@
 //
 import SwiftUI
 
-extension Color {
-    init(pokemonType: PokemonType) {
-        switch pokemonType {
+extension Color
+{
+    init(pokemonType: PokemonType)
+    {
+        switch pokemonType
+        {
         case .bug:
             self = Color(#colorLiteral(red: 0.568513453, green: 0.7608199716, blue: 0.1568415463, alpha: 1))
         case .dragon:
@@ -43,8 +46,10 @@ extension Color {
     }
 }
 
-extension LinearGradient {
-    init(pokemon: Pokemon) {
+extension LinearGradient
+{
+    init(pokemon: Pokemon)
+    {
         let colors = pokemon.types.map({Color(pokemonType: $0)})
         self = LinearGradient(gradient: Gradient(colors: colors), startPoint: .topLeading, endPoint: .bottomTrailing)
     }
