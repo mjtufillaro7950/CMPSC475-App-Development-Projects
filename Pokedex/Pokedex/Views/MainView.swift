@@ -13,17 +13,20 @@ struct MainView: View
     @Environment(AuthManager.self) private var authManager
     var body: some View
     {
-        //TODO: need to 
-        VStack
+        //create tabs to access the 3 different views
+        TabView
         {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Main View")
-            //logs the current user out
-            Button("Log Out")
+            Tab("List", systemImage: "list.bullet")
             {
-                authManager.resetAuthState()
+                ListView()
+            }
+            Tab("Types", systemImage: "square.split.2x2.fill")
+            {
+                TypesView()
+            }
+            Tab("Account", systemImage: "person.crop.circle.fill")
+            {
+                AccountView()
             }
         }
         .padding()
