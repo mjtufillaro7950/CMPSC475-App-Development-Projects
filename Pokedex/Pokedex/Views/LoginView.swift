@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//this code is adapted from the in-class repository
 struct LoginView: View
 {
     @Environment(NetworkManager.self) private var networkManager
@@ -152,12 +153,14 @@ struct LoginView: View
         {
             do
             {
-                //login handles this on its own
+                //network manager handles login stuff
                 try await networkManager.login()
             }
             catch
             {
-                print("error login")
+                //Show the error if it fails
+                errorMessage = error.localizedDescription
+                showError = true
             }
         }
     }
@@ -165,8 +168,10 @@ struct LoginView: View
 
 // MARK: - Custom Text Field Style
 
-struct AuthTextFieldStyle: TextFieldStyle {
-    func _body(configuration: TextField<Self._Label>) -> some View {
+struct AuthTextFieldStyle: TextFieldStyle
+{
+    func _body(configuration: TextField<Self._Label>) -> some View
+    {
         configuration
             .padding()
             .background(.white)
@@ -181,6 +186,6 @@ struct AuthTextFieldStyle: TextFieldStyle {
     networkManager.configure(with: authManager)
     
     return LoginView()
-        .environment(AuthManager())
-        .environment(NetworkManager())
+        .environment(authManager)
+        .environment(networkManager)
 }

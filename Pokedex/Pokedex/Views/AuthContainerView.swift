@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//this code is adapted from the in-class repository
 struct AuthContainerView: View
 {
     @Environment(AuthManager.self) private var authManager
@@ -30,5 +31,11 @@ struct AuthContainerView: View
 
 #Preview
 {
-    //AuthContainerView()
+    let authManager = AuthManager()
+    let networkManager = NetworkManager()
+    networkManager.configure(with: authManager)
+    
+    return AuthContainerView()
+        .environment(authManager)
+        .environment(networkManager)
 }

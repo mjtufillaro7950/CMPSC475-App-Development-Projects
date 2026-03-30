@@ -35,7 +35,6 @@ class NetworkManager
         {
             throw NetworkError.invalidURL
         }
-        
         //use passed in data to create the payload
         let payload = LoginRequest(email: self.loginEmail, password: self.loginPassword)
         
@@ -48,16 +47,13 @@ class NetworkManager
         //enode the request as a JSON
         let encoder = JSONEncoder()
         request.httpBody = try encoder.encode(payload)
-        
         //send the request and wait for a response
         let (data, response) = try await URLSession.shared.data(for: request)
-        
         //Throw errors if the response is not correct one way or another
         guard let httpResponse = response as? HTTPURLResponse else
         {
             throw NetworkError.invalidResponse
         }
-        
         if httpResponse.statusCode == 401
         {
             throw NetworkError.invalidCredentials
@@ -67,6 +63,7 @@ class NetworkManager
         {
             throw NetworkError.httpError(statusCode: httpResponse.statusCode)
         }
+        
         
         //attempt to deode the data from the response into a TokenResponse
         let decoder = JSONDecoder()
@@ -176,7 +173,6 @@ class NetworkManager
         {
             throw NetworkError.invalidURL
         }
-        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "accept")
@@ -192,7 +188,6 @@ class NetworkManager
         {
             throw NetworkError.invalidResponse
         }
-        
         if httpResponse.statusCode == 401
         {
             throw NetworkError.unauthorized
@@ -240,7 +235,8 @@ class NetworkManager
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        //data isn't used so it is ignored
+        let (_, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else
         {
