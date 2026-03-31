@@ -15,7 +15,7 @@ extension Color
         case .bug:
             self = Color(#colorLiteral(red: 0.568513453, green: 0.7608199716, blue: 0.1568415463, alpha: 1))
         case .dragon:
-            self =  Color(#colorLiteral(red: 0.01125660352, green: 0.4274889231, blue: 0.7724513412, alpha: 1))
+            self = Color(#colorLiteral(red: 0.01125660352, green: 0.4274889231, blue: 0.7724513412, alpha: 1))
         case .electric:
             self = Color(#colorLiteral(red: 0.9477237341, green: 0.7576787243, blue: 0.167866584, alpha: 1))
         case .fighting:
