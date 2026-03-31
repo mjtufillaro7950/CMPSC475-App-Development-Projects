@@ -60,7 +60,8 @@ struct Pokemon : Identifiable, Codable {
         self.captured = captured
     }
     
-    static let standard = Pokemon(id: 001, name: "Bulbasaur", types: [.grass,.poison], height: 0.71, weight: 6.9, weaknesses: [.fire,.ice,.flying,.psychic], next_evolution: nil, prev_evolution: [2,3])
+    //this was wrong- Bulbasaur's next evolutions are 2 and 3, not its previous evolutions
+    static let standard = Pokemon(id: 001, name: "Bulbasaur", types: [.grass,.poison], height: 0.71, weight: 6.9, weaknesses: [.fire,.ice,.flying,.psychic], next_evolution: [2,3], prev_evolution: nil)
     
     
     

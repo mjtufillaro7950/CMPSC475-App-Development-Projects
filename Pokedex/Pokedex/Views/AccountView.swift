@@ -12,13 +12,27 @@ struct AccountView: View
     @Environment(NetworkManager.self) private var networkManager
     @Environment(AuthManager.self) private var authManager
     
+    //TODO: make this look nice
     var body: some View
     {
-        Text("Account View")
-        Button("Log Out")
+        VStack
         {
-            authManager.resetAuthState()
+            Text("Account")
+            HStack
+            {
+                if let email = authManager.userEmail
+                {
+                    Text("Email: \(email)")
+                }
+                
+            }
+            Button("Log Out")
+            {
+                authManager.resetAuthState()
+            }
+            .foregroundStyle(.red)
         }
+        .padding()
     }
 }
 

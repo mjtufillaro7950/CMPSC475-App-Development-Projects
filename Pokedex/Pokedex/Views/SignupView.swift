@@ -175,16 +175,12 @@ struct SignupView: View
     
     private func signup()
     {
-        //give the network manager the email and password
-        networkManager.loginEmail = email
-        networkManager.loginPassword = password
-        
         Task
         {
             do
             {
                 //network manager handles signup
-                try await networkManager.signup()
+                try await networkManager.signup(email: email, password: password)
                 dismiss()
             }
             catch

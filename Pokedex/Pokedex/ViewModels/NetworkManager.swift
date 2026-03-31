@@ -14,11 +14,6 @@ class NetworkManager
     static let ipAddress : String = "http://localhost:8000"
     private var authManager: AuthManager?
     
-    //TODO: not sure if this is right, but idk how else to get the email and password to the login func
-    //temporarily store the user's email and password while logging in for the login func
-    var loginEmail: String = ""
-    var loginPassword: String = ""
-    
     func configure(with authManager: AuthManager)
     {
         //provide access to authManager singlton (single source of truth)
@@ -28,7 +23,7 @@ class NetworkManager
     
     //Implement API request for user login
     //pretty much all of the code in NetworkManager is taken from class code in Taskly with some modifications
-    func login() async throws
+    func login(email: String, password: String) async throws
     {
         //fetches the right url for the Swagger website using the network managers ip address (need to do NetworkManager.ipAddress because it's not static)
         guard let url = URL(string: "\(NetworkManager.ipAddress)/auth/login") else
@@ -36,7 +31,7 @@ class NetworkManager
             throw NetworkError.invalidURL
         }
         //use passed in data to create the payload
-        let payload = LoginRequest(email: self.loginEmail, password: self.loginPassword)
+        let payload = LoginRequest(email: email, password: password)
         
         //build a request for a login
         var request = URLRequest(url: url)
@@ -73,7 +68,7 @@ class NetworkManager
     }
     
     //add signup code which is the same as login but with a different url
-    func signup() async throws
+    func signup(email: String, password: String) async throws
     {
         //uses signup url instead of login
         guard let url = URL(string: "\(NetworkManager.ipAddress)/auth/signup") else
@@ -82,7 +77,7 @@ class NetworkManager
         }
         
         //use passed in data to create the payload
-        let payload = LoginRequest(email: self.loginEmail, password: self.loginPassword)
+        let payload = LoginRequest(email: email, password: password)
         
         //build a request for a login
         var request = URLRequest(url: url)

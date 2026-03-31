@@ -145,16 +145,12 @@ struct LoginView: View
     // MARK: - Actions
     private func login()
     {
-        //give the network manager the email and password
-        networkManager.loginEmail = email
-        networkManager.loginPassword = password
-        
         Task
         {
             do
             {
                 //network manager handles login stuff
-                try await networkManager.login()
+                try await networkManager.login(email: email, password: password)
             }
             catch
             {
