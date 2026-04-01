@@ -21,14 +21,15 @@ struct ListView: View
     //same for capture status
     @State private var showCapturedOnly: Bool = false
     //computed property to get the list of filtered pokemon
+    
     var filteredPokemon: [Pokemon]
     {
         return networkManager.currentPokemonList.filter
         {
             //filter by search bar...
-            $0.name.localizedCaseInsensitiveContains(searchText) &&
+            (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) &&
             //and filter by type...
-            $0.types.contains(where: { selectedTypes.contains($0) }) &&
+            (selectedTypes.isEmpty || $0.types.contains(where: { selectedTypes.contains($0) })) &&
             //and filter by capture status
             (!showCapturedOnly || $0.captured)
         }
@@ -47,9 +48,8 @@ struct ListView: View
             
             ScrollView
             {
-                //Create a view for each pokemon
-                //TODO: will need to replace this with the list after filter criteria
-                ForEach(networkManager.currentPokemonList)
+                //Create a view for each pokemon in the filtered list
+                ForEach(filteredPokemon)
                 {
                     pokemon in
                     
@@ -64,8 +64,22 @@ struct ListView: View
                 //when the list appears, call network manager to update the current list of pokemon
                 .task{try? await networkManager.updateCurrentPokemon()}
             }
+            //add the ability to scroll up to refresh
+            .refreshable { try? await networkManager.updateCurrentPokemon() }
         }
         
+    }
+}
+
+
+//TODO: make a drop down list that toggles filters when tapped
+struct FilterView: View
+{
+    @Binding var selectedTypes: Set<PokemonType>
+    @Binding var showCapturedOnly: Bool
+    var body: some View
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
     }
 }
 
