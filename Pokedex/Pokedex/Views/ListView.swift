@@ -15,11 +15,13 @@ struct ListView: View
     
     //need state variables for search/filter stuff
     //current text in search bar
-    @State private var searchText: String = ""
+    @State var searchText: String = ""
     //all the pokemon types selected by the user in the filter
-    @State private var selectedTypes: Set<PokemonType> = []
+    @State var selectedTypes: Set<PokemonType> = []
     //same for capture status
-    @State private var showCapturedOnly: Bool = false
+    @State var showCapturedOnly: Bool = false
+    //controls whether filter sheet is shown
+    @State var showSheet: Bool = false
     //computed property to get the list of filtered pokemon
     
     var filteredPokemon: [Pokemon]
@@ -39,10 +41,20 @@ struct ListView: View
     {
         VStack
         {
-            //TODO: Filter stuff here
             Text("Pokédex")
                 .font(.largeTitle)
                 .bold()
+            
+            //TODO: make this look pretty
+            //Button that pulls up the filter sheet when pressed
+            Button("Filters")
+            {
+                showSheet = true
+            }
+            .sheet(isPresented: $showSheet)
+            {
+                FilterSheetView(selectedTypes: $selectedTypes, showCapturedOnly: $showCapturedOnly)
+            }
             
             SearchBarView(searchText: $searchText)
             
@@ -71,17 +83,6 @@ struct ListView: View
     }
 }
 
-
-//TODO: make a drop down list that toggles filters when tapped
-struct FilterView: View
-{
-    @Binding var selectedTypes: Set<PokemonType>
-    @Binding var showCapturedOnly: Bool
-    var body: some View
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
-    }
-}
 
 
 struct SearchBarView: View
