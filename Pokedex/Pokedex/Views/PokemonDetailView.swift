@@ -376,6 +376,8 @@ struct EvolutionsView: View
                     if let prevEvolutions = pokemon.prev_evolution
                     {
                         Text("Previous")
+                            .bold()
+                            .font(.title2)
                         ScrollView(.horizontal)
                         {
                             HStack
@@ -407,6 +409,7 @@ struct EvolutionsView: View
                     {
                         Text("Next")
                             .bold()
+                            .font(.title2)
                         ScrollView(.horizontal)
                         {
                             HStack
@@ -447,12 +450,8 @@ struct EvolutionsView: View
     let networkManager = NetworkManager()
     networkManager.configure(with: authManager)
     //displays the standard Pokemon (Bulbasaur) for testing purposes
-    //need a NavigationStack here, in my real code it'll be within ListView or MainView
-    return NavigationStack
-    {
-        PokemonDetailView(pokemonID: Pokemon.standard.id)
-            .environment(authManager)
-            .environment(networkManager)
-    }
+    return PokemonDetailView(pokemonID: Pokemon.standard.id)
+        .environment(authManager)
+        .environment(networkManager)
     
 }

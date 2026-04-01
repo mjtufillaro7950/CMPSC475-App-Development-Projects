@@ -14,20 +14,24 @@ struct MainView: View
     var body: some View
     {
         //create tabs to access the 3 different views
-        //TODO: need a NavigationStack for my ListView and TypesView
-        TabView
+        //need a NavigationStack so list view and types view can link to detailed views
+        return NavigationStack
         {
-            Tab("List", systemImage: "list.bullet")
+            
+            TabView
             {
-                ListView()
-            }
-            Tab("Types", systemImage: "square.split.2x2.fill")
-            {
-                TypesView()
-            }
-            Tab("Account", systemImage: "person.crop.circle.fill")
-            {
-                AccountView()
+                Tab("List", systemImage: "list.bullet")
+                {
+                    ListView()
+                }
+                Tab("Types", systemImage: "square.split.2x2.fill")
+                {
+                    TypesView()
+                }
+                Tab("Account", systemImage: "person.crop.circle.fill")
+                {
+                    AccountView()
+                }
             }
         }
     }

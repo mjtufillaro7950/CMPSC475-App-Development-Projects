@@ -27,7 +27,14 @@ struct ListView: View
                 ForEach(networkManager.currentPokemonList)
                 {
                     pokemon in
-                    Text("\(pokemon.name)")
+                    
+                    //link to that pokemon's detailed view when tapped on
+                    NavigationLink(destination: PokemonDetailView(pokemonID: pokemon.id))
+                    {
+                        //Show the pokemon's view
+                        PokemonListViewDisplay(pokemon: pokemon)
+                    }
+                    
                 }
                 //when the list appears, call network manager to update the current list of pokemon
                 .task{try? await networkManager.updateCurrentPokemon()}
@@ -36,6 +43,19 @@ struct ListView: View
         
     }
 }
+
+
+//Display the pokemon and its stats
+struct PokemonListViewDisplay: View
+{
+    let pokemon: Pokemon
+    var body: some View
+    {
+        //TODO: replace with custom pretty view
+        Text("\(pokemon.name)")
+    }
+}
+
 
 #Preview
 {
