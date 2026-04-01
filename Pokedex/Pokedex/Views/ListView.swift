@@ -45,11 +45,28 @@ struct ListView: View
                 .font(.largeTitle)
                 .bold()
             
-            //TODO: make this look pretty
+            Spacer()
             //Button that pulls up the filter sheet when pressed
-            Button("Filters")
+            Button
             {
                 showSheet = true
+            }
+            label:
+            {
+                ZStack
+                {
+                    RoundedRectangle(cornerRadius: 15)
+                        .frame(width: 110, height: 40)
+                        .foregroundStyle(.gray)
+                    HStack
+                    {
+                        Image(systemName: "gear")
+                        Text("Filters")
+                    }
+                    .foregroundStyle(.black)
+                    .bold()
+                }
+                
             }
             .sheet(isPresented: $showSheet)
             {

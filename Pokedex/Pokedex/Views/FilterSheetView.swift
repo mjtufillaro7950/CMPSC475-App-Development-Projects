@@ -30,7 +30,19 @@ struct FilterSheetView: View
                 }
                 label:
                 {
-                    Text("Clear all filters")
+                    ZStack
+                    {
+                        RoundedRectangle(cornerRadius: 15)
+                            .frame(width: 200, height: 30)
+                            .foregroundStyle(.red)
+                        HStack
+                        {
+                            Image(systemName: "xmark")
+                            Text("Clear all filters")
+                        }
+                        .foregroundStyle(.black)
+                        .bold()
+                    }
                 }
                 
                 Divider()
@@ -43,6 +55,7 @@ struct FilterSheetView: View
                     .frame(width: 200)
                 
                 Text("Filter by type")
+                    .font(.caption)
                 //Make a similar toggle for each pokemon type
                 ForEach(PokemonType.allCases)
                 {
@@ -73,7 +86,10 @@ struct CaptureFilterView: View
             ZStack
             {
                 RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color.black, lineWidth: 5)
+                    .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.red, .white]), startPoint: .top, endPoint: .bottom))
+                    .frame(width: 125, height: 30)
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color.black, lineWidth: 2)
                     .frame(width: 125, height: 30)
                 HStack
                 {
