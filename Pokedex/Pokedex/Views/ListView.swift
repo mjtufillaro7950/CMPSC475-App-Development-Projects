@@ -7,19 +7,44 @@
 
 import SwiftUI
 
+
 struct ListView: View
 {
     @Environment(NetworkManager.self) private var networkManager
     @Environment(AuthManager.self) private var authManager
     
+    //need state variables for search/filter stuff
+    //current text in search bar
+    @State private var searchText: String = ""
+    //all the pokemon types selected by the user in the filter
+    @State private var selectedTypes: Set<PokemonType> = []
+    //same for capture status
+    @State private var showCapturedOnly: Bool = false
+    //computed property to get the list of filtered pokemon
+    var filteredPokemon: [Pokemon]
+    {
+        return networkManager.currentPokemonList.filter
+        {
+            //filter by search bar...
+            $0.name.localizedCaseInsensitiveContains(searchText) &&
+            //and filter by type...
+            $0.types.contains(where: { selectedTypes.contains($0) }) &&
+            //and filter by capture status
+            (!showCapturedOnly || $0.captured)
+        }
+    }
+    
     var body: some View
     {
-        //TODO: make a list of all pokemon
         VStack
         {
             //TODO: Filter stuff here
-            Text("Pokedex")
-            //TODO: Search bar here
+            Text("Pokédex")
+                .font(.largeTitle)
+                .bold()
+            
+            SearchBarView(searchText: $searchText)
+            
             ScrollView
             {
                 //Create a view for each pokemon
@@ -41,6 +66,29 @@ struct ListView: View
             }
         }
         
+    }
+}
+
+
+struct SearchBarView: View
+{
+    @Binding var searchText: String
+    var body: some View
+    {
+        ZStack
+        {
+            RoundedRectangle(cornerRadius: 15)
+                .foregroundStyle(.regularMaterial)
+                .frame(height: 40)
+            //connect the text in the seach bar to the state variable
+            HStack
+            {
+                Image(systemName: "magnifyingglass")
+                TextField("Search Pokémon", text: $searchText)
+            }
+            .padding(.horizontal)
+        }
+        .padding()
     }
 }
 

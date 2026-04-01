@@ -46,7 +46,7 @@ struct LoginView: View
                             .scaledToFit()
                             .frame(width: 150)
                         
-                        Text("Pokedex")
+                        Text("Pokédex")
                             .font(.system(size: 48, weight: .bold))
                             .foregroundStyle(.black)
                     }
