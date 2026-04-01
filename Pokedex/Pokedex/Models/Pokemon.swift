@@ -6,7 +6,8 @@
 //
 import Foundation
 
-enum PokemonType: String, Codable, Identifiable, CaseIterable  {
+enum PokemonType: String, Codable, Identifiable, CaseIterable
+{
     var id: String { self.rawValue }
     
     case bug = "Bug"
@@ -26,7 +27,8 @@ enum PokemonType: String, Codable, Identifiable, CaseIterable  {
     case water = "Water"
 }
 
-struct Pokemon : Identifiable, Codable {
+struct Pokemon : Identifiable, Codable
+{
     var id: Int
     var name: String
     var types: [PokemonType]
@@ -37,7 +39,8 @@ struct Pokemon : Identifiable, Codable {
     var next_evolution: [Int]?
     var captured: Bool
 
-    init(from decoder: any Decoder) throws {
+    init(from decoder: any Decoder) throws
+    {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
@@ -50,7 +53,8 @@ struct Pokemon : Identifiable, Codable {
         self.captured = try container.decodeIfPresent(Bool.self, forKey: .captured) ?? false
     }
     
-    init(id: Int, name: String, types: [PokemonType], height: Float, weight: Float, weaknesses: [PokemonType], next_evolution: [Int]?, prev_evolution: [Int]?, captured: Bool = false) {
+    init(id: Int, name: String, types: [PokemonType], height: Float, weight: Float, weaknesses: [PokemonType], next_evolution: [Int]?, prev_evolution: [Int]?, captured: Bool = false)
+    {
         self.id = id
         self.name = name
         self.types = types
@@ -58,12 +62,13 @@ struct Pokemon : Identifiable, Codable {
         self.weight = weight
         self.weaknesses = weaknesses
         self.captured = captured
+        //TODO: these were missing?? is this intentional?
+        self.next_evolution = next_evolution
+        self.prev_evolution = prev_evolution
     }
     
     //this was wrong- Bulbasaur's next evolutions are 2 and 3, not its previous evolutions
     static let standard = Pokemon(id: 001, name: "Bulbasaur", types: [.grass,.poison], height: 0.71, weight: 6.9, weaknesses: [.fire,.ice,.flying,.psychic], next_evolution: [2,3], prev_evolution: nil)
-    
-    
     
 }
 

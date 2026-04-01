@@ -42,7 +42,9 @@ struct LoginView: View
                     VStack(spacing: 10)
                     {
                         Image("PokemonBall")
-                            .font(.system(size: 80))
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150)
                         
                         Text("Pokedex")
                             .font(.system(size: 48, weight: .bold))

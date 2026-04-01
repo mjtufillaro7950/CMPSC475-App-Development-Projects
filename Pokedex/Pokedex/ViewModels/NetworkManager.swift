@@ -13,6 +13,8 @@ class NetworkManager
 {
     static let ipAddress : String = "http://localhost:8000"
     private var authManager: AuthManager?
+    //creates a list of all the current pokemon objects
+    var currentPokemonList: [Pokemon] = []
     
     func configure(with authManager: AuthManager)
     {
@@ -157,6 +159,13 @@ class NetworkManager
         let decoder = JSONDecoder()
         //decode the data into an array of Pokemon objects and return it
         return try decoder.decode([Pokemon].self, from: data)
+    }
+    
+    
+    //helper function that updates the list of current pokemon
+    func updateCurrentPokemon() async throws
+    {
+        self.currentPokemonList = try await getPokemonCollection()
     }
 
     

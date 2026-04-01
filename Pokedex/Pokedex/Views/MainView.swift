@@ -14,6 +14,7 @@ struct MainView: View
     var body: some View
     {
         //create tabs to access the 3 different views
+        //TODO: need a NavigationStack for my ListView and TypesView
         TabView
         {
             Tab("List", systemImage: "list.bullet")
