@@ -68,6 +68,7 @@ struct LoginView: View
                                 .textInputAutocapitalization(.never)
                                 .keyboardType(.emailAddress)
                                 .autocorrectionDisabled()
+                                .foregroundStyle(.black)
                         }
                         
                         // Password Field
@@ -80,6 +81,7 @@ struct LoginView: View
                             
                             SecureField("", text: $password)
                                 .textFieldStyle(AuthTextFieldStyle())
+                                .foregroundStyle(.black)
                         }
                         
                         // Login Button
@@ -99,9 +101,9 @@ struct LoginView: View
                                 }
                             }
                             .frame(maxWidth: .infinity)
-                            .frame(height: 50)
+                            .frame(width: 75, height: 50)
                             .background(.white)
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(.blue)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
                         .disabled(isLoading || email.isEmpty || password.isEmpty)

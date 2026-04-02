@@ -9,16 +9,6 @@ import SwiftUI
 
 struct PokemonDetailView: View
 {
-    //TODO: figure out image stuff- make this refreshable in case images don't show up?
-    //Need following stuff:
-        //Image, name, and id# on a background corresponding to their type
-        //Button that captures or releases depending on its captured status
-        //Its types, colored its special color
-        //Stats screen for its height and weight
-        //List of its type weaknesses, again colored by type
-        //List of any next and/or previous evolutions (same mini thing as in Types list)
-    //                DetailImageBox(pokemon: TODO: for each pokemons next or prev evolutions)
-    //                    .frame(width: 140, height: 200)
     let pokemonID: Int
     
     //fetches the pokemon from the list of currentPokemon given the id

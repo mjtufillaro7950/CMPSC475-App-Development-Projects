@@ -40,22 +40,25 @@ struct TypesView: View
                     //get all pokemon with the current type
                     let pokemonByType = networkManager.currentPokemonList.filter {$0.types.contains(type)}
                     PokemonByTypeView(pokemonByType: pokemonByType, type: type)
-                    
                 }
             }
-            //attempt to update the list of current pokemon whenever this view appears
-            .task{try? await networkManager.updateCurrentPokemon()}
-            //add the ability to scroll up to refresh
-            .refreshable { try? await networkManager.updateCurrentPokemon() }
             .padding()
         }
+        //attempt to update the list of current pokemon whenever this view appears
+        .task{try? await networkManager.updateCurrentPokemon()}
+        //add the ability to scroll up to refresh
+        .refreshable { try? await networkManager.updateCurrentPokemon() }
     }
 }
 
 
 struct CapturedPokemonView: View
 {
+    @Environment(NetworkManager.self) private var networkManager
+    @Environment(AuthManager.self) private var authManager
+    
     let capturedPokemon: [Pokemon]
+    
     var body: some View
     {
         HStack
@@ -79,8 +82,9 @@ struct CapturedPokemonView: View
                 ForEach(capturedPokemon)
                 {
                     pokemon in
+                    let pokemonID: Int = pokemon.id
                     //Clicking on the image of the evolution sends you to its page
-                    NavigationLink(destination: PokemonDetailView(pokemonID: pokemon.id))
+                    NavigationLink(destination: PokemonDetailView(pokemonID: pokemonID))
                     {
                         //render the pokemon's image
                         DetailImageBoxWithCaptureIcon(pokemon: pokemon)

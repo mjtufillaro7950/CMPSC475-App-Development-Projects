@@ -44,11 +44,11 @@ struct SignupView: View
                     {
                         Image(systemName: "person.circle.fill")
                             .font(.system(size: 80))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
                         
                         Text("Create Account")
                             .font(.system(size: 36, weight: .bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
                     }
                     
                     
@@ -61,13 +61,14 @@ struct SignupView: View
                             Text("Email")
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.black)
                             
                             TextField("", text: $email)
                                 .textFieldStyle(AuthTextFieldStyle())
                                 .textInputAutocapitalization(.never)
                                 .keyboardType(.emailAddress)
                                 .autocorrectionDisabled()
+                                .foregroundStyle(.black)
                         }
                         
                         // Password Field
@@ -76,12 +77,13 @@ struct SignupView: View
                             Text("Password")
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.black)
                             
                             SecureField("", text: $password)
                                 .textFieldStyle(AuthTextFieldStyle())
                                 //I was running into a weird bug where the password was getting blocked by "automatic strong password cover view text", but including this got rid of that for some reason
                                 .textContentType(.oneTimeCode)
+                                .foregroundStyle(.black)
                         }
                         
                         // Confirm Password Field
@@ -89,10 +91,11 @@ struct SignupView: View
                             Text("Confirm Password")
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.black)
                             
                             SecureField("", text: $confirmPassword)
                                 .textFieldStyle(AuthTextFieldStyle())
+                                .foregroundStyle(.black)
                         }
                         
                         // Error message for password mismatch
@@ -121,7 +124,7 @@ struct SignupView: View
                                 }
                             }
                             .frame(maxWidth: .infinity)
-                            .frame(height: 50)
+                            .frame(width: 75, height: 50)
                             .background(.white)
                             .foregroundStyle(Color.blue)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
