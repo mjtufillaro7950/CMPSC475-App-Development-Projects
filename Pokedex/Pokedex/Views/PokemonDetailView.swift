@@ -47,7 +47,7 @@ struct PokemonDetailView: View
                         .bold()
                         .font(.title)
                         .foregroundStyle(.black)
-                    DetailImageBox(pokemon: pokemon)
+                    DetailImageBoxWithCaptureIcon(pokemon: pokemon)
                         .frame(height: 250)
                     CaptureButton(pokemon: pokemon)
                     TypeIndicators(pokemon: pokemon, indicator: Indicator.selfTypes)
@@ -102,6 +102,30 @@ struct DetailImageBox: View
 }
 
 
+//basically the same thing but add a small icon to the top right if the current pokemon has been captured
+struct DetailImageBoxWithCaptureIcon: View
+{
+    let pokemon: Pokemon
+    var body: some View
+    {
+        ZStack(alignment: .topTrailing)
+        {
+            DetailImageBox(pokemon: pokemon)
+            
+            //if the pokemon has been captured, add a pokeball icon in the top right
+            if pokemon.captured
+            {
+                Image("PokemonBall")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 30)
+                    .padding(5)
+            }
+        }
+    }
+}
+
+
 //return the pokemon's image, or a question mark if its not found
 struct PokemonImage: View
 {
@@ -119,10 +143,11 @@ struct PokemonImage: View
         //adds a default question mark as the placeholder
         placeholder:
         {
-            Image(systemName: "questionmark.circle.fill")
+            Image(systemName: "questionmark.circle")
                 .resizable()
                 .scaledToFit()
                 .foregroundStyle(.white)
+                .opacity(0.7)
         }
     }
 }
@@ -228,15 +253,16 @@ struct TypeIndicators: View
                 {
                     RoundedRectangle(cornerRadius: 15)
                         .fill(Color(pokemonType: type))
-                        .frame(width: 100, height: 30)
+                        .frame(width: 80, height: 25)
                     HStack
                     {
                         Image(systemName: "circle.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 10)
+                            .frame(height: 7)
                             .foregroundStyle(.white)
                         Text("\(type.rawValue.capitalized)")
+                            .font(.caption)
                             .bold()
                             .foregroundStyle(.white)
                     }
@@ -256,10 +282,13 @@ struct StatsView: View
         ZStack
         {
             RoundedRectangle(cornerRadius: 15)
+                .foregroundStyle(.white)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Color.black, lineWidth: 5)
-                .frame(height: 100)
+            
             VStack
             {
+                
                 HStack
                 {
                     Image(systemName: "chart.bar")
@@ -278,6 +307,7 @@ struct StatsView: View
                         .scaledToFit()
                         .foregroundStyle(.blue)
                         .frame(width: 30)
+                    
                     VStack
                     {
                         Text("HEIGHT:")
@@ -285,12 +315,15 @@ struct StatsView: View
                         Text("\(String(format: "%.1f", pokemon.height))m")
                             .font(.title2)
                     }
+                    
                     Spacer()
+                    
                     Image(systemName: "square.stack.3d.up")
                         .resizable()
                         .scaledToFit()
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(.orange)
                         .frame(width: 30)
+                    
                     VStack
                     {
                         Text("WEIGHT:")
@@ -317,8 +350,9 @@ struct WeaknessesView: View
         ZStack
         {
             RoundedRectangle(cornerRadius: 15)
+                .foregroundStyle(.white)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Color.black, lineWidth: 5)
-                .frame(height: 100)
             VStack
             {
                 HStack
@@ -354,8 +388,10 @@ struct EvolutionsView: View
         ZStack
         {
             RoundedRectangle(cornerRadius: 15)
+                .foregroundStyle(.white)
+                .frame(height: 100)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Color.black, lineWidth: 5)
-                //.frame(height: 200)
             
             VStack
             {
@@ -393,7 +429,7 @@ struct EvolutionsView: View
                                         NavigationLink(destination: PokemonDetailView(pokemonID: prevPokemon.id))
                                         {
                                             //render the pokemon's image
-                                            DetailImageBox(pokemon: prevPokemon)
+                                            DetailImageBoxWithCaptureIcon(pokemon: prevPokemon)
                                                 .frame(width: 140, height: 200)
                                         }
                                         
@@ -424,7 +460,7 @@ struct EvolutionsView: View
                                         NavigationLink(destination: PokemonDetailView(pokemonID: nextPokemon.id))
                                         {
                                             //render the pokemon's image
-                                            DetailImageBox(pokemon: nextPokemon)
+                                            DetailImageBoxWithCaptureIcon(pokemon: nextPokemon)
                                                 .frame(width: 140, height: 200)
                                         }
                                     }

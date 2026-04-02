@@ -85,11 +85,12 @@ struct CaptureFilterView: View
         {
             ZStack
             {
+                
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.red, .white]), startPoint: .top, endPoint: .bottom))
+                    .foregroundStyle(.white)
                     .frame(width: 125, height: 30)
                 RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color.black, lineWidth: 2)
+                    .stroke(Color.black, lineWidth: 5)
                     .frame(width: 125, height: 30)
                 HStack
                 {

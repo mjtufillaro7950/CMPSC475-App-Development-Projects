@@ -22,8 +22,8 @@ struct ListView: View
     @State var showCapturedOnly: Bool = false
     //controls whether filter sheet is shown
     @State var showSheet: Bool = false
-    //computed property to get the list of filtered pokemon
     
+    //computed property to get the list of filtered pokemon
     var filteredPokemon: [Pokemon]
     {
         return networkManager.currentPokemonList.filter
@@ -46,32 +46,8 @@ struct ListView: View
                 .bold()
             
             Spacer()
-            //Button that pulls up the filter sheet when pressed
-            Button
-            {
-                showSheet = true
-            }
-            label:
-            {
-                ZStack
-                {
-                    RoundedRectangle(cornerRadius: 15)
-                        .frame(width: 110, height: 40)
-                        .foregroundStyle(.gray)
-                    HStack
-                    {
-                        Image(systemName: "gear")
-                        Text("Filters")
-                    }
-                    .foregroundStyle(.black)
-                    .bold()
-                }
-                
-            }
-            .sheet(isPresented: $showSheet)
-            {
-                FilterSheetView(selectedTypes: $selectedTypes, showCapturedOnly: $showCapturedOnly)
-            }
+            
+            FilterButton(selectedTypes: $selectedTypes, showCapturedOnly: $showCapturedOnly, showSheet: $showSheet)
             
             SearchBarView(searchText: $searchText)
             
@@ -86,11 +62,11 @@ struct ListView: View
                     NavigationLink(destination: PokemonDetailView(pokemonID: pokemon.id))
                     {
                         //Show the pokemon's view
-                        PokemonListViewDisplay(pokemon: pokemon)
+                        PokemonRowView(pokemon: pokemon)
                     }
                     
                 }
-                //when the list appears, call network manager to update the current list of pokemon
+                //when the list appears, call network manager to update the current list of pok
                 .task{try? await networkManager.updateCurrentPokemon()}
             }
             //add the ability to scroll up to refresh
@@ -100,6 +76,46 @@ struct ListView: View
     }
 }
 
+
+struct FilterButton: View
+{
+    //all the pokemon types selected by the user in the filter
+    @Binding var selectedTypes: Set<PokemonType>
+    //same for capture status
+    @Binding var showCapturedOnly: Bool
+    //controls whether filter sheet is shown
+    @Binding var showSheet: Bool
+    
+    var body: some View
+    {
+        //Button that pulls up the filter sheet when pressed
+        Button
+        {
+            showSheet = true
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 15)
+                    .frame(width: 110, height: 40)
+                    .foregroundStyle(.gray)
+                HStack
+                {
+                    Image(systemName: "gear")
+                    Text("Filters")
+                }
+                .foregroundStyle(.black)
+                .bold()
+            }
+            
+        }
+        .sheet(isPresented: $showSheet)
+        {
+            FilterSheetView(selectedTypes: $selectedTypes, showCapturedOnly: $showCapturedOnly)
+        }
+    }
+}
 
 
 struct SearchBarView: View
@@ -121,18 +137,6 @@ struct SearchBarView: View
             .padding(.horizontal)
         }
         .padding()
-    }
-}
-
-
-//Display the pokemon and its stats
-struct PokemonListViewDisplay: View
-{
-    let pokemon: Pokemon
-    var body: some View
-    {
-        //TODO: replace with custom pretty view
-        Text("\(pokemon.name)")
     }
 }
 
