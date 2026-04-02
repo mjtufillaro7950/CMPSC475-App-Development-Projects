@@ -2,7 +2,7 @@
 //  PokemonRowView.swift
 //  Pokedex
 //
-//  Created by LiasPub on 4/1/26.
+//  Created by Michael Tufillaro on 4/1/26.
 //
 
 import SwiftUI
@@ -15,20 +15,13 @@ struct PokemonRowView: View
     let pokemon: Pokemon
     var body: some View
     {
-        //TODO: replace with custom pretty view
-        //Encapsulate everything inside a rounded rectangle
-        //Add in an HStack:
-        //pokemon image + custom bg
-        //VStack with name, types, height/weight
-        //Spacer()
-        //VStack with ID and pokeball (make transluscent so it doesn't shift positioning)
         ZStack
         {
             //perimeter
             RoundedRectangle(cornerRadius: 15)
                 .foregroundStyle(.white)
             RoundedRectangle(cornerRadius: 15)
-                .stroke(Color.black, lineWidth: 5)
+                .stroke(Color.black, lineWidth: 3)
             
             HStack
             {
@@ -84,17 +77,19 @@ struct SmallImageAndBackground: View
 }
 
 
+//TODO: figure out how to make it left oriented
 struct RowNameAndStats: View
 {
     let pokemon: Pokemon
     var body: some View
     {
-        VStack
+        VStack(alignment: .leading)
         {
             Spacer()
             Text("\(pokemon.name)")
                 .bold()
                 .font(.title2)
+                .foregroundStyle(.black)
             Spacer()
             //add pokemon's types
             TypeIndicators(pokemon: pokemon, indicator: Indicator.selfTypes)
@@ -122,6 +117,7 @@ struct HeightAndWeight: View
             
             Text("\(String(format: "%.1f", pokemon.height))m")
                 .font(.caption2)
+                .foregroundStyle(.black)
                 
             Image(systemName: "square.stack.3d.up")
                 .resizable()
@@ -131,6 +127,7 @@ struct HeightAndWeight: View
             
             Text("\(String(format: "%.1f", pokemon.weight))kg")
                 .font(.caption2)
+                .foregroundStyle(.black)
         }
         .bold()
     }

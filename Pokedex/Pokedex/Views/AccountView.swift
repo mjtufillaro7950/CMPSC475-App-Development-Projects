@@ -12,27 +12,64 @@ struct AccountView: View
     @Environment(NetworkManager.self) private var networkManager
     @Environment(AuthManager.self) private var authManager
     
-    //TODO: make this look nice
     var body: some View
     {
-        VStack
+        VStack(alignment: .leading)
         {
             Text("Account")
-            HStack
+                .font(.largeTitle)
+                .bold()
+                .foregroundStyle(.black)
+                .padding(.leading)
+            
+            ZStack
             {
-                if let email = authManager.userEmail
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(.white)
+                    .frame(height: 50)
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(lineWidth: 3)
+                    .frame(height: 50)
+                HStack
                 {
-                    Text("Email: \(email)")
+                    if let email = authManager.userEmail
+                    {
+                        Text("Email:")
+                        Spacer()
+                        Text("\(email)")
+                    }
                 }
-                
+                .bold()
+                .foregroundStyle(.black)
+                .padding(.horizontal)
             }
-            Button("Log Out")
-            {
-                authManager.resetAuthState()
-            }
-            .foregroundStyle(.red)
         }
         .padding()
+        
+        Button
+        {
+            authManager.resetAuthState()
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(.red)
+                    .frame(width: 125, height: 40)
+                HStack
+                {
+                    Image(systemName: "arrowshape.turn.up.left.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 20)
+                    Text("Log Out")
+                        .bold()
+                }
+                .foregroundStyle(.white)
+            }
+        }
+        Spacer()
     }
 }
 

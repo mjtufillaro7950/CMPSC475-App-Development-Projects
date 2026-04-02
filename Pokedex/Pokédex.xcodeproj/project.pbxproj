@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9BE0E1312F71F0030008F347 /* Build configuration list for PBXProject "Pokedex" */;
+			buildConfigurationList = 9BE0E1312F71F0030008F347 /* Build configuration list for PBXProject "Pokédex" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -313,7 +313,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9BE0E1312F71F0030008F347 /* Build configuration list for PBXProject "Pokedex" */ = {
+		9BE0E1312F71F0030008F347 /* Build configuration list for PBXProject "Pokédex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9BE0E13F2F71F0040008F347 /* Debug */,

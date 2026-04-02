@@ -39,17 +39,24 @@ struct ListView: View
     
     var body: some View
     {
-        VStack
+        VStack(alignment: .leading)
         {
             Text("Pokédex")
                 .font(.largeTitle)
                 .bold()
+                .padding(.leading)
             
             Spacer()
             
-            FilterButton(selectedTypes: $selectedTypes, showCapturedOnly: $showCapturedOnly, showSheet: $showSheet)
-            
-            SearchBarView(searchText: $searchText)
+            HStack
+            {
+                Spacer()
+                SearchBarView(searchText: $searchText)
+                Spacer()
+                FilterButton(selectedTypes: $selectedTypes, showCapturedOnly: $showCapturedOnly, showSheet: $showSheet)
+                    .padding(.trailing)
+                Spacer()
+            }
             
             ScrollView
             {

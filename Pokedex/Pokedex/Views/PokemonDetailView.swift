@@ -53,7 +53,11 @@ struct PokemonDetailView: View
                     TypeIndicators(pokemon: pokemon, indicator: Indicator.selfTypes)
                     StatsView(pokemon: pokemon)
                     WeaknessesView(pokemon: pokemon)
-                    EvolutionsView(pokemon: pokemon)
+                    //display evolutions, if there are any
+                    if (pokemon.next_evolution != nil) || (pokemon.prev_evolution != nil)
+                    {
+                        EvolutionsView(pokemon: pokemon)
+                    }
                 }
             }
             else
@@ -284,10 +288,11 @@ struct StatsView: View
             RoundedRectangle(cornerRadius: 15)
                 .foregroundStyle(.white)
             RoundedRectangle(cornerRadius: 15)
-                .stroke(Color.black, lineWidth: 5)
+                .stroke(Color.black, lineWidth: 3)
             
             VStack
             {
+                Spacer()
                 
                 HStack
                 {
@@ -297,6 +302,8 @@ struct StatsView: View
                 .bold()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .padding(10)
+                
+                Spacer()
                 
                 //list height and weight here
                 HStack
@@ -352,23 +359,24 @@ struct WeaknessesView: View
             RoundedRectangle(cornerRadius: 15)
                 .foregroundStyle(.white)
             RoundedRectangle(cornerRadius: 15)
-                .stroke(Color.black, lineWidth: 5)
+                .stroke(Color.black, lineWidth: 3)
             VStack
             {
+                Spacer()
                 HStack
                 {
                     Image(systemName: "exclamationmark.shield")
-                    Text("Weaknesses (Scrollable)")
+                    Text("Weaknesses")
                 }
                 .bold()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .padding(10)
+                Spacer()
                 ScrollView(.horizontal)
                 {
                     TypeIndicators(pokemon: pokemon, indicator: Indicator.weaknessTypes)
                 }
                 .padding(.horizontal)
-                
                 Spacer()
             }
         }
@@ -391,7 +399,7 @@ struct EvolutionsView: View
                 .foregroundStyle(.white)
                 .frame(height: 100)
             RoundedRectangle(cornerRadius: 15)
-                .stroke(Color.black, lineWidth: 5)
+                .stroke(Color.black, lineWidth: 3)
             
             VStack
             {
@@ -406,7 +414,7 @@ struct EvolutionsView: View
                 .padding(10)
                 
                 //list the detail view images of the evolutions here
-                VStack
+                VStack(alignment: .leading)
                 {
                     //Makes view for any previous evolutions
                     if let prevEvolutions = pokemon.prev_evolution
@@ -414,6 +422,7 @@ struct EvolutionsView: View
                         Text("Previous")
                             .bold()
                             .font(.title2)
+                            .padding(.leading)
                         ScrollView(.horizontal)
                         {
                             HStack
@@ -438,7 +447,9 @@ struct EvolutionsView: View
                             }
                             .padding(.horizontal)
                         }
+                        .padding()
                     }
+                    
                     
                     //does same for next evolutions
                     if let nextEvolutions = pokemon.next_evolution
@@ -446,6 +457,7 @@ struct EvolutionsView: View
                         Text("Next")
                             .bold()
                             .font(.title2)
+                            .padding(.leading)
                         ScrollView(.horizontal)
                         {
                             HStack
@@ -468,6 +480,7 @@ struct EvolutionsView: View
                             }
                             .padding(.horizontal)
                         }
+                        .padding()
                     }
                     Spacer()
                 }
