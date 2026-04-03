@@ -8,7 +8,6 @@
 import SwiftUI
 
 
-//create a pokemon row for use in the ListView
 //Display the pokemon and its stats in the format required for the list view
 struct PokemonRowView: View
 {
@@ -37,6 +36,7 @@ struct PokemonRowView: View
                 VStack
                 {
                     Spacer()
+                    //show ID with leading 0s if needed
                     Text("#\(String(format: "%03d", pokemon.id))")
                         .bold()
                         .foregroundStyle(.black)
@@ -60,6 +60,7 @@ struct PokemonRowView: View
 }
 
 
+//creates a small pokemon image with type gradient background
 struct SmallImageAndBackground: View
 {
     let pokemon: Pokemon
@@ -77,12 +78,13 @@ struct SmallImageAndBackground: View
 }
 
 
-//TODO: figure out how to make it left oriented
+//display name and stats
 struct RowNameAndStats: View
 {
     let pokemon: Pokemon
     var body: some View
     {
+        //.leading so its left oriented
         VStack(alignment: .leading)
         {
             Spacer()
@@ -100,6 +102,7 @@ struct RowNameAndStats: View
         }
     }
 }
+
 
 struct HeightAndWeight: View
 {

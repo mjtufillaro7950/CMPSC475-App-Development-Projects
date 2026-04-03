@@ -18,6 +18,7 @@ struct TypesView: View
         return networkManager.currentPokemonList.filter { $0.captured }
     }
     
+    //main view that displays pokemon by capture status and type
     var body: some View
     {
         ScrollView(.vertical)
@@ -98,6 +99,7 @@ struct CapturedPokemonView: View
 }
 
 
+//pretty much same but for type
 struct PokemonByTypeView: View
 {
     let pokemonByType: [Pokemon]
@@ -107,6 +109,7 @@ struct PokemonByTypeView: View
     {
         HStack
         {
+            //use a circle filled with the type color instead of a pokeball
             Image(systemName: "circle.fill")
                 .resizable()
                 .scaledToFit()

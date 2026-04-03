@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Creates the Account page to see email and log out
 struct AccountView: View
 {
     @Environment(NetworkManager.self) private var networkManager
@@ -32,11 +33,16 @@ struct AccountView: View
                     .frame(height: 50)
                 HStack
                 {
+                    //if the email exists, display it
                     if let email = authManager.userEmail
                     {
                         Text("Email:")
                         Spacer()
                         Text("\(email)")
+                    }
+                    else
+                    {
+                        Text("No email found")
                     }
                 }
                 .bold()
@@ -46,6 +52,7 @@ struct AccountView: View
         }
         .padding()
         
+        //log out button that resets authorization
         Button
         {
             authManager.resetAuthState()

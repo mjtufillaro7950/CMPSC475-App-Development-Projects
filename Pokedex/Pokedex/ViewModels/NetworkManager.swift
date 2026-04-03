@@ -3,6 +3,7 @@
 //  Pokedex
 //
 //  Created by Nader Alfares on 3/6/26.
+//  Edited by Michael Tufillaro on 3/28/26
 //
 import Foundation
 import SwiftUI

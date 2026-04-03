@@ -8,17 +8,15 @@
 import SwiftUI
 
 
+//create list view of all pokemon
 struct ListView: View
 {
     @Environment(NetworkManager.self) private var networkManager
     @Environment(AuthManager.self) private var authManager
     
-    //need state variables for search/filter stuff
-    //current text in search bar
+    //state variables for search/filter stuff
     @State var searchText: String = ""
-    //all the pokemon types selected by the user in the filter
     @State var selectedTypes: Set<PokemonType> = []
-    //same for capture status
     @State var showCapturedOnly: Bool = false
     //controls whether filter sheet is shown
     @State var showSheet: Bool = false
@@ -28,11 +26,11 @@ struct ListView: View
     {
         return networkManager.currentPokemonList.filter
         {
-            //filter by search bar...
+            //filter by search bar (return true if the bar is empty or if the text is in the pokemon's name)...
             (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) &&
-            //and filter by type...
+            //and filter by type (return true if no types are selected or the pokemon's list of types contains a type in selected types)...
             (selectedTypes.isEmpty || $0.types.contains(where: { selectedTypes.contains($0) })) &&
-            //and filter by capture status
+            //and filter by capture status (return true if the captured toggle is off or the current pokemon is listed as captured)
             (!showCapturedOnly || $0.captured)
         }
     }
@@ -73,7 +71,7 @@ struct ListView: View
                     }
                     
                 }
-                //when the list appears, call network manager to update the current list of pok
+                //when the list appears, call network manager to update the current list of pokemon
                 .task{try? await networkManager.updateCurrentPokemon()}
             }
             //add the ability to scroll up to refresh
@@ -95,7 +93,7 @@ struct FilterButton: View
     
     var body: some View
     {
-        //Button that pulls up the filter sheet when pressed
+        //Toggle sheet bool
         Button
         {
             showSheet = true
@@ -117,6 +115,7 @@ struct FilterButton: View
             }
             
         }
+        //show the sheet when the bool is toggled
         .sheet(isPresented: $showSheet)
         {
             FilterSheetView(selectedTypes: $selectedTypes, showCapturedOnly: $showCapturedOnly)

@@ -9,7 +9,7 @@
 
 import Foundation
 
-//again, mostly taken from class code
+//mostly taken from class code
 
 // MARK: - Request Models
 struct SignupRequest: Codable

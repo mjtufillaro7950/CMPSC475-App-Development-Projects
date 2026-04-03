@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+//view that shows detailed information about the pokemon whos ID is passed in
 struct PokemonDetailView: View
 {
     let pokemonID: Int
@@ -23,12 +25,13 @@ struct PokemonDetailView: View
     
     @Environment(NetworkManager.self) private var networkManager
     @Environment(AuthManager.self) private var authManager
+    
     var body: some View
     {
         //scrolling view containing all elements of the detail page
         ScrollView
         {
-            //tries to fetch the current pokemon, otherwise goes to ProgressView
+            //tries to fetch the current pokemon, otherwise shows loading progress view
             if let pokemon = pokemon
             {
                 VStack()
@@ -56,7 +59,7 @@ struct PokemonDetailView: View
             }
         }
         .padding()
-        //need to update the list of current pokemon whenever it appears
+        //need to update the list of current pokemon whenever the detailed view appears
         .task{try? await networkManager.updateCurrentPokemon()}
     }
 }
@@ -73,11 +76,11 @@ struct DetailImageBox: View
             RoundedRectangle(cornerRadius: 15)
                 //creates a Linear Gradient using the pokemon's type colors
                 .foregroundStyle(LinearGradient(pokemon: pokemon))
+            
             VStack()
             {
                 //Add the pokemon's image, fetched from the server
                 PokemonImage(pokemon: pokemon)
-                    //.frame(width: 140, height: 140)
                 //Add the Pokemon's name and ID
                 Text("\(pokemon.name)")
                     .bold()
@@ -96,17 +99,17 @@ struct DetailImageBox: View
 }
 
 
-//basically the same thing but add a small icon to the top right if the current pokemon has been captured
+//basically the same thing but with an added pokeball icon if the current pokemon has been captured
 struct DetailImageBoxWithCaptureIcon: View
 {
     let pokemon: Pokemon
     var body: some View
     {
+        //top trailing so the ball is added on top right
         ZStack(alignment: .topTrailing)
         {
             DetailImageBox(pokemon: pokemon)
             
-            //if the pokemon has been captured, add a pokeball icon in the top right
             if pokemon.captured
             {
                 Image("PokemonBall")
@@ -134,7 +137,7 @@ struct PokemonImage: View
                 .resizable()
                 .scaledToFit()
         }
-        //adds a default question mark as the placeholder
+        //adds a default question mark as the placeholder if the image isn't found
         placeholder:
         {
             Image(systemName: "questionmark.circle")
@@ -147,18 +150,20 @@ struct PokemonImage: View
 }
 
 
-//define the button that inverts the current pokemon's capture status
-
+//button that inverts the current pokemon's capture status
 struct CaptureButton: View
 {
     let pokemon: Pokemon
+    
     @Environment(NetworkManager.self) private var networkManager
     @Environment(AuthManager.self) private var authManager
+    
     //computed properties that find the text/color of the capture button depending on if the pokemon is captured or not
     var buttonText: String
     {
         return pokemon.captured ? "Release": "Capture"
     }
+    
     var buttonColor: Color
     {
         return pokemon.captured ? .red: .green
@@ -237,7 +242,7 @@ struct TypeIndicators: View
     
     var body: some View
     {
-        //make a view for each type in the list
+        //make a view for each type in the given list
         HStack
         {
             ForEach(typeList)
@@ -268,6 +273,7 @@ struct TypeIndicators: View
 }
 
 
+//view that shows the pokemon's height and weight
 struct StatsView: View
 {
     let pokemon: Pokemon
@@ -339,6 +345,7 @@ struct StatsView: View
 }
 
 
+//show the pokemon's weaknesses
 struct WeaknessesView: View
 {
     let pokemon: Pokemon
@@ -375,6 +382,7 @@ struct WeaknessesView: View
 }
 
 
+//show the next and prev evolutions
 struct EvolutionsView: View
 {
     let pokemon: Pokemon
@@ -409,10 +417,15 @@ struct EvolutionsView: View
                     //Makes view for any previous evolutions
                     if let prevEvolutions = pokemon.prev_evolution
                     {
-                        Text("Previous")
-                            .bold()
-                            .font(.title2)
-                            .padding(.leading)
+                        HStack
+                        {
+                            Text("Previous")
+                            Image(systemName: "arrow.left")
+                        }
+                        .bold()
+                        .font(.title2)
+                        .padding(.leading)
+                        
                         ScrollView(.horizontal)
                         {
                             HStack
@@ -444,10 +457,15 @@ struct EvolutionsView: View
                     //does same for next evolutions
                     if let nextEvolutions = pokemon.next_evolution
                     {
-                        Text("Next")
-                            .bold()
-                            .font(.title2)
-                            .padding(.leading)
+                        HStack
+                        {
+                            Text("Next")
+                            Image(systemName: "arrow.right")
+                        }
+                        .bold()
+                        .font(.title2)
+                        .padding(.leading)
+                        
                         ScrollView(.horizontal)
                         {
                             HStack

@@ -2,12 +2,12 @@
 //  FilterSheetView.swift
 //  Pokedex
 //
-//  Created by LiasPub on 4/1/26.
+//  Created by Michael Tufillaro on 4/1/26.
 //
 
 import SwiftUI
 
-//TODO: make a Sheet for the filter stuff
+//Makes a sheet to display filter information
 struct FilterSheetView: View
 {
     @Environment(NetworkManager.self) private var networkManager
@@ -17,9 +17,6 @@ struct FilterSheetView: View
     @Binding var showCapturedOnly: Bool
     var body: some View
     {
-            //TODO: make view for Captured and for each type.
-            //tapping on captured toggles it and tapping on type adds or removes it from selectedTypes
-            //if captured is true or if the type is in selectedTypes, make checkmark have full or no capacity
             VStack
             {
                 //Button that resets filter variables
@@ -110,6 +107,7 @@ struct CaptureFilterView: View
 }
 
 
+//given a type, make a toggle for it
 struct TypeFilterView: View
 {
     @Binding var selectedTypes: Set<PokemonType>

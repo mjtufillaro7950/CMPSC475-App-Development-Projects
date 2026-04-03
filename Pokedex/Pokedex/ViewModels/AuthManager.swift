@@ -17,10 +17,7 @@ class AuthManager
     private(set) var accessToken: String?
     private(set) var userEmail: String?
     private(set) var isAuthenticated: Bool = false
-    
-    //(recommended) use in your views to show an alert for errors
-    //TODO: do I need this?
-    var errorMessage: String? = "ERROR! I guess."
+
     
     //UserDefaults keys
     private let tokenKey = "pokedex_access_token"

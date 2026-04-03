@@ -14,6 +14,7 @@ struct AuthContainerView: View
     
     var body: some View
     {
+        //if the user is logged in, display the main view, or otherwise the login view
         Group
         {
             if authManager.isAuthenticated

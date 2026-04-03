@@ -6,6 +6,7 @@
 //
 import SwiftUI
 
+//associates a Color with each pokemon type
 extension Color
 {
     init(pokemonType: PokemonType)
@@ -46,6 +47,7 @@ extension Color
     }
 }
 
+//make a linear gradient with a pokemon's type(s)
 extension LinearGradient
 {
     init(pokemon: Pokemon)

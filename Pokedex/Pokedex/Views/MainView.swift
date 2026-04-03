@@ -13,11 +13,10 @@ struct MainView: View
     @Environment(AuthManager.self) private var authManager
     var body: some View
     {
-        //create tabs to access the 3 different views
-        //need a NavigationStack so list view and types view can link to detailed views
+        //need a NavigationStack so list view and types view can link to detailed views when tapping on a pokemon
         return NavigationStack
         {
-            
+            //create tabs to access the 3 different main views
             TabView
             {
                 Tab("List", systemImage: "list.bullet")
