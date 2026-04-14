@@ -6,16 +6,19 @@
 //
 
 import Foundation
+import MultipeerConnectivity
+import SwiftUI
 
 
-//TODO: make a func that takes a list of Players, and returns the minimized list of Transactions needed to account for everything
+//TODO: test this
+//func that takes a list of Players, and returns the minimized list of Transactions needed to account for everything
 func transactionMinimization(playerList: [Player]) -> [Transaction]
 {
-    
     //simulate a heap by creating a list of all players with a positive balance, sorted by largest balance owed
     var positiveHeap = playerList
         .filter{ $0.balance > 0 }
         .sorted{ abs($0.balance) > abs($1.balance) }
+    
     //same thing but for negative balances and sorted by largest balance due
     var negativeHeap = playerList
         .filter{ $0.balance < 0 }
@@ -29,6 +32,7 @@ func transactionMinimization(playerList: [Player]) -> [Transaction]
         positiveHeap.append(player)
         positiveHeap.sort{ abs($0.balance) > abs($1.balance) }
     }
+    
     func addPlayerToNegativeHeap(_ player: Player)
     {
         negativeHeap.append(player)
@@ -44,7 +48,8 @@ func transactionMinimization(playerList: [Player]) -> [Transaction]
         //the transaction amount is whichever balance is lower
         let transactionAmount: Double = min(abs(creditor.balance), abs(debtor.balance))
         //create a Transaction and add it to the list
-        transactionList.append(Transaction(debtorName: debtor.name, creditorName: creditor.name, balance: transactionAmount))
+        transactionList.append(Transaction(id: UUID(), debtorName: debtor.name, creditorName: creditor.name, balance: transactionAmount))
+        
         //if the creditor is owed more than the debtor can pay
         if abs(creditor.balance) > abs(debtor.balance)
         {
@@ -53,6 +58,7 @@ func transactionMinimization(playerList: [Player]) -> [Transaction]
             addPlayerToPositiveHeap(creditor)
             
         }
+        
         //if the debtor owes more than the creditor needs
         else if abs(creditor.balance) < abs(debtor.balance)
         {
@@ -60,13 +66,16 @@ func transactionMinimization(playerList: [Player]) -> [Transaction]
             debtor.balance += transactionAmount
             addPlayerToNegativeHeap(debtor)
         }
+        
         //if their balances are the same, neither needs to be added back into the heap so do nothing
     }
+    
     //if both heaps are empty, then everything has been settled so just return the list of transactions
     if positiveHeap.isEmpty && negativeHeap.isEmpty
     {
         return transactionList
     }
+    
     //if one heap still has value(s) in it, then there must be a user error because poker is a zero-sum game. Alert user.
     else
     {
