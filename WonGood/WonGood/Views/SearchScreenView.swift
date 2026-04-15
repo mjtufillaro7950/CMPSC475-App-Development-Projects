@@ -9,13 +9,18 @@ import SwiftUI
 
 struct SearchScreenView: View
 {
+    //declare to access the viewmodel
+    @State var gameSessionManager = GameSessionManager()
+    
     var body: some View
     {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        //TODO: this will be a Sheet that displays a list of all nearby Host games. Clicking on one leaves the sheet and updates game state, taking you to the room view
+        Text("Placeholder Search Screen View")
     }
 }
 
 #Preview
 {
     SearchScreenView()
+        .environment(GameSessionManager())
 }

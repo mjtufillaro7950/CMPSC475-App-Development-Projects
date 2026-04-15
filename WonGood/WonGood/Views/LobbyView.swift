@@ -9,13 +9,98 @@ import SwiftUI
 
 struct LobbyView: View
 {
+    //declare to access the viewmodel
+    @State var gameSessionManager = GameSessionManager()
+    
     var body: some View
     {
-        Text("Lobby View")
+        //TODO: hook up the host game button and the join game button to their proper functions. Make the searching screen be a Sheet because at any point you should be able to go back and pick Host if you want.
+        //TODO: make sure that when leaving said search screen sheet, you stop searching
+        
+        
+        //TODO: make a dedicated view for the dealer top half of the screen, maybe have a "current dealer image" property in viewmodel that it can reference to make updating it easier
+        Image("DefaultPlaceholder")
+            .resizable().scaledToFit()
+            .ignoresSafeArea()
+        //TODO: make a much better looking title, probably even a dedicated image instead of text
+        Text("WONGOOD")
+            .font(.title).bold()
+        Spacer()
+        HStack
+        {
+            Spacer()
+            HostGameButtonView()
+            Spacer()
+            JoinGameButtonView()
+            Spacer()
+        }
+        .padding()
     }
 }
 
+
+struct HostGameButtonView: View
+{
+    var body: some View
+    {
+        Button
+        {
+            //TODO: do host game stuff here
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(.green)
+                    .frame(width: 150, height: 40)
+                HStack
+                {
+                    Image(systemName: "house.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 20)
+                    Text("Host Game")
+                        .bold()
+                }
+                .foregroundStyle(.white)
+            }
+        }
+    }
+}
+
+
+struct JoinGameButtonView: View
+{
+    var body: some View
+    {
+        Button
+        {
+            //TODO: do join game stuff here
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(.blue)
+                    .frame(width: 150, height: 40)
+                HStack
+                {
+                    Image(systemName: "arrowshape.turn.up.right.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 20)
+                    Text("Join Game")
+                        .bold()
+                }
+                .foregroundStyle(.white)
+            }
+        }
+    }
+}
 #Preview
 {
     LobbyView()
+        .environment(GameSessionManager())
 }
