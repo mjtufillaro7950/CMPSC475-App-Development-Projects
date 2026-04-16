@@ -11,10 +11,13 @@ struct LobbyView: View
 {
     //declare to access the viewmodel
     @State var gameSessionManager = GameSessionManager()
+    //controls whether the seaching sheet is shown
+    @State var showSeachSheet = false
     
     var body: some View
     {
-        //TODO: hook up the host game button and the join game button to their proper functions. Make the searching screen be a Sheet because at any point you should be able to go back and pick Host if you want.
+        //TODO: hook up the host game button and the join game button to their proper functions. Make the searching screen be a Sheet because at any point you should be able to go back and pick Host if you want.!!!!!!!!!!!!!!!!!!!!!
+        
         //TODO: make sure that when leaving said search screen sheet, you stop searching
         
         
@@ -26,26 +29,37 @@ struct LobbyView: View
         Text("WONGOOD")
             .font(.title).bold()
         Spacer()
-        HStack
+        VStack
         {
             Spacer()
             HostGameButtonView()
             Spacer()
-            JoinGameButtonView()
+            JoinGameButtonView(showSearchSheet: $showSeachSheet)
             Spacer()
         }
+        .sheet(isPresented: $showSeachSheet)
+        {
+            SearchScreenView()
+        }
         .padding()
+        
     }
 }
 
 
 struct HostGameButtonView: View
 {
+    //declare to access the viewmodel
+    @State var gameSessionManager = GameSessionManager()
+    
     var body: some View
     {
         Button
         {
             //TODO: do host game stuff here
+            gameSessionManager.hostGame()
+            //move to the view for the host's room
+            gameSessionManager.phase = .collectingData
         }
         label:
         {
@@ -72,11 +86,21 @@ struct HostGameButtonView: View
 
 struct JoinGameButtonView: View
 {
+    //pass in binding var
+    @Binding var showSearchSheet: Bool
+    
+    //declare to access the viewmodel
+    @State var gameSessionManager = GameSessionManager()
+    
     var body: some View
     {
         Button
         {
-            //TODO: do join game stuff here
+            //TODO: update this?
+            //call join game from viewmodel
+            gameSessionManager.joinGame()
+            //pull up the search screen Sheet
+            showSearchSheet = true
         }
         label:
         {

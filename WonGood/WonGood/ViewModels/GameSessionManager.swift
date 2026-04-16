@@ -174,4 +174,11 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     {
         DispatchQueue.main.async { self.foundHosts.removeAll { $0 == peerID } }
     }
+    
+    //get rid of the current browser when stopping searching for joinable games
+    func stopSearching()
+    {
+        browser?.stopBrowsingForPeers()
+        browser = nil
+    }
 }
