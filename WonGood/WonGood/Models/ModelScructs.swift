@@ -10,11 +10,13 @@ import MultipeerConnectivity
 
 
 //struct that represents a player and their associated balance
+//TODO: I'm eventually going to need to add an extra parameter for card customization options
 struct Player: Codable, Identifiable
 {
     let id: UUID
     var name: String
     var balance: Double
+    //TODO: is this needed?
     //id for multipeer connectivity
     var peerID: MCPeerID?
     
@@ -52,8 +54,7 @@ enum MessageType: String, Codable
     case playerSubmit      // client → host: name + balance
     case startCalculation  // host → all: balances locked, computing
     case distributeResults // host → all: here are the transactions
-    //TODO: necessary?
-    //case playerJoined      // host → all: update lobby list
+    case syncPlayerList      // host → all: update lobby list
 }
 
 

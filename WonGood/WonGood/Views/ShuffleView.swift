@@ -20,4 +20,5 @@ struct ShuffleView: View
 #Preview
 {
     ShuffleView()
+        .environment(GameSessionManager())
 }

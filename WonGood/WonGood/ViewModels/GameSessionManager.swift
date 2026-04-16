@@ -20,6 +20,8 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     var foundHosts: [MCPeerID] = []
     var isHost = false
     var localPlayer: Player?
+    //computed property for room view
+    var needsPlayerInfo: Bool { localPlayer == nil }
     
     //vars used for Multipeer Connectivity stuff
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
@@ -92,15 +94,36 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     }
     
     
-    //send host player information
+    //update the player's info
+//    func updatePlayerInfo(name: String, amount: Double)
+//    {
+//        let player = Player(id: UUID(), name: name, balance: amount)
+//        self.localPlayer = player
+//    }
+    
+    //send player information to host
     func submitBalance(name: String, amount: Double)
     {
-        //make a Player object using the name and balance
+        //TODO: I'm eventually going to need to add an extra parameter for card customization options
+        //create a player object for the local player
         let player = Player(id: UUID(), name: name, balance: amount)
-        //keeps track of which player object is the current user
-        localPlayer = player
-        guard let encoded = try? JSONEncoder().encode(player) else { return }
-        broadcast(type: .playerSubmit, payload: encoded)
+        self.localPlayer = player
+        //TODO: if editing later, this might add people twice, so maybe check and remove duplicates before adding to list?
+        //the host doesn't need to broadcast so just add to the list of players and make sure its updated
+        if self.isHost
+        {
+            // Add directly — can't broadcast to yourself
+            players.append(player)
+            // Then re-broadcast the updated list to clients
+            guard let encoded = try? JSONEncoder().encode(players) else { return }
+            broadcast(type: .syncPlayerList, payload: encoded)
+        }
+        //send player information to host
+        else
+        {
+            guard let encoded = try? JSONEncoder().encode(player) else { return }
+            broadcast(type: .playerSubmit, payload: encoded)
+        }
     }
     
     
@@ -130,21 +153,33 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
             switch message.type
             {
                 
-                //add a new player to the list of players
-            case .playerSubmit:
-                guard let player = try? JSONDecoder().decode(Player.self, from: message.payload) else { return }
-                self.players.append(player)
+                //add a player to the list of players when they join the room/create a card
+                case .playerSubmit:
+                    guard let player = try? JSONDecoder().decode(Player.self, from: message.payload) else { return }
+                    self.players.append(player)
+                    
+                    //when a player joins, send message to update lists
+                    if self.isHost
+                    {
+                        guard let encoded = try? JSONEncoder().encode(self.players) else { return }
+                        self.broadcast(type: .syncPlayerList, payload: encoded)
+                    }
+
+                //update list of players
+                case .syncPlayerList:
+                    guard let updatedPlayers = try? JSONDecoder().decode([Player].self, from: message.payload) else { return }
+                    self.players = updatedPlayers
                 
                 //set the flag to start calculating the transactions
-            case .startCalculation:
-                self.phase = .calculating
+                case .startCalculation:
+                    self.phase = .calculating
                 
                 //set the flag to start distributing results
-            case .distributeResults:
-                //decode and assign the list of transactions
-                guard let transactions = try? JSONDecoder().decode([Transaction].self, from: message.payload) else { return }
-                self.resolvedTransactions = transactions
-                self.phase = .results
+                case .distributeResults:
+                    //decode and assign the list of transactions
+                    guard let transactions = try? JSONDecoder().decode([Transaction].self, from: message.payload) else { return }
+                    self.resolvedTransactions = transactions
+                    self.phase = .results
                 
             }
         }
@@ -156,7 +191,13 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     {
         DispatchQueue.main.async
         {
-            //TODO: is the second check required here?
+            //whenever someone joins, update everyone's list of players
+            if state == .connected && self.isHost
+            {
+                guard let encoded = try? JSONEncoder().encode(self.players) else { return }
+                self.broadcast(type: .syncPlayerList, payload: encoded)
+            }
+            
             //if the host disconnects, all players go back to the lobby
             if state == .notConnected && peerID == self.hostPeerID
             {
@@ -198,7 +239,6 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         browser = nil
     }
     
-    //TODO: need a leave game function
     //leaves the game, resetting all relavent funcs and values
     func leaveGame()
     {

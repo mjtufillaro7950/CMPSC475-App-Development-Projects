@@ -22,4 +22,5 @@ struct DealerView: View
 #Preview
 {
     DealerView()
+        .environment(GameSessionManager())
 }
