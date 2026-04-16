@@ -13,6 +13,7 @@ struct ShuffleView: View
     
     var body: some View
     {
+        //TODO: unused for now, but the idea is to have a little shuffle animation for a second or two before the results come out
         Text("Placeholder Shuffle View")
     }
 }

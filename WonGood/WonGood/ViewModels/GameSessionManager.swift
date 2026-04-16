@@ -14,22 +14,35 @@ import SwiftUI
 class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate
 {
     //vars used in views
+    
+    //controls which main view is being shown
     var phase: GamePhase = .lobby
+    //current list of players
     var players: [Player] = []
+    //stores the list of transactions after algorithm runs
     var resolvedTransactions: [Transaction] = []
+    //updates list of hosts that are found while looking for a game
     var foundHosts: [MCPeerID] = []
     var isHost = false
+    //this stores the Player object corresponding to the local user
     var localPlayer: Player?
-    //computed property for room view
-    var needsPlayerInfo: Bool { localPlayer == nil }
+//    //computed property for roomView
+//    var needsPlayerInfo: Bool { localPlayer == nil }
     
     //vars used for Multipeer Connectivity stuff
+    
+    //ID representing this device
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
+    //ID representing the hosts device
     private var hostPeerID: MCPeerID?
+    //the room that the devices connect to
     private var session: MCSession!
+    //lets the host reach out to peers to join
     private var advertiser: MCNearbyServiceAdvertiser?
+    //helps peers search for nearby host games
     private var browser: MCNearbyServiceBrowser?
-    private let serviceType = "wongood-game"
+    //key so only other wongood games show up
+    private let serviceType = "wongood"
     
     
     //make a custom init, building off of the NSObject framework which is required for MCConnectivity delegation
@@ -64,27 +77,27 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     func lockAndCalculate()
     {
         self.advertiser?.stopAdvertisingPeer()
-        self.phase = .calculating
-        //change everyone else's phase to calculating (no data needed so empty value)
+        self.phase = .shuffle
+        //change everyone else's phase to shuffle (no data needed so empty value)
         self.broadcast(type: .startCalculation, payload: Data())
         //run the minimization algorithm and store/encode the results
-        let transactions = transactionMinimization(playerList: players)
+        let transactions = transactionMinimization(playerList: self.players)
         guard let encodedTransactions = try? JSONEncoder().encode(transactions) else { return }
         self.resolvedTransactions = transactions
         self.phase = .results
         //TODO: if i want to have a dedicated shuffling animation, I will need some way to halt this until whatever animation is done
         //send the results to everyone
-        broadcast(type: .distributeResults, payload: encodedTransactions)
+        self.broadcast(type: .distributeResults, payload: encodedTransactions)
     }
     
     
     //start looking for hosts
     func joinGame()
     {
-        isHost = false
-        browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
-        browser?.delegate = self
-        browser?.startBrowsingForPeers()
+        self.isHost = false
+        self.browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
+        self.browser?.delegate = self
+        self.browser?.startBrowsingForPeers()
     }
     
     
@@ -93,7 +106,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     {
         //update peer id and join
         self.hostPeerID = hostPeerID
-        browser?.invitePeer(hostPeerID, to: session, withContext: nil, timeout: 30)
+        self.browser?.invitePeer(hostPeerID, to: self.session, withContext: nil, timeout: 30)
     }
     
     
@@ -105,27 +118,27 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
 //    }
     
     //send player information to host
+    //TODO: I'm eventually going to need to add an extra parameter for card customization options
     func submitBalance(name: String, amount: Double)
     {
-        //TODO: I'm eventually going to need to add an extra parameter for card customization options
         //create a player object for the local player
         let player = Player(id: UUID(), name: name, balance: amount)
         self.localPlayer = player
-        //TODO: if editing later, this might add people twice, so maybe check and remove duplicates before adding to list?
+        //TODO: if editing card design later, this might add people twice, so maybe check and remove duplicates before adding to list?
         //the host doesn't need to broadcast so just add to the list of players and make sure its updated
         if self.isHost
         {
-            // Add directly — can't broadcast to yourself
-            players.append(player)
-            // Then re-broadcast the updated list to clients
-            guard let encoded = try? JSONEncoder().encode(players) else { return }
-            broadcast(type: .syncPlayerList, payload: encoded)
+            //update the host's list of players
+            self.players.append(player)
+            //re-broadcast the updated list to peers
+            guard let encoded = try? JSONEncoder().encode(self.players) else { return }
+            self.broadcast(type: .syncPlayerList, payload: encoded)
         }
         //send player information to host
         else
         {
             guard let encoded = try? JSONEncoder().encode(player) else { return }
-            broadcast(type: .playerSubmit, payload: encoded)
+            self.broadcast(type: .playerSubmit, payload: encoded)
         }
     }
     
@@ -137,10 +150,9 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         let message = GameMessage(type: type, payload: payload)
         //make sure the message can be encoded and there's at least one connected peer
         guard
-            let data = try? JSONEncoder().encode(message), !session.connectedPeers.isEmpty
-        else { return }
+            let data = try? JSONEncoder().encode(message), !self.session.connectedPeers.isEmpty else { return }
         //send the information to peers
-        try? session.send(data, toPeers: session.connectedPeers, with: .reliable)
+        try? self.session.send(data, toPeers: self.session.connectedPeers, with: .reliable)
     }
     
     
@@ -154,7 +166,6 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
             //depending on the message's type, handle it differently
             switch message.type
             {
-                
                 //add a player to the list of players when they join the room/create a card
                 case .playerSubmit:
                     guard let player = try? JSONDecoder().decode(Player.self, from: message.payload) else { return }
@@ -172,9 +183,9 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
                     guard let updatedPlayers = try? JSONDecoder().decode([Player].self, from: message.payload) else { return }
                     self.players = updatedPlayers
                 
-                //set the flag to start calculating the transactions
+                //set the flag to start calculating/shuffling
                 case .startCalculation:
-                    self.phase = .calculating
+                    self.phase = .shuffle
                 
                 //set the flag to start distributing results
                 case .distributeResults:
@@ -222,7 +233,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     }
     
     
-    //add hosts to list of found hosts when they are start advertising
+    //add hosts to list of found hosts when they start advertising
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?)
     {
         DispatchQueue.main.async { self.foundHosts.append(peerID) }
@@ -237,8 +248,8 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     //get rid of the current browser when stopping searching for joinable games
     func stopSearching()
     {
-        browser?.stopBrowsingForPeers()
-        browser = nil
+        self.browser?.stopBrowsingForPeers()
+        self.browser = nil
     }
     
     //leaves the game, resetting all relavent funcs and values
@@ -260,8 +271,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         self.hostPeerID = nil
         
         //rebuild the session var so it can be used again
-        session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
-        session.delegate = self
+        self.session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
+        self.session.delegate = self
     }
-    
 }

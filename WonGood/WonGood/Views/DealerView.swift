@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-//in order to animate the shuffling, need to import combine
+//in order to animate the shuffling with Timer, need to import combine
 import Combine
 
 struct DealerView: View
@@ -15,8 +15,9 @@ struct DealerView: View
     
     var body: some View
     {
-        //TODO: this will be the view of the dealer at the top of the screen. There are several different images it will pull from, depending on the phase of the game
+        //the view of the dealer at the top of the screen. There are several different images it will pull from, depending on the phase of the game
         //It needs to be the exact same size and position in each view, to give the illusion of animation.
+        //the final non-placeholder images will all be the exact same size
         switch gameSessionManager.phase
         {
             case .lobby:
@@ -25,18 +26,18 @@ struct DealerView: View
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
                     .ignoresSafeArea()
-            case .collectingData:
+            case .room:
                 Image("ThinkingPlaceholder")
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
                     .ignoresSafeArea()
-            case .calculating:
+            case .shuffle:
                 //animate card shuffling
                 ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "ShuffleBPlaceholder")
             case .results:
                 //animate card dealing
-            ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "DealingPlaceholder")
+                ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "DealingPlaceholder")
         }
     }
 }
@@ -55,7 +56,6 @@ struct ImageAnimation: View
     
     var body: some View
     {
-
         Image(showFirstImage ? firstImage : secondImage)
             .resizable()
             .scaledToFit()
@@ -66,7 +66,7 @@ struct ImageAnimation: View
             { _ in
                 showFirstImage.toggle()
             }
-            //cancels the timer when the view is not being shown
+            //stops the timer loop when the view is not being shown
             .onDisappear
             {
                 timer.upstream.connect().cancel()
@@ -78,6 +78,6 @@ struct ImageAnimation: View
 #Preview
 {
     //DealerView()
-    ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "DealingPlaceholder")
+    ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "ShuffleBPlaceholder")
         .environment(GameSessionManager())
 }

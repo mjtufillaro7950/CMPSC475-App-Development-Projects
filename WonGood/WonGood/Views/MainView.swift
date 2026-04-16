@@ -16,14 +16,15 @@ struct MainView: View
     {
         VStack
         {
+            //show dealer in top part of screen
             DealerView()
             //show different views depending on phase of game session
             switch gameSessionManager.phase
             {
-                case .lobby: LobbyView()
-                case .collectingData: RoomView()
-                case .calculating: ShuffleView()
-                case .results: ResultsView()
+                case .lobby:    LobbyView()
+                case .room:     RoomView()
+                case .shuffle:  ShuffleView()
+                case .results:  ResultsView()
             }
         }
         .background(Color.tableColor)

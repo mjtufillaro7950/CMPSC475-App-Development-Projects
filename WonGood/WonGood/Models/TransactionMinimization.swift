@@ -10,7 +10,6 @@ import MultipeerConnectivity
 import SwiftUI
 
 
-//TODO: test this
 //func that takes a list of Players, and returns the minimized list of Transactions needed to account for everything
 func transactionMinimization(playerList: [Player]) -> [Transaction]
 {
@@ -48,7 +47,7 @@ func transactionMinimization(playerList: [Player]) -> [Transaction]
         //the transaction amount is whichever balance is lower
         let transactionAmount: Double = min(abs(creditor.balance), abs(debtor.balance))
         //create a Transaction and add it to the list
-        transactionList.append(Transaction(id: UUID(), debtorName: debtor.name, creditorName: creditor.name, balance: transactionAmount))
+        transactionList.append(Transaction(id: UUID(), debtor: debtor, creditor: creditor, balance: transactionAmount))
         
         //if the creditor is owed more than the debtor can pay
         if abs(creditor.balance) > abs(debtor.balance)

@@ -30,7 +30,7 @@ struct SearchScreenView: View
                     //start connecting to the selected host
                     gameSessionManager.connectToHost(host)
                     //update the phase to change the view
-                    gameSessionManager.phase = .collectingData
+                    gameSessionManager.phase = .room
                 }
             }
         }

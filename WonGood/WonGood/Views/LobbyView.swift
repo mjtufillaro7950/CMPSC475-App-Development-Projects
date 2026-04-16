@@ -16,16 +16,12 @@ struct LobbyView: View
     
     var body: some View
     {
-        //TODO: hook up the host game button and the join game button to their proper functions. Make the searching screen be a Sheet because at any point you should be able to go back and pick Host if you want.!!!!!!!!!!!!!!!!!!!!!
-        
-        //TODO: make sure that when leaving said search screen sheet, you stop searching
-        
         VStack
         {
             //TODO: make a much better looking title, probably even a dedicated image instead of text
-            Text("WONGOOD")
-                .font(.title).bold()
-            Spacer()
+            Text("WONGOOD (Prototype)")
+                .font(.largeTitle)
+                .bold()
             Spacer()
             HostGameButtonView()
             Spacer()
@@ -51,11 +47,12 @@ struct HostGameButtonView: View
     {
         Button
         {
-            //TODO: do host game stuff here
+            //start hosting game
             gameSessionManager.hostGame()
             //move to the view for the host's room
-            gameSessionManager.phase = .collectingData
+            gameSessionManager.phase = .room
         }
+        //TODO: replace placeholder button design
         label:
         {
             ZStack
@@ -91,12 +88,12 @@ struct JoinGameButtonView: View
     {
         Button
         {
-            //TODO: update this?
             //call join game from viewmodel
             gameSessionManager.joinGame()
             //pull up the search screen Sheet
             showSearchSheet = true
         }
+        //TODO: replace placeholder button design
         label:
         {
             ZStack

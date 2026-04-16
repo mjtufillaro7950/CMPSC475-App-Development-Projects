@@ -16,15 +16,13 @@ struct Player: Codable, Identifiable
     let id: UUID
     var name: String
     var balance: Double
-    //TODO: is this needed?
-    //id for multipeer connectivity
-    var peerID: MCPeerID?
-    
-    //ignore peerID when coding since its not decodable
-    enum CodingKeys: String, CodingKey
-    {
-        case id, name, balance
-    }
+//    //id for multipeer connectivity
+//    var peerID: MCPeerID?
+//    //ignore peerID when coding since its not decodable
+//    enum CodingKeys: String, CodingKey
+//    {
+//        case id, name, balance
+//    }
 }
 
 
@@ -32,35 +30,43 @@ struct Player: Codable, Identifiable
 struct Transaction: Codable, Identifiable
 {
     let id: UUID
-    let debtorName: String
-    let creditorName: String
+    let debtor: Player
+    let creditor: Player
     var balance: Double
 }
 
 
-//TODO: replace comments when I understand what this does
+//this controls the different stages of the game loop
 enum GamePhase: String, Codable
 {
-    case lobby           // host is advertising, clients are joining
-    case collectingData  // everyone enters their name + balance
-    case calculating     // host is running the algorithm
-    case results         // transactions have been resolved and distributed
+    //choosing between host/join game
+    case lobby
+    //in the game room
+    case room
+    //calculating results (shuffling animation?)
+    case shuffle
+    //display results
+    case results
 }
 
 
-//TODO: replace comments when I understand what this does
+//different types of messages that are sent using Multipeer Connectivity
 enum MessageType: String, Codable
 {
-    case playerSubmit      // client → host: name + balance
-    case startCalculation  // host → all: balances locked, computing
-    case distributeResults // host → all: here are the transactions
-    case syncPlayerList      // host → all: update lobby list
+    //peer sends host Player information
+    case playerSubmit
+    //host tells all peers to move to calculation/shuffle phase
+    case startCalculation
+    //host tells all peers to display results
+    case distributeResults
+    //host refreshes all peers player lists
+    case syncPlayerList
 }
 
 
-//TODO: replace comments when I understand what this does
+//creates a message to be sent that has both data and a message type so the recipient knows how to interpret it
 struct GameMessage: Codable
 {
     let type: MessageType
-    let payload: Data   // JSON-encoded Player or [Transaction] depending on type
+    let payload: Data
 }
