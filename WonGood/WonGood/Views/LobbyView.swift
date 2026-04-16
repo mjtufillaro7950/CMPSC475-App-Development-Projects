@@ -61,7 +61,7 @@ struct HostGameButtonView: View
             ZStack
             {
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(.yellow)
                     .frame(width: 150, height: 40)
                 HStack
                 {
