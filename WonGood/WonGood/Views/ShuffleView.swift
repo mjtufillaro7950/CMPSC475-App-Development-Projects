@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ShuffleView: View
 {
+    @Environment(GameSessionManager.self) var gameSessionManager
+    
     var body: some View
     {
         Text("Shuffle View")

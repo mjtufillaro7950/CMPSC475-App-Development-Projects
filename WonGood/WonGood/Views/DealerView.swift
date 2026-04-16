@@ -9,6 +9,8 @@ import SwiftUI
 
 struct DealerView: View
 {
+    @Environment(GameSessionManager.self) var gameSessionManager
+    
     var body: some View
     {
         //TODO: this will be the view of the dealer at the top of the screen. There are several different images it will pull from, depending on the phase of the game

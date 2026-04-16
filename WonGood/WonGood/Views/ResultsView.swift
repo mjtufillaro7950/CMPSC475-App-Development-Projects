@@ -10,7 +10,7 @@ import SwiftUI
 struct ResultsView: View
 {
     //declare to access the viewmodel
-    @State var gameSessionManager = GameSessionManager()
+    @Environment(GameSessionManager.self) var gameSessionManager
     
     var body: some View
     {

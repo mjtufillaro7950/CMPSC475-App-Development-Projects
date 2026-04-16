@@ -13,7 +13,6 @@ import SwiftUI
 //needs MultipeerConnectivity stuff (as well as NSObject which they depend on)
 class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate
 {
-    
     //vars used in views
     var phase: GamePhase = .lobby
     var players: [Player] = []
@@ -24,6 +23,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     
     //vars used for Multipeer Connectivity stuff
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
+    private var hostPeerID: MCPeerID?
     private var session: MCSession!
     private var advertiser: MCNearbyServiceAdvertiser?
     private var browser: MCNearbyServiceBrowser?
@@ -86,6 +86,8 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     //send invitation to host to join
     func connectToHost(_ hostPeerID: MCPeerID)
     {
+        //update peer id and join
+        self.hostPeerID = hostPeerID
         browser?.invitePeer(hostPeerID, to: session, withContext: nil, timeout: 30)
     }
     
@@ -95,7 +97,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     {
         //make a Player object using the name and balance
         let player = Player(id: UUID(), name: name, balance: amount)
-        //TODO: what is localPlayer?
+        //keeps track of which player object is the current user
         localPlayer = player
         guard let encoded = try? JSONEncoder().encode(player) else { return }
         broadcast(type: .playerSubmit, payload: encoded)
@@ -117,7 +119,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     }
     
     
-    //this func recieves and interprets broadcasted messages
+    //run whenever recieving a message from a peer
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID)
     {
         //try to decode the message
@@ -148,9 +150,23 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         }
     }
     
-    //as a byproduct of MCSessionDelegate, I need session funcs for didChange, didRecieve stream, and didStart/didFinish ReceivingResourceWithName
+    
+    //run when there's a change in connectivity
+    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState)
+    {
+        DispatchQueue.main.async
+        {
+            //TODO: is the second check required here?
+            //if the host disconnects, all players go back to the lobby
+            if state == .notConnected && peerID == self.hostPeerID
+            {
+                self.leaveGame()
+            }
+        }
+    }
+    
+    //as a byproduct of MCSessionDelegate, I need session funcs for didRecieve stream, and didStart/didFinish ReceivingResourceWithName
     //they're not used and don't do anything but it throws an error unless I have them
-    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {}
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {}
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {}
@@ -181,4 +197,29 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         browser?.stopBrowsingForPeers()
         browser = nil
     }
+    
+    //TODO: need a leave game function
+    //leaves the game, resetting all relavent funcs and values
+    func leaveGame()
+    {
+        //disconnect from other players
+        session.disconnect()
+        
+        //stop advertising/browsing
+        self.advertiser?.stopAdvertisingPeer()
+        self.advertiser = nil
+        self.browser?.stopBrowsingForPeers()
+        self.browser = nil
+        //reset states
+        self.players = []
+        self.foundHosts = []
+        self.isHost = false
+        self.phase = .lobby
+        self.hostPeerID = nil
+        
+        //rebuild the session var so it can be used again
+        session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
+        session.delegate = self
+    }
+    
 }
