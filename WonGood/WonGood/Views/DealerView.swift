@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+//in order to animate the shuffling, need to import combine
+import Combine
 
 struct DealerView: View
 {
@@ -30,25 +32,52 @@ struct DealerView: View
                     .frame(maxWidth: .infinity)
                     .ignoresSafeArea()
             case .calculating:
-                //TODO: create shuffle animation by swapping between shuffleA and shuffleB images in regular time intervals
-                Image("ShuffleBPlaceholder")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea()
+                //animate card shuffling
+                ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "ShuffleBPlaceholder")
             case .results:
-                //TODO: create dealing animation by swapping between shuffleA and dealing images in regular time intervals
-                Image("DealingPlaceholder")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea()
+                //animate card dealing
+            ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "DealingPlaceholder")
         }
     }
 }
 
+
+//create simple animation by swapping between two images in regular time intervals
+struct ImageAnimation: View
+{
+    let firstImage: String
+    let secondImage: String
+    @Environment(GameSessionManager.self) var gameSessionManager
+    @State private var showFirstImage = true
+    
+    //creates a timer that triggers every 0.5 seconds
+    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+    
+    var body: some View
+    {
+
+        Image(showFirstImage ? firstImage : secondImage)
+            .resizable()
+            .scaledToFit()
+            .frame(maxWidth: .infinity)
+            .ignoresSafeArea()
+            //swaps which image is shown every 5 seconds
+            .onReceive(timer)
+            { _ in
+                showFirstImage.toggle()
+            }
+            //cancels the timer when the view is not being shown
+            .onDisappear
+            {
+                timer.upstream.connect().cancel()
+            }
+    }
+}
+
+
 #Preview
 {
-    DealerView()
+    //DealerView()
+    ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "DealingPlaceholder")
         .environment(GameSessionManager())
 }
