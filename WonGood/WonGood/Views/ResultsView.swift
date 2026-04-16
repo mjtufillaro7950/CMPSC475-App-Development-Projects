@@ -24,6 +24,10 @@ struct ResultsView: View
             transaction in
             Text("\(transaction.debtorName) pays \(transaction.creditorName) \(transaction.balance)")
         }
+        Button("Leave Room")
+        {
+            gameSessionManager.leaveGame()
+        }
         Spacer()
     }
 }

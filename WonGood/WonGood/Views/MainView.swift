@@ -14,13 +14,18 @@ struct MainView: View
     
     var body: some View
     {
-        //show different views depending on phase of game session
-        switch gameSessionManager.phase
+        VStack
         {
+            //TODO: store dealer view OUT HERE. All four of these below views just change the bottom half of the screen
+            DealerView()
+            //show different views depending on phase of game session
+            switch gameSessionManager.phase
+            {
             case .lobby: LobbyView()
             case .collectingData: RoomView()
             case .calculating: ShuffleView()
             case .results: ResultsView()
+            }
         }
     }
 }

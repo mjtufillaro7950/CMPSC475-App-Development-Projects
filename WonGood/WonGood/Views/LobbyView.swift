@@ -22,10 +22,6 @@ struct LobbyView: View
         
         VStack
         {
-            //TODO: make a dedicated view for the dealer top half of the screen, maybe have a "current dealer image" property in viewmodel that it can reference to make updating it easier
-            Image("DefaultPlaceholder")
-                .resizable().scaledToFit()
-                .ignoresSafeArea()
             //TODO: make a much better looking title, probably even a dedicated image instead of text
             Text("WONGOOD")
                 .font(.title).bold()
