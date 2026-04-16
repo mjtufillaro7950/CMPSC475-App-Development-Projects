@@ -13,7 +13,7 @@ struct ShuffleView: View
     
     var body: some View
     {
-        Text("Shuffle View")
+        Text("Placeholder Shuffle View")
     }
 }
 

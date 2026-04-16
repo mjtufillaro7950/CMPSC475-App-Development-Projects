@@ -35,6 +35,7 @@ struct CardCustomizationView: View
             
             Button("Submit")
             {
+                //submit the name and balance
                 gameSessionManager.submitBalance(name: name, amount: Double(balanceText)!)
                 //close the sheet when submit is pressed
                 showCustomizationSheet = false

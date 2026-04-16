@@ -37,41 +37,44 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     {
         super.init()
         //make a new MCSession, and make self the sessions delegate
-        session = MCSession(
-            peer: myPeerID,
+        self.session = MCSession(
+            peer: self.myPeerID,
             securityIdentity: nil,
             encryptionPreference: .required
         )
-        session.delegate = self
+        self.session.delegate = self
     }
     
     
     //start advertising so other devices can find the host device
     func hostGame()
     {
-        isHost = true
-        advertiser = MCNearbyServiceAdvertiser(
-            peer: myPeerID,
+        self.isHost = true
+        self.advertiser = MCNearbyServiceAdvertiser(
+            peer: self.myPeerID,
             discoveryInfo: nil,
-            serviceType: serviceType
+            serviceType: self.serviceType
         )
-        advertiser?.delegate = self
-        advertiser?.startAdvertisingPeer()
+        self.advertiser?.delegate = self
+        self.advertiser?.startAdvertisingPeer()
     }
     
     
     //stop advertising and run minimiztion algorithm
     func lockAndCalculate()
     {
-        advertiser?.stopAdvertisingPeer()
-        phase = .calculating
-        broadcast(type: .startCalculation, payload: Data())
-        
+        self.advertiser?.stopAdvertisingPeer()
+        self.phase = .calculating
+        //change everyone else's phase to calculating (no data needed so empty value)
+        self.broadcast(type: .startCalculation, payload: Data())
+        //run the minimization algorithm and store/encode the results
         let transactions = transactionMinimization(playerList: players)
-        guard let encoded = try? JSONEncoder().encode(transactions) else { return }
-        resolvedTransactions = transactions
-        phase = .results
-        broadcast(type: .distributeResults, payload: encoded)
+        guard let encodedTransactions = try? JSONEncoder().encode(transactions) else { return }
+        self.resolvedTransactions = transactions
+        self.phase = .results
+        //TODO: if i want to have a dedicated shuffling animation, I will need some way to halt this until whatever animation is done
+        //send the results to everyone
+        broadcast(type: .distributeResults, payload: encodedTransactions)
     }
     
     
@@ -134,8 +137,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         let message = GameMessage(type: type, payload: payload)
         //make sure the message can be encoded and there's at least one connected peer
         guard
-            let data = try? JSONEncoder().encode(message),
-            !session.connectedPeers.isEmpty
+            let data = try? JSONEncoder().encode(message), !session.connectedPeers.isEmpty
         else { return }
         //send the information to peers
         try? session.send(data, toPeers: session.connectedPeers, with: .reliable)
@@ -191,7 +193,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     {
         DispatchQueue.main.async
         {
-            //whenever someone joins, update everyone's list of players
+            //whenever someone joins, host needs to update everyone's list of players
             if state == .connected && self.isHost
             {
                 guard let encoded = try? JSONEncoder().encode(self.players) else { return }
