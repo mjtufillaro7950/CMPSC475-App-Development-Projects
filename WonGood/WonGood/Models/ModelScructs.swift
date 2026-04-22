@@ -16,6 +16,7 @@ struct Player: Codable, Identifiable
     let id: UUID
     var name: String
     var balance: Double
+    var cardCustomizationOptions: CardCustomizationOptions
 //    //id for multipeer connectivity
 //    var peerID: MCPeerID?
 //    //ignore peerID when coding since its not decodable

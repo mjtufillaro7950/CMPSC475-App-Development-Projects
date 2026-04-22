@@ -122,8 +122,9 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     func submitBalance(name: String, amount: Double)
     {
         //create a player object for the local player
-        let player = Player(id: UUID(), name: name, balance: amount)
+        let player = Player(id: UUID(), name: name, balance: amount, cardCustomizationOptions: CardCustomizationOptions())
         self.localPlayer = player
+        
         //TODO: if editing card design later, this might add people twice, so maybe check and remove duplicates before adding to list?
         //the host doesn't need to broadcast so just add to the list of players and make sure its updated
         if self.isHost
