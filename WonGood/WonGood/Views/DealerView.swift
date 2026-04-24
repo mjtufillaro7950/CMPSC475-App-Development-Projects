@@ -18,26 +18,32 @@ struct DealerView: View
         //the view of the dealer at the top of the screen. There are several different images it will pull from, depending on the phase of the game
         //It needs to be the exact same size and position in each view, to give the illusion of animation.
         //the final non-placeholder images will all be the exact same size
-        switch gameSessionManager.phase
+        ZStack
         {
+            //overlay the dealer and the background
+            Image("Background")
+            
+            switch gameSessionManager.phase
+            {
             case .lobby:
-                Image("DefaultPlaceholder")
+                Image("Default")
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
                     .ignoresSafeArea()
             case .room:
-                Image("ThinkingPlaceholder")
+                Image("Thinking")
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
                     .ignoresSafeArea()
             case .shuffle:
                 //animate card shuffling
-                ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "ShuffleBPlaceholder")
+                ImageAnimation(firstImage: "ShuffleA", secondImage: "ShuffleB")
             case .results:
                 //animate card dealing
-                ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "DealingPlaceholder")
+                ImageAnimation(firstImage: "ShuffleA", secondImage: "Dealing")
+            }
         }
     }
 }
@@ -77,7 +83,7 @@ struct ImageAnimation: View
 
 #Preview
 {
-    //DealerView()
-    ImageAnimation(firstImage: "ShuffleAPlaceholder", secondImage: "ShuffleBPlaceholder")
+    DealerView()
+    //ImageAnimation(firstImage: "ShuffleA", secondImage: "Dealing")
         .environment(GameSessionManager())
 }

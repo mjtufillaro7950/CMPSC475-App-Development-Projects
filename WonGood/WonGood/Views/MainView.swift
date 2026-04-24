@@ -18,6 +18,8 @@ struct MainView: View
         {
             //show dealer in top part of screen
             DealerView()
+                .ignoresSafeArea()
+            
             //show different views depending on phase of game session
             switch gameSessionManager.phase
             {

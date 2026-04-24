@@ -13,31 +13,12 @@ struct CardView: View
     let cardWidth: CGFloat
     let player: Player
     
-    //get the corner radius and height of the card relative to its width
-    var cardCornerRadius: CGFloat
-    {
-        return cardWidth / 15
-    }
-    
-    var cardStrokeWidth: CGFloat
-    {
-        return cardWidth / 20
-    }
-    
-    var cardHeight: CGFloat
-    {
-        return 1.4 * cardWidth
-    }
-    
-    var shadowRadius: CGFloat
-    {
-        return 0.08 * cardWidth
-    }
-    
-    var paddingSize: CGFloat
-    {
-        return 0.05 * cardWidth
-    }
+    //get different sizing values as a function of the width so that it looks the same at all sizes
+    var cardCornerRadius: CGFloat{ return cardWidth / 15 }
+    var cardStrokeWidth: CGFloat{ return cardWidth / 20 }
+    var cardHeight: CGFloat{  return 1.4 * cardWidth }
+    var shadowRadius: CGFloat{ return 0.08 * cardWidth }
+    var paddingSize: CGFloat{ return 0.05 * cardWidth }
     
     var cardGradient: LinearGradient
     {
@@ -75,14 +56,22 @@ struct CardView: View
                 HStack
                 {
                     CardCornerDesign(cardWidth: cardWidth, player: player)
+                    
                     Spacer()
                 }
+                
                 Spacer()
+                
                 //TODO: name and balance in middle
+                Text("Name and Balance Stuff Here")
+                
+                Spacer()
+                
+                //same corner design, upside down and on the bottom right
                 HStack
                 {
                     Spacer()
-                    //same design, upside down
+                    
                     CardCornerDesign(cardWidth: cardWidth, player: player)
                         .rotationEffect(.degrees(180))
                 }
@@ -102,6 +91,7 @@ struct CardCornerDesign: View
     let cardWidth: CGFloat
     let player: Player
     
+    //computed properties that pull the relevant customizaton values out of the player object
     var playerValue: String
     {
         return player.cardCustomizationOptions.value.rawValue
