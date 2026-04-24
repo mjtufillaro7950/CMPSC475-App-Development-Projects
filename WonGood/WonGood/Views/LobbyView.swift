@@ -18,9 +18,7 @@ struct LobbyView: View
     {
         VStack
         {
-            Text("WONGOOD")
-                .bold()
-                .font(.system(size: 65, design: .serif))
+            LogoView()
             Spacer()
             HostGameButtonView()
             Spacer()
@@ -36,6 +34,26 @@ struct LobbyView: View
 }
 
 
+struct LogoView: View
+{
+    var body: some View
+    {
+        ZStack
+        {
+            //add a shadow effect
+            Text("WonGood")
+                .foregroundStyle(.black)
+                .offset(x: -2, y: 2)
+            Text("WonGood")
+                .foregroundStyle(Color.titleColor)
+        }
+        .bold()
+        .font(.system(size: 75, design: .serif))
+    }
+}
+
+
+//TODO: make buttons look nice!!!!!!!!!!!!!!!!!!!!!!!!!
 struct HostGameButtonView: View
 {
     //declare to access the viewmodel
@@ -115,6 +133,14 @@ struct JoinGameButtonView: View
 }
 #Preview
 {
-    LobbyView()
-        .environment(GameSessionManager())
+    VStack
+    {
+        DealerView()
+            .environment(GameSessionManager())
+        LobbyView()
+            .environment(GameSessionManager())
+    }
+    .background(Color.tableColor)
+    .ignoresSafeArea()
+    
 }
