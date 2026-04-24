@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 //TODO: make a struct for different options for card customization options
     //start with value and color
@@ -16,6 +17,16 @@ enum CardColor: String, Codable, CaseIterable
 {
     case red
     case black
+    
+    //returns a Color for each cardColor
+    var color: Color
+    {
+        switch self
+        {
+            case .red:   return Color.red
+            case .black: return Color.black
+        }
+    }
 }
 
 enum CardValue: String, Codable, CaseIterable
@@ -41,6 +52,18 @@ enum CardSuit: String, Codable, CaseIterable
     case hearts
     case diamonds
     case clubs
+    
+    //returns the name of the system image corresponding to each suit
+    var imageName: String
+    {
+        switch self
+        {
+            case .spades:   return "suit.spade.fill"
+            case .hearts:   return "suit.heart.fill"
+            case .diamonds: return "suit.diamonds.fill"
+            case .clubs:    return "suit.club.fill"
+        }
+    }
 }
 
 struct CardCustomizationOptions: Codable
