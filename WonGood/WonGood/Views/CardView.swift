@@ -63,8 +63,7 @@ struct CardView: View
                 
                 Spacer()
                 
-                //TODO: name and balance in middle (scaled to card size)
-                Text("Name and Balance Stuff Here")
+                CardMiddleText(cardWidth: cardWidth, player: player)
                 
                 Spacer()
                 
@@ -89,10 +88,31 @@ struct CardMiddleText: View
     //pass in the size of the card and the player its for
     let cardWidth: CGFloat
     let player: Player
+    //return + if positive balance or - if negative
+    var symbol: String
+    {
+        return player.balance > 0 ? "plus.circle": "minus.circle.fill"
+    }
     
     var body: some View
     {
-        
+        VStack
+        {
+            Text(player.name)
+                //handles long names
+                .minimumScaleFactor(0.5)
+                .lineLimit(2)
+            //truncate to two decimal places
+            HStack
+            {
+                //TODO: make symbol larger than balance so its easy to see
+                Image(systemName: symbol)
+                Text("$\(String(format: "%.2f", abs(player.balance)))")
+            }
+        }
+        .bold()
+        .font(.system(size: cardWidth * 0.15, design: .serif))
+        .foregroundStyle(player.cardCustomizationOptions.color.color)
     }
 }
 
@@ -130,7 +150,7 @@ struct CardCornerDesign: View
                 .bold()
                 .font(.system(size: cardWidth * 0.2, design: .serif))
             Image(systemName: playerSuit)
-                .font(.system(size: cardWidth * 0.1))
+                .font(.system(size: cardWidth * 0.13))
         }
         //set the symbols to the player's selected color
         .foregroundStyle(playerColor)
@@ -143,9 +163,20 @@ struct CardCornerDesign: View
     let cardWidthSmall: CGFloat = 150
     let cardWidthLarge: CGFloat = 300
     
-    let previewPlayer = Player(id: UUID(), name: "Mike", balance: 50.00, cardCustomizationOptions: CardCustomizationOptions())
+    let previewPlayer = Player(
+        id: UUID(),
+        name: "Mike",
+        balance: 50.00,
+        cardCustomizationOptions: CardCustomizationOptions()
+    )
     
-    CardView(cardWidth: cardWidthLarge, player: previewPlayer)
-    Spacer()
-    CardView(cardWidth: cardWidthSmall, player: previewPlayer)
+    VStack
+    {
+        CardView(cardWidth: cardWidthLarge, player: previewPlayer)
+        Spacer()
+        CardView(cardWidth: cardWidthSmall, player: previewPlayer)
+    }
+    .background(Color.tableColor)
+    //.ignoresSafeArea()
+    
 }

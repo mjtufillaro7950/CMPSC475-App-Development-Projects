@@ -71,7 +71,7 @@ enum CardSuit: String, Codable, CaseIterable
 struct CardCustomizationOptions: Codable
 {
     //default card option is the black jack of spades
-    var color: CardColor = .black
-    var value: CardValue = .jack
-    var suit: CardSuit = .spades
+    var color: CardColor = .red
+    var value: CardValue = .ace
+    var suit: CardSuit = .hearts
 }
