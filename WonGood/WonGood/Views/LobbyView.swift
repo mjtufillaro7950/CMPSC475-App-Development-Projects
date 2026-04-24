@@ -18,22 +18,20 @@ struct LobbyView: View
     {
         VStack
         {
-            //TODO: make a much better looking title, probably even a dedicated image instead of text
-            Text("WONGOOD (Prototype)")
-                .font(.largeTitle)
+            Text("WONGOOD")
                 .bold()
+                .font(.system(size: 65, design: .serif))
             Spacer()
             HostGameButtonView()
             Spacer()
             JoinGameButtonView(showSearchSheet: $showSeachSheet)
             Spacer()
         }
+        .padding()
         .sheet(isPresented: $showSeachSheet)
         {
             SearchScreenView()
         }
-
-        
     }
 }
 

@@ -14,4 +14,6 @@ extension Color
 {
     //HEX #497826
     static let tableColor = Color( #colorLiteral(red: 0.2862745098, green: 0.4705882353, blue: 0.1490196078, alpha: 1) )
+    
+    //dealer gray is #acacac
 }
