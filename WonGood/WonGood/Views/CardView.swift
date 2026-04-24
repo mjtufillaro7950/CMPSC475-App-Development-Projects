@@ -7,83 +7,110 @@
 
 import SwiftUI
 
-struct CardView: View
+struct PlayerCardView: View
 {
     //pass in the size of the card and the player its for
     let cardWidth: CGFloat
     let player: Player
     
-    //get different sizing values as a function of the width so that it looks the same at all sizes
-    var cardCornerRadius: CGFloat{ return cardWidth / 15 }
-    var cardStrokeWidth: CGFloat{ return cardWidth / 20 }
-    var cardHeight: CGFloat{  return 1.4 * cardWidth }
-    var shadowRadius: CGFloat{ return 0.08 * cardWidth }
-    var paddingSize: CGFloat{ return 0.05 * cardWidth }
-    
-    var cardGradient: LinearGradient
-    {
-        let cardColorOne = Color( #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) )
-        let cardColorTwo = Color( #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1) )
-        
-        
-        return LinearGradient(gradient: Gradient(colors: [cardColorOne, cardColorTwo]), startPoint: .topLeading, endPoint: .bottomTrailing)
-    }
-    
     var body: some View
     {
-        //TODO: make a view for the player cards
-            //need a zstack with:
-            //rounded rectangle forming main card
-            //number and symbol pair in top left and upside down in bottom right
-            //in the middle, name and balance
-        //TODO: make a view for transaction card
-            //two options: make the card look like one of the players cards, OR, make one of the symbol/number pairs be that of the creditor and one of the debtor.
-            //I like the second option, also make the middle text's color be a gradient from one to the other
+        //make a layout struct to calculate the necessary size of the different views
+        let layout = CardLayout(cardWidth: cardWidth)
         
-        //Text("CardView")
         ZStack
         {
             //border of card
-            RoundedRectangle(cornerRadius: cardCornerRadius)
-                .stroke(lineWidth: cardStrokeWidth)
+            RoundedRectangle(cornerRadius: layout.cardCornerRadius)
+                .stroke(lineWidth: layout.cardStrokeWidth)
             
             //subtle background gradient of card with a shadow
-            RoundedRectangle(cornerRadius: cardCornerRadius)
-                .foregroundStyle(cardGradient)
-                .shadow(radius: shadowRadius)
+            RoundedRectangle(cornerRadius: layout.cardCornerRadius)
+                .foregroundStyle(layout.cardGradient)
+                .shadow(radius: layout.shadowRadius)
+            
             VStack
             {
                 //add the corner design in the top left of card
                 HStack
                 {
                     CardCornerDesign(cardWidth: cardWidth, player: player)
-                    
                     Spacer()
                 }
                 
                 Spacer()
-                
-                CardMiddleText(cardWidth: cardWidth, player: player)
-                
+                PlayerMiddleText(cardWidth: cardWidth, player: player)
                 Spacer()
                 
                 //same corner design, upside down and on the bottom right
                 HStack
                 {
                     Spacer()
-                    
                     CardCornerDesign(cardWidth: cardWidth, player: player)
                         .rotationEffect(.degrees(180))
                 }
             }
-            .padding(paddingSize)
+            .padding(layout.paddingSize)
         }
-        .frame(width: cardWidth, height: cardHeight)
+        .frame(width: cardWidth, height: layout.cardHeight)
+    }
+}
+
+//similar to the player card but makes a card for a transaction instead
+struct TransactionCardView: View
+{
+    //pass in the size of the card and the transaction its for
+    let cardWidth: CGFloat
+    let transaction: Transaction
+    
+    var body: some View
+    {
+        //make a layout struct to calculate the necessary size of the different views
+        let layout = CardLayout(cardWidth: cardWidth)
+        
+        ZStack
+        {
+            //border of card
+            RoundedRectangle(cornerRadius: layout.cardCornerRadius)
+                .stroke(lineWidth: layout.cardStrokeWidth)
+            
+            //subtle background gradient of card with a shadow
+            RoundedRectangle(cornerRadius: layout.cardCornerRadius)
+                .foregroundStyle(layout.cardGradient)
+                .shadow(radius: layout.shadowRadius)
+            
+            //TODO: turn vstack of hstacks into an hstack of vstacks
+            HStack
+            {
+                //the debtors card info is in top left, and the creditor's name is in the top right
+                VStack
+                {
+                    CardCornerDesign(cardWidth: cardWidth, player: transaction.debtor)
+                    Spacer()
+                    
+                }
+                
+                Spacer()
+                //TODO: middle text needs to be colored with a gradient of the two players
+                TransactionMiddleText(cardWidth: cardWidth, transaction: transaction, layout: layout)
+                Spacer()
+                
+                //the creditor's card info is in bottom right, and the debtor's name in bottom left
+                VStack
+                {
+                    Spacer()
+                    CardCornerDesign(cardWidth: cardWidth, player: transaction.creditor)
+                        .rotationEffect(.degrees(180))
+                }
+            }
+            .padding(layout.paddingSize)
+        }
+        .frame(width: cardWidth, height: layout.cardHeight)
     }
 }
 
 
-struct CardMiddleText: View
+struct PlayerMiddleText: View
 {
     //pass in the size of the card and the player its for
     let cardWidth: CGFloat
@@ -91,19 +118,19 @@ struct CardMiddleText: View
     //return + if positive balance or - if negative
     var symbol: String
     {
-        return player.balance > 0 ? "plus.circle": "minus.circle.fill"
+        return player.balance > 0 ? "plus.rectangle": "minus.rectangle.fill"
     }
     
     var body: some View
     {
-        VStack
+        VStack(spacing: cardWidth * 0.01)
         {
             Text(player.name)
                 //handles long names
                 .minimumScaleFactor(0.5)
                 .lineLimit(2)
             //truncate to two decimal places
-            HStack
+            HStack(spacing: cardWidth * 0.01)
             {
                 //TODO: make symbol larger than balance so its easy to see
                 Image(systemName: symbol)
@@ -113,6 +140,71 @@ struct CardMiddleText: View
         .bold()
         .font(.system(size: cardWidth * 0.15, design: .serif))
         .foregroundStyle(player.cardCustomizationOptions.color.color)
+    }
+}
+
+struct TransactionMiddleText: View
+{
+    //pass in the size of the card and the player its for
+    let cardWidth: CGFloat
+    let transaction: Transaction
+    let layout: CardLayout
+    
+    var body: some View
+    {
+        let debtorColor = transaction.debtor.cardCustomizationOptions.color.color
+        let creditorColor = transaction.creditor.cardCustomizationOptions.color.color
+        
+        let maxTransactionNameSize = cardWidth * 0.2
+        
+        ZStack
+        {
+            //border of card
+            RoundedRectangle(cornerRadius: layout.cardCornerRadius)
+                .stroke(lineWidth: layout.cardStrokeWidth / 4)
+                .frame(height: layout.cardHeight * 0.75)
+            
+            
+            VStack(spacing: cardWidth * 0.01)
+            {
+                Text(transaction.debtor.name)
+                //handles long names by shrinking it down and going on two lines if they do not fit
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(2)
+                    .foregroundStyle(debtorColor)
+                    .bold()
+                    .font(.system(size: maxTransactionNameSize, design: .serif))
+                
+                Image(systemName: "arrow.down.square.fill")
+                    .bold()
+                    .font(.system(size: cardWidth * 0.2, design: .serif))
+                //gradient from debtor's color to creditor
+                    .foregroundStyle(LinearGradient(
+                        gradient: Gradient(colors: [debtorColor, creditorColor]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                        )
+                    )
+                
+                Text(transaction.creditor.name)
+                //handles long values by shrinking it down and going on two lines if they do not fit
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(2)
+                    .foregroundStyle(creditorColor)
+                    .bold()
+                    .font(.system(size: maxTransactionNameSize, design: .serif))
+                
+                
+                Text("$\(String(format: "%.2f", abs(transaction.balance)))")
+                //handles long values by shrinking it down and going on two lines if they do not fit
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(2)
+                    .foregroundStyle(creditorColor)
+                    .bold()
+                    .font(.system(size: cardWidth * 0.2, design: .serif))
+            }
+            .padding(.horizontal, layout.paddingSize)
+        }
     }
 }
 
@@ -163,19 +255,36 @@ struct CardCornerDesign: View
     let cardWidthSmall: CGFloat = 150
     let cardWidthLarge: CGFloat = 300
     
-    let previewPlayer = Player(
+    let creditor = Player(
         id: UUID(),
-        name: "Mike",
+        name: "Michael",
         balance: 50.00,
         cardCustomizationOptions: CardCustomizationOptions()
     )
     
+    let debtor = Player(
+        id: UUID(),
+        name: "James",
+        balance: -50.00,
+        cardCustomizationOptions: CardCustomizationOptions(color: CardColor.red, value: CardValue.ace, suit: CardSuit.hearts)
+    )
+    
+    let previewTransaction: Transaction = Transaction(id: UUID(), debtor: debtor, creditor: creditor, balance: 50)
+    
     VStack
     {
-        CardView(cardWidth: cardWidthLarge, player: previewPlayer)
-        Spacer()
-        CardView(cardWidth: cardWidthSmall, player: previewPlayer)
+//        HStack
+//        {
+//
+//            PlayerCardView(cardWidth: cardWidthSmall, player: debtor)
+//            Spacer()
+//            PlayerCardView(cardWidth: cardWidthSmall, player: creditor)
+//            
+//        }
+        TransactionCardView(cardWidth: cardWidthLarge, transaction: previewTransaction)
+        TransactionCardView(cardWidth: cardWidthSmall, transaction: previewTransaction)
     }
+    .padding()
     .background(Color.tableColor)
     //.ignoresSafeArea()
     

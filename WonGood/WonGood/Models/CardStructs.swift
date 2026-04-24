@@ -12,7 +12,6 @@ import SwiftUI
     //start with value and color
     //right now, keep it to 2-A and Black/red, but update later
 
-
 enum CardColor: String, Codable, CaseIterable
 {
     case red
@@ -68,10 +67,36 @@ enum CardSuit: String, Codable, CaseIterable
     }
 }
 
+
+//calculate/store the relevant sizes of the different parts of the card views as a function of card width
+struct CardLayout
+{
+    let cardWidth: CGFloat
+
+    var cardCornerRadius: CGFloat { return cardWidth / 15 }
+    var cardStrokeWidth:  CGFloat { return cardWidth / 20 }
+    var cardHeight:       CGFloat { return 1.4 * cardWidth }
+    var shadowRadius:     CGFloat { return 0.08 * cardWidth }
+    var paddingSize:      CGFloat { return 0.05 * cardWidth }
+
+    //subtle off-white linear gradient for card  color
+    var cardGradient: LinearGradient
+    {
+        let cardColorOne = Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+        let cardColorTwo = Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
+        return LinearGradient(
+            gradient: Gradient(colors: [cardColorOne, cardColorTwo]),
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+}
+
+
 struct CardCustomizationOptions: Codable
 {
     //default card option is the black jack of spades
-    var color: CardColor = .red
-    var value: CardValue = .ace
-    var suit: CardSuit = .hearts
+    var color: CardColor = .black
+    var value: CardValue = .jack
+    var suit: CardSuit = .spades
 }
