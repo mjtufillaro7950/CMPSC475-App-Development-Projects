@@ -29,21 +29,21 @@ struct PlayerCardView: View
                 .foregroundStyle(layout.cardGradient)
                 .shadow(radius: layout.shadowRadius)
             
-            VStack
+            HStack
             {
                 //add the corner design in the top left of card
-                HStack
+                VStack
                 {
                     CardCornerDesign(cardWidth: cardWidth, player: player)
                     Spacer()
                 }
                 
                 Spacer()
-                PlayerMiddleText(cardWidth: cardWidth, player: player)
+                PlayerMiddleText(cardWidth: cardWidth, player: player, layout: layout)
                 Spacer()
                 
                 //same corner design, upside down and on the bottom right
-                HStack
+                VStack
                 {
                     Spacer()
                     CardCornerDesign(cardWidth: cardWidth, player: player)
@@ -115,6 +115,7 @@ struct PlayerMiddleText: View
     //pass in the size of the card and the player its for
     let cardWidth: CGFloat
     let player: Player
+    let layout: CardLayout
     //return + if positive balance or - if negative
     var symbol: String
     {
@@ -123,23 +124,33 @@ struct PlayerMiddleText: View
     
     var body: some View
     {
-        VStack(spacing: cardWidth * 0.01)
+        ZStack
         {
-            Text(player.name)
-                //handles long names
-                .minimumScaleFactor(0.5)
-                .lineLimit(2)
-            //truncate to two decimal places
-            HStack(spacing: cardWidth * 0.01)
+            //border of card
+            RoundedRectangle(cornerRadius: layout.cardCornerRadius)
+                .stroke(lineWidth: layout.cardStrokeWidth / 4)
+                .frame(height: layout.cardHeight * 0.75)
+            //gradient from debtor's color to creditor
+                .foregroundStyle(player.cardCustomizationOptions.color.color)
+            
+            VStack(spacing: cardWidth * 0.01)
             {
+                Text(player.name)
+                //handles long names
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(2)
+                //truncate to two decimal places
                 //TODO: make symbol larger than balance so its easy to see
                 Image(systemName: symbol)
                 Text("$\(String(format: "%.2f", abs(player.balance)))")
+                .minimumScaleFactor(0.5)
+                .lineLimit(2)
             }
+            .padding(.horizontal, layout.paddingSize)
+            .bold()
+            .font(.system(size: cardWidth * 0.15, design: .serif))
+            .foregroundStyle(player.cardCustomizationOptions.color.color)
         }
-        .bold()
-        .font(.system(size: cardWidth * 0.15, design: .serif))
-        .foregroundStyle(player.cardCustomizationOptions.color.color)
     }
 }
 
@@ -163,7 +174,13 @@ struct TransactionMiddleText: View
             RoundedRectangle(cornerRadius: layout.cardCornerRadius)
                 .stroke(lineWidth: layout.cardStrokeWidth / 4)
                 .frame(height: layout.cardHeight * 0.75)
-            
+                //gradient from debtor's color to creditor
+                .foregroundStyle(LinearGradient(
+                    gradient: Gradient(colors: [debtorColor, creditorColor]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                    )
+                )
             
             VStack(spacing: cardWidth * 0.01)
             {
@@ -176,9 +193,8 @@ struct TransactionMiddleText: View
                     .font(.system(size: maxTransactionNameSize, design: .serif))
                 
                 Image(systemName: "arrow.down.square.fill")
-                    .bold()
                     .font(.system(size: cardWidth * 0.2, design: .serif))
-                //gradient from debtor's color to creditor
+                    //gradient from debtor's color to creditor
                     .foregroundStyle(LinearGradient(
                         gradient: Gradient(colors: [debtorColor, creditorColor]),
                         startPoint: .top,
@@ -273,15 +289,15 @@ struct CardCornerDesign: View
     
     VStack
     {
-//        HStack
-//        {
-//
-//            PlayerCardView(cardWidth: cardWidthSmall, player: debtor)
-//            Spacer()
-//            PlayerCardView(cardWidth: cardWidthSmall, player: creditor)
-//            
-//        }
-        TransactionCardView(cardWidth: cardWidthLarge, transaction: previewTransaction)
+        HStack
+        {
+
+            PlayerCardView(cardWidth: cardWidthSmall, player: debtor)
+            Spacer()
+            PlayerCardView(cardWidth: cardWidthSmall, player: creditor)
+            
+        }
+        //TransactionCardView(cardWidth: cardWidthLarge, transaction: previewTransaction)
         TransactionCardView(cardWidth: cardWidthSmall, transaction: previewTransaction)
     }
     .padding()
