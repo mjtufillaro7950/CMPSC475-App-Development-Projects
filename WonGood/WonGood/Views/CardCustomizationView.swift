@@ -20,6 +20,7 @@ struct CardCustomizationView: View
     {
         VStack
         {
+            //TODO: 
             Text("Placeholder data entry view")
             Spacer()
             Text("Enter Info")

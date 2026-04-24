@@ -48,6 +48,8 @@ enum CardValue: String, Codable, CaseIterable
 
 enum CardSuit: String, Codable, CaseIterable
 {
+    //TODO: optionally, add fun different suits like a star, sun, moon, eye, cloud, tortise, smiley, flame, gamecontroller, shield.lefthalf, globe, burn, bitcoinsign.square
+    //TODO: make suit correspond to color like how it works in the real world? if thats the case, I can get rid of CardColor and simplify things
     case spades
     case hearts
     case diamonds

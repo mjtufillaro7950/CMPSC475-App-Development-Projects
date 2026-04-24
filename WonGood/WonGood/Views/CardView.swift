@@ -38,6 +38,7 @@ struct CardView: View
             //in the middle, name and balance
         //TODO: make a view for transaction card
             //two options: make the card look like one of the players cards, OR, make one of the symbol/number pairs be that of the creditor and one of the debtor.
+            //I like the second option, also make the middle text's color be a gradient from one to the other
         
         //Text("CardView")
         ZStack
@@ -62,7 +63,7 @@ struct CardView: View
                 
                 Spacer()
                 
-                //TODO: name and balance in middle
+                //TODO: name and balance in middle (scaled to card size)
                 Text("Name and Balance Stuff Here")
                 
                 Spacer()
@@ -76,10 +77,22 @@ struct CardView: View
                         .rotationEffect(.degrees(180))
                 }
             }
-            //TODO: make padding size dependant on cardSize for obvious reasons
             .padding(paddingSize)
         }
         .frame(width: cardWidth, height: cardHeight)
+    }
+}
+
+
+struct CardMiddleText: View
+{
+    //pass in the size of the card and the player its for
+    let cardWidth: CGFloat
+    let player: Player
+    
+    var body: some View
+    {
+        
     }
 }
 
