@@ -8,61 +8,85 @@
 import Foundation
 import SwiftUI
 
-//TODO: make a struct for different options for card customization options
-    //start with value and color
-    //right now, keep it to 2-A and Black/red, but update later
+//structs for different options for card customization options
 
 enum CardColor: String, Codable, CaseIterable
 {
-    case red
     case black
+    case red
+    case orange
+    case yellow
+    case green
+    case blue
+    case purple
+    case gray
     
     //returns a Color for each cardColor
     var color: Color
     {
         switch self
         {
-            case .red:   return Color.red
-            case .black: return Color.black
+            case .black:    return Color.black
+            case .red:      return Color.red
+            case .orange:   return Color.orange
+            case .yellow:   return Color( #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1) )
+            case .green:    return Color.green
+            case .blue:     return Color.blue
+            case .purple:   return Color.purple
+            case .gray:     return Color.gray
         }
     }
 }
 
 enum CardValue: String, Codable, CaseIterable
 {
-    case two   = "2"
-    case three = "3"
-    case four  = "4"
-    case five  = "5"
-    case six   = "6"
-    case seven = "7"
-    case eight = "8"
-    case nine  = "9"
-    case ten   = "10"
-    case jack  = "J"
-    case queen = "Q"
-    case king  = "K"
-    case ace   = "A"
+    case two    = "2"
+    case three  = "3"
+    case four   = "4"
+    case five   = "5"
+    case six    = "6"
+    case seven  = "7"
+    case eight  = "8"
+    case nine   = "9"
+    case ten    = "10"
+    case jack   = "J"
+    case queen  = "Q"
+    case king   = "K"
+    case ace    = "A"
+    case funny = "67"
+    
 }
 
 enum CardSuit: String, Codable, CaseIterable
 {
-    //TODO: optionally, add fun different suits like a star, sun, moon, eye, cloud, tortise, smiley, flame, gamecontroller, shield.lefthalf, globe, burn, bitcoinsign.square
+    //TODO: optionally, add fun different suits like a star, sun, moon, eye, cloud, tortise, smiley, flame, gamecontroller, shield.lefthalf, globe, burn
     //TODO: make suit correspond to color like how it works in the real world? if thats the case, I can get rid of CardColor and simplify things
     case spades
     case hearts
     case diamonds
     case clubs
+    case stars
+    case suns
+    case moons
+    case flames
+    case shields
+    case rads
     
     //returns the name of the system image corresponding to each suit
     var imageName: String
     {
         switch self
         {
-            case .spades:   return "suit.spade.fill"
-            case .hearts:   return "suit.heart.fill"
-            case .diamonds: return "suit.diamonds.fill"
-            case .clubs:    return "suit.club.fill"
+            case .spades:       return "suit.spade.fill"
+            case .hearts:       return "suit.heart.fill"
+            case .diamonds:     return "suit.diamond.fill"
+            case .clubs:        return "suit.club.fill"
+            case .stars:        return "star.fill"
+            case .suns:         return "sun.max.fill"
+            case .moons:        return "moon.fill"
+            case .flames:       return "flame.fill"
+            case .shields:      return "shield.lefthalf.fill"
+            case .rads:         return "burn"
         }
     }
 }

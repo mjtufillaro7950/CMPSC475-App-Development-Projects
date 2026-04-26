@@ -79,7 +79,6 @@ struct TransactionCardView: View
                 .foregroundStyle(layout.cardGradient)
                 .shadow(radius: layout.shadowRadius)
             
-            //TODO: turn vstack of hstacks into an hstack of vstacks
             HStack
             {
                 //the debtors card info is in top left, and the creditor's name is in the top right
@@ -87,7 +86,6 @@ struct TransactionCardView: View
                 {
                     CardCornerDesign(cardWidth: cardWidth, player: transaction.debtor)
                     Spacer()
-                    
                 }
                 
                 Spacer()
@@ -119,7 +117,7 @@ struct PlayerMiddleText: View
     //return + if positive balance or - if negative
     var symbol: String
     {
-        return player.balance > 0 ? "plus.rectangle": "minus.rectangle.fill"
+        return player.balance >= 0 ? "plus.rectangle": "minus.rectangle.fill"
     }
     
     var body: some View
@@ -140,7 +138,6 @@ struct PlayerMiddleText: View
                     .minimumScaleFactor(0.5)
                     .lineLimit(2)
                 //truncate to two decimal places
-                //TODO: make symbol larger than balance so its easy to see
                 Image(systemName: symbol)
                 Text("$\(String(format: "%.2f", abs(player.balance)))")
                 .minimumScaleFactor(0.5)
@@ -251,14 +248,15 @@ struct CardCornerDesign: View
     
     var body: some View
     {
-        VStack
+        VStack(spacing: cardWidth * 0.01)
         {
             //add the player's selected value and suit
             Text(playerValue)
                 .bold()
                 .font(.system(size: cardWidth * 0.2, design: .serif))
             Image(systemName: playerSuit)
-                .font(.system(size: cardWidth * 0.13))
+                .resizable()
+                .frame(width: cardWidth * 0.13, height: cardWidth * 0.13)
         }
         //set the symbols to the player's selected color
         .foregroundStyle(playerColor)
@@ -269,7 +267,7 @@ struct CardCornerDesign: View
 #Preview
 {
     let cardWidthSmall: CGFloat = 150
-    let cardWidthLarge: CGFloat = 300
+    //let cardWidthLarge: CGFloat = 300
     
     let creditor = Player(
         id: UUID(),
