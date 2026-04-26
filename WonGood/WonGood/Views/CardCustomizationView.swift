@@ -37,13 +37,10 @@ struct CardCustomizationView: View
             PlayerCardView(cardWidth: cardWidth, player: tempPlayer)
             Spacer()
             
-            //TODO: make adjusting these values adjust localplayer
-            //TODO: adjust submitBalance to not need to pass in values anymore (because localPlayer is already there)
-            //TODO: allow editing of customization options
-            
             Text("Enter Info")
-                .font(.title)
+                .font(.title2)
                 .bold()
+                .foregroundStyle(.black)
             
             TextField("Name", text: $nameText)
                 .textFieldStyle(.roundedBorder)
@@ -80,42 +77,51 @@ struct CardCustomizationView: View
                     }
                 }
             
-            //make pickers for the different card customization options
-            Picker("Color", selection: $tempPlayer.cardCustomizationOptions.color)
-            {
-                ForEach(CardColor.allCases, id: \.self)
-                { color in
-                    Text(color.rawValue.capitalized)
-                        .tag(color)
-                }
-            }
-            .pickerStyle(.menu)
-
-            Picker("Value", selection: $tempPlayer.cardCustomizationOptions.value)
-            {
-                ForEach(CardValue.allCases, id: \.self)
-                { value in
-                    //get the case names from the enum
-                    Text(String(describing: value).capitalized)
-                        .tag(value)
-                }
-            }
-
-            Picker("Suit", selection: $tempPlayer.cardCustomizationOptions.suit)
-            {
-                ForEach(CardSuit.allCases, id: \.self)
-                { suit in
-                    Text(suit.rawValue.capitalized)
-                        .tag(suit)
-                }
-            }
-            //.pickerStyle(.segmented)
+            Text("Your card is the... ")
+                .font(.title2)
+                .bold()
+                .foregroundStyle(.black)
             
+            HStack
+            {
+                //make pickers for the different card customization options
+                Picker("Color", selection: $tempPlayer.cardCustomizationOptions.color)
+                {
+                    ForEach(CardColor.allCases, id: \.self)
+                    { color in
+                        Text(color.rawValue.capitalized)
+                            .tag(color)
+                    }
+                }
+                .pickerStyle(.menu)
+                
+                Picker("Value", selection: $tempPlayer.cardCustomizationOptions.value)
+                {
+                    ForEach(CardValue.allCases, id: \.self)
+                    { value in
+                        //get the case names from the enum
+                        Text(String(describing: value).capitalized)
+                            .tag(value)
+                    }
+                }
+                
+                Text("of")
+                    .foregroundStyle(.black)
+                
+                Picker("Suit", selection: $tempPlayer.cardCustomizationOptions.suit)
+                {
+                    ForEach(CardSuit.allCases, id: \.self)
+                    { suit in
+                        Text(suit.rawValue.capitalized)
+                            .tag(suit)
+                    }
+                }
+            }
             
-            Button("Submit Changes")
+            Button("Add Player")
             {
                 //submit the name and balance
-                gameSessionManager.submitBalance(name: name, amount: Double(balanceText)!)
+                gameSessionManager.submitPlayer(player: tempPlayer)
                 //close the sheet when submit is pressed
                 showCustomizationSheet = false
             }

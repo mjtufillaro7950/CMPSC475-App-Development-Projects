@@ -21,7 +21,8 @@ struct ResultsView: View
         ForEach(gameSessionManager.resolvedTransactions)
         {
             transaction in
-            Text("\(transaction.debtor.name) pays \(transaction.creditor.name) \(transaction.balance)")
+            //TODO: animate these coming out, one by one
+            TransactionCardView(cardWidth: 125, transaction: transaction)
         }
         Button("Leave Room")
         {

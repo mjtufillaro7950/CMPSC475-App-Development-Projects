@@ -22,13 +22,22 @@ struct RoomView: View
             //display every connected user that has submitted their info (ForEach on manager.players)
             Text("Players with submitted info:")
             //TODO: replace this with card themed view
-            ForEach(gameSessionManager.players)
+            ScrollView(.horizontal)
             {
-                player in
-                Text("\(player.name), \(player.balance)")
+                HStack
+                {
+                    ForEach(gameSessionManager.players)
+                    {
+                        player in
+                        //TODO: host needs ability to remove player from manager.players and resync player lists when clicking on one of the card views
+                        PlayerCardView(cardWidth: 125, player: player)
+                    }
+                    .padding()
+                }
             }
+            //.padding()
+            
             //Placeholder button to leave the room
-            //TODO: need to remove player from manager.players and resync player lists when a non-host player leaves
             Button("Leave Room")
             {
                 gameSessionManager.leaveGame()
@@ -58,6 +67,31 @@ struct RoomView: View
 
 #Preview
 {
+    @Previewable @State var manager = GameSessionManager()
+        
     RoomView()
-        .environment(GameSessionManager())
+        .environment(manager)
+        .onAppear
+        {
+            manager.players = [
+                    Player(
+                        id: UUID(),
+                        name: "Michael",
+                        balance: 50.00,
+                        cardCustomizationOptions: CardCustomizationOptions()
+                    ),
+                    Player(
+                        id: UUID(),
+                        name: "James",
+                        balance: -200.00,
+                        cardCustomizationOptions: CardCustomizationOptions()
+                    ),
+                    Player(
+                        id: UUID(),
+                        name: "Tufillaro",
+                        balance: 150.00,
+                        cardCustomizationOptions: CardCustomizationOptions()
+                    )
+                ]
+        }
 }

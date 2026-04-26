@@ -194,8 +194,8 @@ struct TransactionMiddleText: View
                     //gradient from debtor's color to creditor
                     .foregroundStyle(LinearGradient(
                         gradient: Gradient(colors: [debtorColor, creditorColor]),
-                        startPoint: .top,
-                        endPoint: .bottom
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                         )
                     )
                 

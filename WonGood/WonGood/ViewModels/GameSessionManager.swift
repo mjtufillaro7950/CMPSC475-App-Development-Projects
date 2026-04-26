@@ -118,14 +118,11 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
 //    }
     
     //send player information to host
-    //TODO: I'm eventually going to need to add an extra parameter for card customization options
-    func submitBalance(name: String, amount: Double)
+    func submitPlayer(player: Player)
     {
-        //create a player object for the local player
-        let player = Player(id: UUID(), name: name, balance: amount, cardCustomizationOptions: CardCustomizationOptions())
+        //set the local player value to the submitted player
         self.localPlayer = player
         
-        //TODO: if editing card design later, this might add people twice, so maybe check and remove duplicates before adding to list?
         //the host doesn't need to broadcast so just add to the list of players and make sure its updated
         if self.isHost
         {
