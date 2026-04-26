@@ -77,17 +77,26 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     func lockAndCalculate()
     {
         self.advertiser?.stopAdvertisingPeer()
+        //start the shuffle animation
         self.phase = .shuffle
         //change everyone else's phase to shuffle (no data needed so empty value)
         self.broadcast(type: .startCalculation, payload: Data())
         //run the minimization algorithm and store/encode the results
         let transactions = transactionMinimization(playerList: self.players)
         guard let encodedTransactions = try? JSONEncoder().encode(transactions) else { return }
-        self.resolvedTransactions = transactions
-        self.phase = .results
-        //TODO: if i want to have a dedicated shuffling animation, I will need some way to halt this until whatever animation is done
-        //send the results to everyone
-        self.broadcast(type: .distributeResults, payload: encodedTransactions)
+        
+        Task
+        {
+            //keep shuffling for a few seconds, before moving onto results
+            try? await Task.sleep(for: .seconds(2))
+            await MainActor.run
+            {
+                self.resolvedTransactions = transactions
+                self.phase = .results
+            }
+            //start distributing results to all players
+            self.broadcast(type: .distributeResults, payload: encodedTransactions)
+        }
     }
     
     
