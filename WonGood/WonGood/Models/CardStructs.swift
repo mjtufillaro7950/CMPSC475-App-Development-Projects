@@ -82,7 +82,7 @@ enum CardSuit: String, Codable, CaseIterable
             case .diamonds:     return "suit.diamond.fill"
             case .clubs:        return "suit.club.fill"
             case .stars:        return "star.fill"
-            case .suns:         return "sun.max.fill"
+            case .suns:         return "sun.min.fill"
             case .moons:        return "moon.fill"
             case .flames:       return "flame.fill"
             case .shields:      return "shield.lefthalf.fill"
