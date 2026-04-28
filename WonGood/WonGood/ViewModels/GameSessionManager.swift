@@ -26,8 +26,11 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     var isHost = false
     //this stores the Player object corresponding to the local user
     var localPlayer: Player?
-//    //computed property for roomView
-//    var needsPlayerInfo: Bool { localPlayer == nil }
+    //computed property to get all non-local players
+    var otherPlayers: [Player]
+    {
+        players.filter { $0.id != localPlayer?.id }
+    }
     
     //vars used for Multipeer Connectivity stuff
     

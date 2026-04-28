@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-//TODO: f
 struct PlayerCardView: View
 {
     //pass in the size of the card and the player its for
@@ -23,6 +22,7 @@ struct PlayerCardView: View
             //border of card
             RoundedRectangle(cornerRadius: layout.cardCornerRadius)
                 .stroke(lineWidth: layout.cardStrokeWidth)
+                .foregroundStyle(.black)
             
             //subtle background gradient of card with a shadow
             RoundedRectangle(cornerRadius: layout.cardCornerRadius)
@@ -75,6 +75,7 @@ struct TransactionCardView: View
             //border of card
             RoundedRectangle(cornerRadius: layout.cardCornerRadius)
                 .stroke(lineWidth: layout.cardStrokeWidth)
+                .foregroundStyle(.black)
             
             //subtle background gradient of card with a shadow
             RoundedRectangle(cornerRadius: layout.cardCornerRadius)
@@ -192,6 +193,7 @@ struct TransactionMiddleText: View
                     .bold()
                     .font(.system(size: maxTransactionNameSize, design: .serif))
                 
+                //TODO: replace this with word "pays"
                 Image(systemName: "arrow.down.square.fill")
                     .font(.system(size: cardWidth * 0.2, design: .serif))
                     //gradient from debtor's color to creditor
@@ -270,6 +272,27 @@ struct CardCornerDesign: View
 }
 
 
+//slightly translucent black card used to indicate a lack of player in room view
+struct EmptyPlaceholderCardView: View
+{
+    let cardWidth: CGFloat
+    var body: some View
+    {
+        //make a layout struct to calculate the necessary size of the different views
+        let layout = CardLayout(cardWidth: cardWidth)
+    
+        //subtle background gradient of card with a shadow
+        RoundedRectangle(cornerRadius: layout.cardCornerRadius)
+            .foregroundStyle(.black)
+            .opacity(0.4)
+            .frame(width: cardWidth, height: layout.cardHeight)
+    }
+}
+
+//TODO: make a struct that either returns a player card or an empty placeholder depending on if a player is passed in
+
+
+
 #Preview
 {
     let cardWidthSmall: CGFloat = 80
@@ -293,14 +316,14 @@ struct CardCornerDesign: View
     
     VStack
     {
-        HStack
-        {
-
-            PlayerCardView(cardWidth: cardWidthLarge, player: creditor)
-            //Spacer()
-            PlayerCardView(cardWidth: cardWidthSmall, player: creditor)
-            
-        }
+//        HStack
+//        {
+//
+//            PlayerCardView(cardWidth: cardWidthLarge, player: creditor)
+//            //Spacer()
+//            PlayerCardView(cardWidth: cardWidthSmall, player: creditor)
+//
+//        }
         //TransactionCardView(cardWidth: cardWidthLarge, transaction: previewTransaction)
         HStack
         {
@@ -308,6 +331,7 @@ struct CardCornerDesign: View
             //Spacer()
             TransactionCardView(cardWidth: cardWidthSmall, transaction: previewTransaction)
         }
+        EmptyPlaceholderCardView(cardWidth: cardWidthSmall)
     }
     .padding()
     .background(Color.tableColor)
