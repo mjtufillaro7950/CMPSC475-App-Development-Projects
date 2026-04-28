@@ -13,7 +13,8 @@ struct ShuffleView: View
     
     var body: some View
     {
-        //TODO: figure out what the heck to put here...?
+        //TODO: put in the random "dealer quote" here
+        //TODO: make it be the same quote on all connected screens? would need to broadcast this then :sob:
         Text("Placeholder Shuffle View")
         Spacer()
     }

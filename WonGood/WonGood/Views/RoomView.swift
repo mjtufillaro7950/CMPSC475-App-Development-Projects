@@ -69,10 +69,11 @@ struct RoomView: View
 {
     @Previewable @State var manager = GameSessionManager()
         
-    RoomView()
+    MainView()
         .environment(manager)
         .onAppear
         {
+            manager.phase = .room
             manager.players = [
                     Player(
                         id: UUID(),

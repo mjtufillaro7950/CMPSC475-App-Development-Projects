@@ -29,7 +29,8 @@ struct MainView: View
                 case .results:  ResultsView()
             }
         }
-        .background(Color.tableColor)
+        //.background(Color.tableColor)
+        .background(LinearGradient.tableGradient)
     }
 }
 
