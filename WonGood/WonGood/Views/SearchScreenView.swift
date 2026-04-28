@@ -19,22 +19,45 @@ struct SearchScreenView: View
 
         ScrollView(.vertical)
         {
-            Text("Placeholder Search Screen View")
+            Text("Searching For Devices to Join...")
+                .font(.title2)
+                .bold()
+                .foregroundStyle(Color.dealerGray)
             //for all hosts that are found, make a button to join them
-            //TODO: will need to replace and supplement with more info like number of players
             ForEach(gameSessionManager.foundHosts, id: \.self)
             {
                 host in
-                Button(host.displayName)
+                Button
                 {
                     //start connecting to the selected host
                     gameSessionManager.connectToHost(host)
                     //update the phase to change the view
                     gameSessionManager.phase = .room
                 }
+                label:
+                {
+                    ZStack
+                    {
+                        RoundedRectangle(cornerRadius: 15)
+                            .foregroundStyle(Color.titleColor)
+                            .frame(height: 40)
+                        HStack
+                        {
+                            Image(systemName: "paperplane.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 20)
+                            Text("Host: \(host.displayName)")
+                                .bold()
+                        }
+                        .foregroundStyle(.white)
+                    }
+                }
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.screenColor)
         .onDisappear
         {
             //when leaving this view, stop searching for rooms
@@ -45,6 +68,17 @@ struct SearchScreenView: View
 
 #Preview
 {
+    @Previewable @State var manager = GameSessionManager()
+        
     SearchScreenView()
-        .environment(GameSessionManager())
+        .environment(manager)
+        .onAppear
+        {
+            //make fake testing hosts
+            manager.foundHosts = [
+                MCPeerID(displayName: "Michael's iPhone"),
+                MCPeerID(displayName: "James's iPhone"),
+                MCPeerID(displayName: "Tyler's iPhone")
+            ]
+        }
 }

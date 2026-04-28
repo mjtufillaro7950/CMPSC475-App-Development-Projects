@@ -9,7 +9,8 @@ import SwiftUI
 
 //handles the card-dealing animation: cards fly out from the dealer's hand,
 //pause large in the center, then shrink and land in a fanned row at the bottom.
-//tapping a landed card brings it back to the front; tapping it again returns it.
+//tapping a landed card brings it back to the front, tapping it again returns it.
+//TODO: make it so dealer's hand follows actions on screen instead of just oscillating forever
 struct DealingTableView: View
 {
     let transactions: [Transaction]

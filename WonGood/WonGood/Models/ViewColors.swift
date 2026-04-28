@@ -14,6 +14,8 @@ extension Color
 {
     //HEX #497826
     static let tableColor = Color( #colorLiteral(red: 0.2862745098, green: 0.4705882353, blue: 0.1490196078, alpha: 1) )
+    
+    static let screenColor = Color( #colorLiteral(red: 0.1814262424, green: 0.298234919, blue: 0.09444105765, alpha: 1) )
     //HEX #2B3853
     static let titleColor = Color( #colorLiteral(red: 0.168627451, green: 0.2196078431, blue: 0.3254901961, alpha: 1) )
     //HEX #acacac

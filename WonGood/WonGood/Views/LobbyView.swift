@@ -18,7 +18,15 @@ struct LobbyView: View
     {
         VStack
         {
-            LogoView()
+            //make a shadow effect with the logo by duplicating it in black
+            ZStack
+            {
+                LogoView()
+                    .foregroundStyle(.black)
+                    .offset(x: -2, y: 2)
+                LogoView()
+                    .foregroundStyle(Color.titleColor)
+            }
             Spacer()
             HostGameButtonView()
             Spacer()
@@ -29,6 +37,8 @@ struct LobbyView: View
         .sheet(isPresented: $showSeachSheet)
         {
             SearchScreenView()
+                //only pulls the sheet halfway up instead of all the way up
+                .presentationDetents([.medium])
         }
     }
 }
@@ -38,17 +48,19 @@ struct LogoView: View
 {
     var body: some View
     {
-        ZStack
+        VStack(spacing: 0)
         {
-            //add a shadow effect
+            RoundedRectangle(cornerRadius: 2)
+                .frame(width: 340, height: 5)
+            
             Text("WonGood")
-                .foregroundStyle(.black)
-                .offset(x: -2, y: 2)
-            Text("WonGood")
-                .foregroundStyle(Color.titleColor)
+                .bold()
+                .font(.system(size: 75, design: .serif))
+            
+            RoundedRectangle(cornerRadius: 2)
+                .frame(width: 340, height: 5)
         }
-        .bold()
-        .font(.system(size: 75, design: .serif))
+        
     }
 }
 
@@ -74,7 +86,7 @@ struct HostGameButtonView: View
             ZStack
             {
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(.yellow)
+                    .foregroundStyle(Color.titleColor)
                     .frame(width: 150, height: 40)
                 HStack
                 {
@@ -115,7 +127,7 @@ struct JoinGameButtonView: View
             ZStack
             {
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(.white)
                     .frame(width: 150, height: 40)
                 HStack
                 {
@@ -126,7 +138,7 @@ struct JoinGameButtonView: View
                     Text("Join Game")
                         .bold()
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.titleColor)
             }
         }
     }

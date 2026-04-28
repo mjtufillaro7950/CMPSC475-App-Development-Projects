@@ -44,6 +44,7 @@ struct CardCustomizationView: View
             
             TextField("Name", text: $nameText)
                 .textFieldStyle(.roundedBorder)
+                .foregroundStyle(Color.tableColor)
                 .onChange(of: nameText)
                 { _, text in
                     //only updates it if its a double
@@ -61,6 +62,7 @@ struct CardCustomizationView: View
             //TODO: make a positive/negative button to left so can use decmal pad keyboard entry
             TextField("Balance as a positive or negative float", text: $balanceText)
                 .textFieldStyle(.roundedBorder)
+                .foregroundStyle(Color.tableColor)
                 //.keyboardType(.decimalPad)
                 //when this is changed, attempts to update the temp player's balance
                 .onChange(of: balanceText)
@@ -131,6 +133,7 @@ struct CardCustomizationView: View
             Spacer()
         }
         .padding()
+        .background(Color.screenColor)
     }
 }
 
