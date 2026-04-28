@@ -59,8 +59,6 @@ enum CardValue: String, Codable, CaseIterable
 
 enum CardSuit: String, Codable, CaseIterable
 {
-    //TODO: optionally, add fun different suits like a star, sun, moon, eye, cloud, tortise, smiley, flame, gamecontroller, shield.lefthalf, globe, burn
-    //TODO: make suit correspond to color like how it works in the real world? if thats the case, I can get rid of CardColor and simplify things
     case spades
     case hearts
     case diamonds
@@ -102,6 +100,7 @@ struct CardLayout
     var cardHeight:       CGFloat { return 1.4 * cardWidth }
     var shadowRadius:     CGFloat { return 0.08 * cardWidth }
     var paddingSize:      CGFloat { return 0.05 * cardWidth }
+    var sideSpacing:      CGFloat { return 0.19 * cardWidth }
 
     //subtle off-white linear gradient for card  color
     var cardGradient: LinearGradient
