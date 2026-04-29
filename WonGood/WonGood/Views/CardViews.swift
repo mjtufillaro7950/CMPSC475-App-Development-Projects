@@ -272,7 +272,7 @@ struct CardCornerDesign: View
 }
 
 
-//slightly translucent black card used to indicate a lack of player in room view
+//translucent black card used to indicate a lack of player in room view
 struct EmptyPlaceholderCardView: View
 {
     let cardWidth: CGFloat
@@ -289,8 +289,23 @@ struct EmptyPlaceholderCardView: View
     }
 }
 
-//TODO: make a struct that either returns a player card or an empty placeholder depending on if a player is passed in
-
+//struct that either returns a player card or an empty placeholder depending on if a player is passed in
+struct RoomCardView: View
+{
+    let cardWidth: CGFloat
+    let player: Player?
+    var body: some View
+    {
+        if let cardPlayer = player
+        {
+            PlayerCardView(cardWidth: cardWidth, player: cardPlayer)
+        }
+        else
+        {
+            EmptyPlaceholderCardView(cardWidth: cardWidth)
+        }
+    }
+}
 
 
 #Preview
@@ -331,7 +346,12 @@ struct EmptyPlaceholderCardView: View
             //Spacer()
             TransactionCardView(cardWidth: cardWidthSmall, transaction: previewTransaction)
         }
-        EmptyPlaceholderCardView(cardWidth: cardWidthSmall)
+//        HStack
+//        {
+//            RoomCardView(cardWidth: cardWidthLarge, player: nil)
+//            RoomCardView(cardWidth: cardWidthLarge, player: debtor)
+//        }
+        //EmptyPlaceholderCardView(cardWidth: cardWidthSmall)
     }
     .padding()
     .background(Color.tableColor)

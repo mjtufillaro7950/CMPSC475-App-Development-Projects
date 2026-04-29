@@ -284,4 +284,18 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         self.session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
         self.session.delegate = self
     }
+    
+    //return self.otherPlayers but padded out to 8 for room view
+    func returnRoomSlotArray(others: [Player]) -> [Player?]
+    {
+        var slots: [Player?] = others
+        let numberOfOthers = others.count
+        let maxNumberOfOthers = 8
+        //loop as many times as is needed to get from numberOfOthers to 8
+        for _ in 0..<(maxNumberOfOthers-numberOfOthers)
+        {
+            slots.append(nil)
+        }
+        return slots
+    }
 }

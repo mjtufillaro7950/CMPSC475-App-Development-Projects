@@ -21,57 +21,148 @@ struct RoomView: View
     {
         HStack
         {
-            
+            Spacer()
             VStack
             {
-                //display every connected user that has submitted their info (ForEach on manager.players)
-                Text("Players with submitted info:")
-                //TODO: make this a 2x4 lazy grid instead of a scrollview
-                ScrollView(.horizontal)
-                {
-                    HStack
-                    {
-                        ForEach(gameSessionManager.players)
-                        {
-                            player in
-                            //TODO: host needs ability to remove player from manager.players and resync player lists when clicking on one of the card views
-                            PlayerCardView(cardWidth: 125, player: player)
-                        }
-                        .padding()
-                    }
-                }
-                //.padding()
+                PlayerCardSlotsView()
+                Spacer()
             }
             
+            Spacer()
+            Spacer()
+            
             VStack
             {
-                //Make this button look like the player's current card
-                Button("Enter Info/Customize Card")
+                //Spacer()
+                Text("Tap to Enter\n  Card Info:")
+                    .lineLimit(2)
+                    .bold()
+                    .foregroundStyle(.black)
+                    .font(.title3)
+                    //need to adjust frame so it fits on two lines
+                    .frame(height: 50)
+                    
+                //button that opens the card customization
+                Button
                 {
                     showCustomizationSheet = true
                 }
-                //TODO: need to somehow make sure that everyone has submitted a Player object if they wanna be included
-                //users wont be added to the list of players UNTIL they submit stuff- could cause issues if the host hits the button to calcualte when not everyone in the room is in the list of players
-                //TODO: check if there's a way to compare the number of connected peers to the list of players
+                label:
+                {
+                    //make the button look like the local player's card, or a default one if there isn't a player card
+                    PlayerCardView(
+                        cardWidth: 125,
+                        player: gameSessionManager.localPlayer ?? Player(
+                            id: UUID(),
+                            name: "Enter Info",
+                            balance: 0,
+                            cardCustomizationOptions: CardCustomizationOptions()
+                        )
+                    )
+                }
+                //space out the player card button and the results button
+                .padding(.bottom, 50)
+                Spacer()
+                
                 //calculate button is only enabled for host
-                Button("Start Calculating")
+                Button
                 {
                     gameSessionManager.lockAndCalculate()
                 }
+                //TODO: replace placeholder button design
+                label:
+                {
+                    ZStack
+                    {
+                        RoundedRectangle(cornerRadius: 15)
+                            .foregroundStyle(Color.titleColor)
+                            .frame(width: 150, height: 40)
+                        HStack
+                        {
+                            Image(systemName: "pencil.and.outline")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 20)
+                            Text("Get Results")
+                                .bold()
+                        }
+                        .foregroundStyle(.white)
+                    }
+                }
                 .disabled(!gameSessionManager.isHost)
-                Spacer()
-                Button("Leave Room")
+                
+                //Spacer()
+                
+                Button
                 {
                     gameSessionManager.leaveGame()
                 }
+                //TODO: replace placeholder button design
+                label:
+                {
+                    ZStack
+                    {
+                        RoundedRectangle(cornerRadius: 15)
+                            .foregroundStyle(Color.titleColor)
+                            .frame(width: 150, height: 40)
+                        HStack
+                        {
+                            Image(systemName: "arrowshape.turn.up.left.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 20)
+                            Text("Leave Room")
+                                .bold()
+                        }
+                        .foregroundStyle(.white)
+                    }
+                }
+                
+                //Spacer()
             }
+            .frame(maxHeight: .infinity)
+            
+            Spacer()
         }
+        .padding()
         .sheet(isPresented: $showCustomizationSheet)
         {
             CardCustomizationView(showCustomizationSheet: $showCustomizationSheet)
         }
     }
 }
+
+
+struct PlayerCardSlotsView: View
+{
+    //declare to access the viewmodel
+    @Environment(GameSessionManager.self) var gameSessionManager
+    var body: some View
+    {
+        //TODO: move all the card stuff into its own view
+        let slotCardWidth: CGFloat = 65
+        let layout = CardLayout(cardWidth: slotCardWidth)
+        
+        //need to declare this here so the view properly resets when manager.players changes
+        let others = gameSessionManager.otherPlayers
+        //make an array of other players, padded out to 8 if fewer
+        let slots = gameSessionManager.returnRoomSlotArray(others: others)
+        
+        //make rows of GridItem for LazyHGrid
+        let rows = [GridItem(.fixed(layout.cardHeight)), GridItem(.fixed(layout.cardHeight)), GridItem(.fixed(layout.cardHeight)), GridItem(.fixed(layout.cardHeight))]
+        //show all other players cards on left, or a blank placeholder if there's not a player there
+        LazyHGrid(rows: rows)
+        {
+            ForEach(slots.indices, id: \.self)
+            { index in
+                //TODO: host needs ability to remove player from manager.players and resync player lists when clicking on one of the card views
+                //TODO: add a sheet that gets pulled up when clicking on a card- makes it big and has button to remove it once thats implemented
+                RoomCardView(cardWidth: slotCardWidth, player: slots[index])
+            }
+        }
+    }
+}
+
 
 #Preview
 {
