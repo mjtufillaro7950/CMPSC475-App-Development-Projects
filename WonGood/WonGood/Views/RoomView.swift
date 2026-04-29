@@ -25,6 +25,7 @@ struct RoomView: View
             VStack
             {
                 PlayerCardSlotsView()
+                    .padding(.bottom, 50)
                 Spacer()
             }
             
@@ -61,7 +62,7 @@ struct RoomView: View
                     )
                 }
                 //space out the player card button and the results button
-                .padding(.bottom, 50)
+                //.padding(.bottom, 50)
                 Spacer()
                 
                 //calculate button is only enabled for host
@@ -91,8 +92,6 @@ struct RoomView: View
                 }
                 .disabled(!gameSessionManager.isHost)
                 
-                //Spacer()
-                
                 Button
                 {
                     gameSessionManager.leaveGame()
@@ -117,13 +116,13 @@ struct RoomView: View
                         .foregroundStyle(.white)
                     }
                 }
+                .padding(.bottom, 85)
                 
                 //Spacer()
             }
-            .frame(maxHeight: .infinity)
-            
             Spacer()
         }
+        .frame(maxHeight: .infinity)
         .padding()
         .sheet(isPresented: $showCustomizationSheet)
         {
