@@ -275,6 +275,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         self.browser = nil
         //reset states
         self.players = []
+        self.localPlayer = nil
         self.foundHosts = []
         self.isHost = false
         self.phase = .lobby

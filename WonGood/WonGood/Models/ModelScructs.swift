@@ -10,20 +10,12 @@ import MultipeerConnectivity
 
 
 //struct that represents a player and their associated balance
-//TODO: I'm eventually going to need to add an extra parameter for card customization options
 struct Player: Codable, Identifiable
 {
     let id: UUID
-    var name: String
-    var balance: Double
-    var cardCustomizationOptions: CardCustomizationOptions
-//    //id for multipeer connectivity
-//    var peerID: MCPeerID?
-//    //ignore peerID when coding since its not decodable
-//    enum CodingKeys: String, CodingKey
-//    {
-//        case id, name, balance
-//    }
+    var name: String = "Enter Name"
+    var balance: Double = 0
+    var cardCustomizationOptions: CardCustomizationOptions = CardCustomizationOptions()
 }
 
 

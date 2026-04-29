@@ -18,36 +18,39 @@ struct CardCustomizationView: View
     @State private var balanceText: String = ""
     @State private var nameText: String = ""
     
-    @State private var tempPlayer = Player(
-            id: UUID(),
-            name: "Enter Name",
-            balance: 0.0,
-            cardCustomizationOptions: CardCustomizationOptions()
-        )
+    @State private var tempPlayer = Player(id: UUID())
     
     var body: some View
     {
-        let cardWidth: CGFloat = 200
+        let cardWidth: CGFloat = 250
         
-        VStack
+        //return + if positive balance or - if negative
+        var symbol: String
         {
-            Text("Placeholder data entry view")
+            return tempPlayer.balance >= 0 ? "plus.rectangle": "minus.rectangle.fill"
+        }
+        
+        VStack(spacing: 20)
+        {
             
             Spacer()
-            PlayerCardView(cardWidth: cardWidth, player: tempPlayer)
-            Spacer()
             
-            Text("Enter Info")
-                .font(.title2)
+            Text("Enter Info:")
+                .font(.title)
                 .bold()
                 .foregroundStyle(.black)
             
-            TextField("Name", text: $nameText)
-                .textFieldStyle(.roundedBorder)
-                .foregroundStyle(Color.tableColor)
-                .onChange(of: nameText)
+            HStack(spacing: 2)
+            {
+                Spacer()
+                
+                TextField("Name", text: $nameText)
+                    .frame(width: 100)
+                    .textFieldStyle(.roundedBorder)
+                    .foregroundStyle(Color.tableColor)
+                    .onChange(of: nameText)
                 { _, text in
-                    //only updates it if its a double
+                    //updates any non-blank text
                     if text != ""
                     {
                         tempPlayer.name = text
@@ -58,34 +61,73 @@ struct CardCustomizationView: View
                         tempPlayer.name = "Enter Name"
                     }
                 }
-            
-            //TODO: make a positive/negative button to left so can use decmal pad keyboard entry
-            TextField("Balance as a positive or negative float", text: $balanceText)
-                .textFieldStyle(.roundedBorder)
-                .foregroundStyle(Color.tableColor)
-                //.keyboardType(.decimalPad)
-                //when this is changed, attempts to update the temp player's balance
-                .onChange(of: balanceText)
-                { _, newValue in
-                    //only updates it if its a double
-                    if let balance = Double(newValue)
-                    {
-                        tempPlayer.balance = balance
-                    }
-                    //otherwise, default to 0
-                    else
-                    {
-                        tempPlayer.balance = 0
-                    }
+                
+                Spacer()
+                
+                //Button that changes whether the balance entered is positive or negative
+                Button
+                {
+                    tempPlayer.balance *= -1
                 }
+                label:
+                {
+                    Image(systemName: symbol)
+                        .font(.title)
+                        .foregroundStyle(.black)
+                        .backgroundStyle(.white)
+                        .bold()
+                }
+                
+                TextField("Balance", text: $balanceText)
+                    .frame(width: 100)
+                    .textFieldStyle(.roundedBorder)
+                    .foregroundStyle(Color.tableColor)
+                
+                    //only implements this if opening on a real device
+                    #if !targetEnvironment(simulator)
+                    //use decimal pad because a number is being entered
+                    .keyboardType(.decimalPad)
+                    //when not on a simulator, the decimal pad has no button to dismiss it, so add one
+                    .toolbar
+                        {
+                            ToolbarItemGroup(placement: .keyboard)
+                            {
+                                Spacer()
+                                Button("Done")
+                                {
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                }
+                            }
+                        }
+                    #endif
+                
+                    //when this is changed, attempts to update the temp player's balance
+                    .onChange(of: balanceText)
+                    { _, newValue in
+                        //only updates it if its a double
+                        if let balance = Double(newValue)
+                        {
+                            tempPlayer.balance = balance
+                        }
+                        //otherwise, default to 0
+                        else
+                        {
+                            tempPlayer.balance = 0
+                        }
+                    }
+                
+                Spacer()
+            }
+            .padding(.bottom, 20)
             
             Text("Your card is the... ")
-                .font(.title2)
+                .font(.title)
                 .bold()
                 .foregroundStyle(.black)
             
             HStack
             {
+                //TODO: make pickers look nice, using common view
                 //make pickers for the different card customization options
                 Picker("Color", selection: $tempPlayer.cardCustomizationOptions.color)
                 {
@@ -128,8 +170,12 @@ struct CardCustomizationView: View
                 showCustomizationSheet = false
             }
             //ensure the button can only be hit when both text fields are filled and valid
-            //TODO: for finished product, make it only work with a max of 2 decimals
             .disabled(nameText.isEmpty || Double(balanceText) == nil)
+            
+            Spacer()
+            
+            PlayerCardView(cardWidth: cardWidth, player: tempPlayer)
+            
             Spacer()
         }
         .padding()

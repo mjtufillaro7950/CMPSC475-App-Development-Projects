@@ -25,7 +25,7 @@ struct RoomView: View
             VStack
             {
                 PlayerCardSlotsView()
-                    .padding(.bottom, 50)
+                    .offset(y: -25)
                 Spacer()
             }
             
@@ -53,12 +53,7 @@ struct RoomView: View
                     //make the button look like the local player's card, or a default one if there isn't a player card
                     PlayerCardView(
                         cardWidth: 125,
-                        player: gameSessionManager.localPlayer ?? Player(
-                            id: UUID(),
-                            name: "Enter Info",
-                            balance: 0,
-                            cardCustomizationOptions: CardCustomizationOptions()
-                        )
+                        player: gameSessionManager.localPlayer ?? Player(id: UUID())
                     )
                 }
                 //space out the player card button and the results button
@@ -116,9 +111,8 @@ struct RoomView: View
                         .foregroundStyle(.white)
                     }
                 }
-                .padding(.bottom, 85)
                 
-                //Spacer()
+                Spacer()
             }
             Spacer()
         }
