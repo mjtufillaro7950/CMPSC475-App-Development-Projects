@@ -65,7 +65,6 @@ struct RoomView: View
                 {
                     gameSessionManager.lockAndCalculate()
                 }
-                //TODO: replace placeholder button design
                 label:
                 {
                     ZStack
@@ -121,6 +120,8 @@ struct RoomView: View
         .sheet(isPresented: $showCustomizationSheet)
         {
             CardCustomizationView(showCustomizationSheet: $showCustomizationSheet)
+            //TODO: adjust height of this as needed
+                .presentationDetents([.medium])
         }
     }
 }

@@ -22,7 +22,7 @@ struct CardCustomizationView: View
     
     var body: some View
     {
-        let cardWidth: CGFloat = 250
+        let cardWidth: CGFloat = 150
         
         //return + if positive balance or - if negative
         var symbol: String
@@ -30,65 +30,73 @@ struct CardCustomizationView: View
             return tempPlayer.balance >= 0 ? "plus.rectangle": "minus.rectangle.fill"
         }
         
-        VStack(spacing: 20)
+        VStack(spacing: 5)
         {
-            
-            Spacer()
             
             Text("Enter Info:")
                 .font(.title)
                 .bold()
-                .foregroundStyle(.black)
+                .foregroundStyle(Color.dealerGray)
             
-            HStack(spacing: 2)
+            ZStack
             {
-                Spacer()
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundStyle(Color.dealerGray)
+                    .frame(height: 50)
                 
-                TextField("Name", text: $nameText)
-                    .frame(width: 100)
-                    .textFieldStyle(.roundedBorder)
-                    .foregroundStyle(Color.tableColor)
-                    .onChange(of: nameText)
-                { _, text in
-                    //updates any non-blank text
-                    if text != ""
-                    {
-                        tempPlayer.name = text
-                    }
-                    //otherwise, default to "Enter Name"
-                    else
-                    {
-                        tempPlayer.name = "Enter Name"
-                    }
-                }
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.black, lineWidth: 2)
+                    .frame(height: 50)
                 
-                Spacer()
-                
-                //Button that changes whether the balance entered is positive or negative
-                Button
+                HStack(spacing: 2)
                 {
-                    tempPlayer.balance *= -1
-                }
-                label:
-                {
-                    Image(systemName: symbol)
-                        .font(.title)
-                        .foregroundStyle(.black)
-                        .backgroundStyle(.white)
-                        .bold()
-                }
-                
-                TextField("Balance", text: $balanceText)
-                    .frame(width: 100)
-                    .textFieldStyle(.roundedBorder)
-                    .foregroundStyle(Color.tableColor)
-                
-                    //only implements this if opening on a real device
-                    #if !targetEnvironment(simulator)
-                    //use decimal pad because a number is being entered
-                    .keyboardType(.decimalPad)
-                    //when not on a simulator, the decimal pad has no button to dismiss it, so add one
-                    .toolbar
+                    Spacer()
+                    
+                    TextField("Name", text: $nameText)
+                        .frame(width: 100)
+                        .textFieldStyle(.roundedBorder)
+                        .foregroundStyle(Color.titleColor)
+                        .onChange(of: nameText)
+                        {
+                            _, text in
+                            //updates any non-blank text
+                            if text != ""
+                            {
+                                tempPlayer.name = text
+                            }
+                            //otherwise, default to "Enter Name"
+                            else
+                            {
+                                tempPlayer.name = "Enter Name"
+                            }
+                        }
+                    
+                    Spacer()
+                    
+                    //Button that changes whether the balance entered is positive or negative
+                    Button
+                    {
+                        tempPlayer.balance *= -1
+                    }
+                    label:
+                    {
+                        Image(systemName: symbol)
+                            .font(.largeTitle)
+                            .foregroundStyle(Color.titleColor)
+                            .bold()
+                    }
+                    
+                    TextField("Balance", text: $balanceText)
+                        .frame(width: 100)
+                        .textFieldStyle(.roundedBorder)
+                        .foregroundStyle(Color.titleColor)
+                    
+                        //only implements this if opening on a real device
+                        #if !targetEnvironment(simulator)
+                        //use decimal pad because a number is being entered
+                        .keyboardType(.decimalPad)
+                        //when not on a simulator, the decimal pad has no button to dismiss it, so add one
+                        .toolbar
                         {
                             ToolbarItemGroup(placement: .keyboard)
                             {
@@ -99,35 +107,35 @@ struct CardCustomizationView: View
                                 }
                             }
                         }
-                    #endif
-                
-                    //when this is changed, attempts to update the temp player's balance
-                    .onChange(of: balanceText)
-                    { _, newValue in
-                        //only updates it if its a double
-                        if let balance = Double(newValue)
-                        {
-                            tempPlayer.balance = balance
+                        #endif
+                    
+                        //when this is changed, attempts to update the temp player's balance
+                        .onChange(of: balanceText)
+                        { _, newValue in
+                            //only updates it if its a double
+                            if let balance = Double(newValue)
+                            {
+                                tempPlayer.balance = balance
+                            }
+                            //otherwise, default to 0
+                            else
+                            {
+                                tempPlayer.balance = 0
+                            }
                         }
-                        //otherwise, default to 0
-                        else
-                        {
-                            tempPlayer.balance = 0
-                        }
-                    }
-                
-                Spacer()
+                    
+                    Spacer()
+                }
             }
             .padding(.bottom, 20)
             
             Text("Your card is the... ")
                 .font(.title)
                 .bold()
-                .foregroundStyle(.black)
+                .foregroundStyle(Color.dealerGray)
             
             HStack
             {
-                //TODO: make pickers look nice, using common view
                 //make pickers for the different card customization options
                 Picker("Color", selection: $tempPlayer.cardCustomizationOptions.color)
                 {
@@ -137,7 +145,10 @@ struct CardCustomizationView: View
                             .tag(color)
                     }
                 }
-                .pickerStyle(.menu)
+                .frame(width: 100)
+                .tint(Color.titleColor)
+                .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
                 
                 Picker("Value", selection: $tempPlayer.cardCustomizationOptions.value)
                 {
@@ -148,9 +159,15 @@ struct CardCustomizationView: View
                             .tag(value)
                     }
                 }
+                .frame(width: 95)
+                .tint(Color.titleColor)
+                .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
                 
                 Text("of")
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Color.dealerGray)
+                    .bold()
+                    .font(.title3)
                 
                 Picker("Suit", selection: $tempPlayer.cardCustomizationOptions.suit)
                 {
@@ -160,23 +177,47 @@ struct CardCustomizationView: View
                             .tag(suit)
                     }
                 }
+                .frame(width: 120)
+                .tint(Color.titleColor)
+                .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
             }
+            .padding(.bottom, 20)
             
-            Button("Add Player")
+            Button
             {
                 //submit the name and balance
                 gameSessionManager.submitPlayer(player: tempPlayer)
                 //close the sheet when submit is pressed
                 showCustomizationSheet = false
             }
+            label:
+            {
+                ZStack
+                {
+                    RoundedRectangle(cornerRadius: 15)
+                        .foregroundStyle(Color.titleColor)
+                        .frame(width: 150, height: 40)
+                    HStack
+                    {
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 20)
+                        Text("Add Player")
+                            .bold()
+                    }
+                    .foregroundStyle(.white)
+                }
+            }
             //ensure the button can only be hit when both text fields are filled and valid
-            .disabled(nameText.isEmpty || Double(balanceText) == nil)
-            
-            Spacer()
+            //transparent when inactive
+            .opacity(nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0 ? 0.4: 1)
+            .disabled(nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0)
+            .padding(.bottom, 50)
             
             PlayerCardView(cardWidth: cardWidth, player: tempPlayer)
-            
-            Spacer()
+
         }
         .padding()
         .background(Color.screenColor)
