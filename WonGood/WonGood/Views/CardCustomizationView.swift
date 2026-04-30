@@ -22,7 +22,9 @@ struct CardCustomizationView: View
     
     var body: some View
     {
-        let cardWidth: CGFloat = 150
+        let cardWidth: CGFloat = 250
+        
+        //TODO: clean up this code and put stuff in its own separate views
         
         //return + if positive balance or - if negative
         var symbol: String
@@ -30,33 +32,40 @@ struct CardCustomizationView: View
             return tempPlayer.balance >= 0 ? "plus.rectangle": "minus.rectangle.fill"
         }
         
-        VStack(spacing: 5)
+        var entryIsInvalid: Bool
         {
-            
-            Text("Enter Info:")
-                .font(.title)
-                .bold()
-                .foregroundStyle(Color.dealerGray)
-            
-            ZStack
+            return nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0
+        }
+        
+        ScrollView
+        {
+            VStack(spacing: 5)
             {
-                RoundedRectangle(cornerRadius: 8)
+                
+                Text("Enter Info:")
+                    .font(.title)
+                    .bold()
                     .foregroundStyle(Color.dealerGray)
-                    .frame(height: 50)
                 
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(.black, lineWidth: 2)
-                    .frame(height: 50)
-                
-                HStack(spacing: 2)
+                ZStack
                 {
-                    Spacer()
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundStyle(Color.dealerGray)
+                        .frame(height: 50)
                     
-                    TextField("Name", text: $nameText)
-                        .frame(width: 100)
-                        .textFieldStyle(.roundedBorder)
-                        .foregroundStyle(Color.titleColor)
-                        .onChange(of: nameText)
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(.black, lineWidth: 2)
+                        .frame(height: 50)
+                    
+                    HStack(spacing: 2)
+                    {
+                        Spacer()
+                        
+                        TextField("Name", text: $nameText)
+                            .frame(width: 100)
+                            .textFieldStyle(.roundedBorder)
+                            .foregroundStyle(Color.titleColor)
+                            .onChange(of: nameText)
                         {
                             _, text in
                             //updates any non-blank text
@@ -70,33 +79,33 @@ struct CardCustomizationView: View
                                 tempPlayer.name = "Enter Name"
                             }
                         }
-                    
-                    Spacer()
-                    
-                    //Button that changes whether the balance entered is positive or negative
-                    Button
-                    {
-                        tempPlayer.balance *= -1
-                    }
+                        
+                        Spacer()
+                        
+                        //Button that changes whether the balance entered is positive or negative
+                        Button
+                        {
+                            tempPlayer.balance *= -1
+                        }
                     label:
-                    {
-                        Image(systemName: symbol)
-                            .font(.largeTitle)
+                        {
+                            Image(systemName: symbol)
+                                .font(.largeTitle)
+                                .foregroundStyle(Color.titleColor)
+                                .bold()
+                        }
+                        
+                        TextField("Balance", text: $balanceText)
+                            .frame(width: 100)
+                            .textFieldStyle(.roundedBorder)
                             .foregroundStyle(Color.titleColor)
-                            .bold()
-                    }
-                    
-                    TextField("Balance", text: $balanceText)
-                        .frame(width: 100)
-                        .textFieldStyle(.roundedBorder)
-                        .foregroundStyle(Color.titleColor)
-                    
+                        
                         //only implements this if opening on a real device
-                        #if !targetEnvironment(simulator)
+#if !targetEnvironment(simulator)
                         //use decimal pad because a number is being entered
-                        .keyboardType(.decimalPad)
+                            .keyboardType(.decimalPad)
                         //when not on a simulator, the decimal pad has no button to dismiss it, so add one
-                        .toolbar
+                            .toolbar
                         {
                             ToolbarItemGroup(placement: .keyboard)
                             {
@@ -107,8 +116,8 @@ struct CardCustomizationView: View
                                 }
                             }
                         }
-                        #endif
-                    
+#endif
+                        
                         //when this is changed, attempts to update the temp player's balance
                         .onChange(of: balanceText)
                         { _, newValue in
@@ -123,103 +132,104 @@ struct CardCustomizationView: View
                                 tempPlayer.balance = 0
                             }
                         }
-                    
-                    Spacer()
-                }
-            }
-            .padding(.bottom, 20)
-            
-            Text("Your card is the... ")
-                .font(.title)
-                .bold()
-                .foregroundStyle(Color.dealerGray)
-            
-            HStack
-            {
-                //make pickers for the different card customization options
-                Picker("Color", selection: $tempPlayer.cardCustomizationOptions.color)
-                {
-                    ForEach(CardColor.allCases, id: \.self)
-                    { color in
-                        Text(color.rawValue.capitalized)
-                            .tag(color)
+                        
+                        Spacer()
                     }
                 }
-                .frame(width: 100)
-                .tint(Color.titleColor)
-                .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
+                .padding(.bottom, 20)
                 
-                Picker("Value", selection: $tempPlayer.cardCustomizationOptions.value)
-                {
-                    ForEach(CardValue.allCases, id: \.self)
-                    { value in
-                        //get the case names from the enum
-                        Text(String(describing: value).capitalized)
-                            .tag(value)
-                    }
-                }
-                .frame(width: 95)
-                .tint(Color.titleColor)
-                .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
-                
-                Text("of")
-                    .foregroundStyle(Color.dealerGray)
+                Text("Your card is the... ")
+                    .font(.title)
                     .bold()
-                    .font(.title3)
+                    .foregroundStyle(Color.dealerGray)
                 
-                Picker("Suit", selection: $tempPlayer.cardCustomizationOptions.suit)
+                HStack
                 {
-                    ForEach(CardSuit.allCases, id: \.self)
-                    { suit in
-                        Text(suit.rawValue.capitalized)
-                            .tag(suit)
-                    }
-                }
-                .frame(width: 120)
-                .tint(Color.titleColor)
-                .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
-            }
-            .padding(.bottom, 20)
-            
-            Button
-            {
-                //submit the name and balance
-                gameSessionManager.submitPlayer(player: tempPlayer)
-                //close the sheet when submit is pressed
-                showCustomizationSheet = false
-            }
-            label:
-            {
-                ZStack
-                {
-                    RoundedRectangle(cornerRadius: 15)
-                        .foregroundStyle(Color.titleColor)
-                        .frame(width: 150, height: 40)
-                    HStack
+                    //make pickers for the different card customization options
+                    Picker("Color", selection: $tempPlayer.cardCustomizationOptions.color)
                     {
-                        Image(systemName: "checkmark.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 20)
-                        Text("Add Player")
-                            .bold()
+                        ForEach(CardColor.allCases, id: \.self)
+                        { color in
+                            Text(color.rawValue.capitalized)
+                                .tag(color)
+                        }
                     }
-                    .foregroundStyle(.white)
+                    .frame(width: 100)
+                    .tint(Color.titleColor)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
+                    
+                    Picker("Value", selection: $tempPlayer.cardCustomizationOptions.value)
+                    {
+                        ForEach(CardValue.allCases, id: \.self)
+                        { value in
+                            //get the case names from the enum
+                            Text(String(describing: value).capitalized)
+                                .tag(value)
+                        }
+                    }
+                    .frame(width: 95)
+                    .tint(Color.titleColor)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
+                    
+                    Text("of")
+                        .foregroundStyle(Color.dealerGray)
+                        .bold()
+                        .font(.title3)
+                    
+                    Picker("Suit", selection: $tempPlayer.cardCustomizationOptions.suit)
+                    {
+                        ForEach(CardSuit.allCases, id: \.self)
+                        { suit in
+                            Text(suit.rawValue.capitalized)
+                                .tag(suit)
+                        }
+                    }
+                    .frame(width: 120)
+                    .tint(Color.titleColor)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
                 }
+                .padding(.bottom, 20)
+                
+                Button
+                {
+                    //submit the name and balance
+                    gameSessionManager.submitPlayer(player: tempPlayer)
+                    //close the sheet when submit is pressed
+                    showCustomizationSheet = false
+                }
+            label:
+                {
+                    ZStack
+                    {
+                        RoundedRectangle(cornerRadius: 15)
+                            .foregroundStyle(Color.titleColor)
+                            .frame(width: 150, height: 40)
+                        HStack
+                        {
+                            Image(systemName: "checkmark.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 20)
+                            Text("Add Player")
+                                .bold()
+                        }
+                        .foregroundStyle(.white)
+                    }
+                }
+                //ensure the button can only be hit when both text fields are filled and valid. Also check to make sure there's not the max number of players
+                //transparent when inactive
+                .opacity(nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0 || gameSessionManager.players.count >= 9 ? 0.4: 1)
+                .disabled(nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0 || gameSessionManager.players.count >= 9)
+                .padding(.bottom, 50)
+                PlayerCardView(cardWidth: cardWidth, player: tempPlayer)
+                Spacer()
             }
-            //ensure the button can only be hit when both text fields are filled and valid
-            //transparent when inactive
-            .opacity(nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0 ? 0.4: 1)
-            .disabled(nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0)
-            .padding(.bottom, 50)
-            
-            PlayerCardView(cardWidth: cardWidth, player: tempPlayer)
-
+            .padding()
         }
-        .padding()
+        .frame(maxHeight: .infinity)
         .background(Color.screenColor)
     }
 }

@@ -12,7 +12,14 @@ struct RoomView: View
     //declare to access the viewmodel
     @Environment(GameSessionManager.self) var gameSessionManager
     @State var showCustomizationSheet: Bool = false
-    
+    var cardText: String
+    {
+        if let _ = gameSessionManager.localPlayer
+        {
+            return "   Tap to Enter\nAdditional Card:"
+        }
+        return "Tap to Enter\n  Card Info:"
+    }
     //TODO: two VStacks
         //One has space for 9 submitted player names, possibly their card- tapping pulls up their card design
         //One has a button to add a card, then the calculate and leave room buttons
@@ -35,13 +42,14 @@ struct RoomView: View
             VStack
             {
                 //Spacer()
-                Text("Tap to Enter\n  Card Info:")
-                    .lineLimit(2)
+                Text(cardText)
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(3)
                     .bold()
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Color.dealerGray)
                     .font(.title3)
                     //need to adjust frame so it fits on two lines
-                    .frame(height: 50)
+                    .frame(width: 120, height: 50)
                     
                 //button that opens the card customization
                 Button
@@ -56,8 +64,10 @@ struct RoomView: View
                         player: gameSessionManager.localPlayer ?? Player(id: UUID())
                     )
                 }
-                //space out the player card button and the results button
-                //.padding(.bottom, 50)
+                //disable adding more cards if the max is reached
+                .disabled(gameSessionManager.players.count >= 9)
+                .opacity(gameSessionManager.players.count >= 9 ? 0.4: 1)
+                
                 Spacer()
                 
                 //calculate button is only enabled for host
@@ -85,6 +95,7 @@ struct RoomView: View
                     }
                 }
                 .disabled(!gameSessionManager.isHost)
+                .opacity(!gameSessionManager.isHost ? 0.4: 1)
                 
                 Button
                 {
@@ -121,7 +132,8 @@ struct RoomView: View
         {
             CardCustomizationView(showCustomizationSheet: $showCustomizationSheet)
             //TODO: adjust height of this as needed
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
     }
 }

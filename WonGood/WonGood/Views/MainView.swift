@@ -21,7 +21,6 @@ struct MainView: View
                 .ignoresSafeArea()
             
             //show different views depending on phase of game session
-            //TODO: figure out transition between phase views?
             switch gameSessionManager.phase
             {
                 case .lobby:    LobbyView()

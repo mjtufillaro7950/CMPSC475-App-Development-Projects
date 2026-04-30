@@ -65,7 +65,6 @@ struct LogoView: View
 }
 
 
-//TODO: make buttons look nice!!!!!!!!!!!!!!!!!!!!!!!!!
 struct HostGameButtonView: View
 {
     //declare to access the viewmodel

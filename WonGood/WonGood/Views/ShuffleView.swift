@@ -13,9 +13,17 @@ struct ShuffleView: View
     
     var body: some View
     {
-        //TODO: put in the random "dealer quote" here
-        //TODO: make it be the same quote on all connected screens? would need to broadcast this then :sob:
-        Text("Placeholder Shuffle View")
+        //display a random quote from the dealer
+        Text("\"\(gameSessionManager.randomDealerQuote())\"")
+            .font(.system(size: 30, design: .serif))
+            .bold()
+            .foregroundStyle(Color.dealerGray)
+            .padding(.horizontal)
+        Spacer()
+        ProgressView()
+            .progressViewStyle(.circular)
+            .tint(Color.dealerGray)
+            .scaleEffect(3.0)
         Spacer()
     }
 }
