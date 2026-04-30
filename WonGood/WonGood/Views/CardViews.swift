@@ -13,10 +13,17 @@ struct PlayerCardView: View
     let cardWidth: CGFloat
     let player: Player
     
+    //TODO: need to adjust this to work with ScaleEffect to fix animation bug
+    //initially, I rendered each view's size as a function of the passed in card width, but ran into issues when animating a size change, as each view changed size slightly differently, making the animation look disconnected. My fix is to render everything at a fixed size and then shrink the whole view based on the passed in cardWidth
+    private static let baseWidth: CGFloat = 250
+    
     var body: some View
     {
         //make a layout struct to calculate the necessary size of the different views
-        let layout = CardLayout(cardWidth: cardWidth)
+        let layout = CardLayout(cardWidth: Self.baseWidth)
+        //calculate the scale needed to adjust the card to get to the desired width
+        let scale = cardWidth / Self.baseWidth
+        
         ZStack
         {
             //border of card
@@ -34,29 +41,33 @@ struct PlayerCardView: View
                 //add the corner design in the top left of card
                 VStack
                 {
-                    CardCornerDesign(cardWidth: cardWidth, player: player)
+                    CardCornerDesign(cardWidth: Self.baseWidth, player: player)
                     Spacer()
                 }
                 .frame(width: layout.sideSpacing)
                 
-                //Spacer()
-                PlayerMiddleText(cardWidth: cardWidth, player: player, layout: layout)
-                //Spacer()
+                PlayerMiddleText(cardWidth: Self.baseWidth, player: player, layout: layout)
                 
                 //same corner design, upside down and on the bottom right
                 VStack
                 {
                     Spacer()
-                    CardCornerDesign(cardWidth: cardWidth, player: player)
+                    CardCornerDesign(cardWidth: Self.baseWidth, player: player)
                         .rotationEffect(.degrees(180))
                 }
                 .frame(width: layout.sideSpacing)
             }
             .padding(layout.paddingSize)
         }
-        .frame(width: cardWidth, height: layout.cardHeight)
+        //first, render the card at the base width and height
+        .frame(width: Self.baseWidth, height: layout.cardHeight)
+        //then, scale the card so the view is visually the same size as the desired width
+        .scaleEffect(scale)
+        //finally, reframe the view so the frame matches its new width and height
+        .frame(width: cardWidth, height: layout.cardHeight * scale)
     }
 }
+
 
 //similar to the player card but makes a card for a transaction instead
 struct TransactionCardView: View
@@ -65,10 +76,14 @@ struct TransactionCardView: View
     let cardWidth: CGFloat
     let transaction: Transaction
     
+    private static let baseWidth: CGFloat = 250
+    
     var body: some View
     {
         //make a layout struct to calculate the necessary size of the different views
-        let layout = CardLayout(cardWidth: cardWidth)
+        let layout = CardLayout(cardWidth: Self.baseWidth)
+        //calculate the scale needed to adjust the card to get to the desired width
+        let scale = cardWidth / Self.baseWidth
         
         ZStack
         {
@@ -87,27 +102,30 @@ struct TransactionCardView: View
                 //the debtors card info is in top left, and the creditor's name is in the top right
                 VStack
                 {
-                    CardCornerDesign(cardWidth: cardWidth, player: transaction.debtor)
+                    CardCornerDesign(cardWidth: Self.baseWidth, player: transaction.debtor)
                     Spacer()
                 }
                 .frame(width: layout.sideSpacing)
                 
-                //Spacer()
-                TransactionMiddleText(cardWidth: cardWidth, transaction: transaction, layout: layout)
-                //Spacer()
+                TransactionMiddleText(cardWidth: Self.baseWidth, transaction: transaction, layout: layout)
                 
                 //the creditor's card info is in bottom right, and the debtor's name in bottom left
                 VStack
                 {
                     Spacer()
-                    CardCornerDesign(cardWidth: cardWidth, player: transaction.creditor)
+                    CardCornerDesign(cardWidth: Self.baseWidth, player: transaction.creditor)
                         .rotationEffect(.degrees(180))
                 }
                 .frame(width: layout.sideSpacing)
             }
             .padding(layout.paddingSize)
         }
-        .frame(width: cardWidth, height: layout.cardHeight)
+        //first, render the card at the base width and height
+        .frame(width: Self.baseWidth, height: layout.cardHeight)
+        //then, scale the card so the view is visually the same size as the desired width
+        .scaleEffect(scale)
+        //finally, reframe the view so the frame matches its new width and height
+        .frame(width: cardWidth, height: layout.cardHeight * scale)
     }
 }
 
@@ -310,7 +328,7 @@ struct RoomCardView: View
 
 #Preview
 {
-    let cardWidthSmall: CGFloat = 80
+    let cardWidthSmall: CGFloat = 40
     let cardWidthLarge: CGFloat = 220
     
     let creditor = Player(
