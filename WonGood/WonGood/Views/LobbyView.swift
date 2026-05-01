@@ -54,8 +54,11 @@ struct LogoView: View
                 .frame(width: 340, height: 5)
             
             Text("WonGood")
-                .bold()
+                //shrink the text if it doesn't fit on one line
                 .font(.system(size: 75, design: .serif))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+                .bold()
             
             RoundedRectangle(cornerRadius: 2)
                 .frame(width: 340, height: 5)
