@@ -101,7 +101,6 @@ struct RoomView: View
                 {
                     gameSessionManager.leaveGame()
                 }
-                //TODO: replace placeholder button design
                 label:
                 {
                     ZStack
@@ -131,9 +130,9 @@ struct RoomView: View
         .sheet(isPresented: $showCustomizationSheet)
         {
             CardCustomizationView(showCustomizationSheet: $showCustomizationSheet)
-            //TODO: adjust height of this as needed
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
+                .presentationBackground(Color.screenColor)  
         }
     }
 }

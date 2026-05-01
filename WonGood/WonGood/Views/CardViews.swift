@@ -13,7 +13,6 @@ struct PlayerCardView: View
     let cardWidth: CGFloat
     let player: Player
     
-    //TODO: need to adjust this to work with ScaleEffect to fix animation bug
     //initially, I rendered each view's size as a function of the passed in card width, but ran into issues when animating a size change, as each view changed size slightly differently, making the animation look disconnected. My fix is to render everything at a fixed size and then shrink the whole view based on the passed in cardWidth
     private static let baseWidth: CGFloat = 250
     
@@ -59,6 +58,8 @@ struct PlayerCardView: View
             }
             .padding(layout.paddingSize)
         }
+        //make the card always render in light mode due to color issues between modes
+        .environment(\.colorScheme, .light)
         //first, render the card at the base width and height
         .frame(width: Self.baseWidth, height: layout.cardHeight)
         //then, scale the card so the view is visually the same size as the desired width
@@ -120,6 +121,7 @@ struct TransactionCardView: View
             }
             .padding(layout.paddingSize)
         }
+        .environment(\.colorScheme, .light) 
         //first, render the card at the base width and height
         .frame(width: Self.baseWidth, height: layout.cardHeight)
         //then, scale the card so the view is visually the same size as the desired width
