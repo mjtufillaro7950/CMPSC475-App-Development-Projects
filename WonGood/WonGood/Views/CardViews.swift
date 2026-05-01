@@ -280,13 +280,14 @@ struct CardCornerDesign: View
             //add the player's selected value and suit
             Text(playerValue)
                 .bold()
-                .font(.system(size: cardWidth * 0.2, design: .serif))
+                .font(.system(size: cardWidth * 0.3, design: .serif))
                 //shrink the text if it doesn't fit on one line
+                .frame(width: cardWidth * 0.20, height: cardWidth * 0.25)
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
             Image(systemName: playerSuit)
                 .resizable()
-                .frame(width: cardWidth * 0.13, height: cardWidth * 0.13)
+                .frame(width: cardWidth * 0.13, height: cardWidth * 0.15)
         }
         //set the symbols to the player's selected color
         .foregroundStyle(playerColor)
@@ -346,7 +347,7 @@ struct RoomCardView: View
         id: UUID(),
         name: "Joe. Q",
         balance: -1.50,
-        cardCustomizationOptions: CardCustomizationOptions(color: CardColor.red, value: CardValue.king, suit: CardSuit.spades)
+        cardCustomizationOptions: CardCustomizationOptions(color: CardColor.red, value: CardValue.ten, suit: CardSuit.diamonds)
     )
     
     let previewTransaction: Transaction = Transaction(id: UUID(), debtor: debtor, creditor: creditor, balance: 1.50)
