@@ -89,25 +89,25 @@ struct CardDataEntryView: View
     
     var body: some View
     {
-        ZStack
+        HStack(spacing: 2)
         {
-            RoundedRectangle(cornerRadius: 8)
-                .foregroundStyle(Color.dealerGray)
-                .frame(height: 50)
+            Spacer()
             
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(.black, lineWidth: 2)
-                .frame(height: 50)
+            TextField("Name", text: $nameText)
+                .frame(width: 100)
             
-            HStack(spacing: 2)
-            {
-                Spacer()
-                
-                TextField("Name", text: $nameText)
-                    .frame(width: 100)
-                    .textFieldStyle(.roundedBorder)
-                    .foregroundStyle(Color.titleColor)
-                    .onChange(of: nameText)
+                //TODO: make a custom text field style so it doesn't look weird when swapping between light and dark mode
+                .multilineTextAlignment(.center)
+                .foregroundStyle(Color.titleColor)
+                .tint(Color.titleColor)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 6)
+                .frame(width: 110)
+                .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
+                //.textFieldStyle(.roundedBorder)
+
+                .onChange(of: nameText)
                 {
                     _, text in
                     //updates any non-blank text
@@ -121,68 +121,73 @@ struct CardDataEntryView: View
                         tempPlayer.name = "Enter Name"
                     }
                 }
-                
-                Spacer()
-                
-                //Button that changes whether the balance entered is positive or negative
-                Button
+            
+            Spacer()
+            
+            //Button that changes whether the balance entered is positive or negative
+            Button
+            {
+                isNegative.toggle()
+                //re-apply the new sign to whatever's already in the text field
+                if let balance = Double(balanceText)
                 {
-                    isNegative.toggle()
-                    //re-apply the new sign to whatever's already in the text field
-                    if let balance = Double(balanceText)
-                    {
-                        tempPlayer.balance = isNegative ? -abs(balance) : abs(balance)
-                    }
+                    tempPlayer.balance = isNegative ? -abs(balance) : abs(balance)
                 }
-                label:
-                {
-                    Image(systemName: symbol)
-                        .font(.largeTitle)
-                        .foregroundStyle(Color.titleColor)
-                        .bold()
-                }
-                
-                TextField("Balance", text: $balanceText)
-                    .frame(width: 100)
-                    .textFieldStyle(.roundedBorder)
-                    .foregroundStyle(Color.titleColor)
-                
-                    //only implements this if opening on a real device
-                    #if !targetEnvironment(simulator)
-                    //use decimal pad because a number is being entered
-                    .keyboardType(.decimalPad)
-                    //when not on a simulator, the decimal pad has no button to dismiss it, so add one
-                    .toolbar
-                    {
-                        ToolbarItemGroup(placement: .keyboard)
-                        {
-                            Spacer()
-                            Button("Done")
-                            {
-                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                            }
-                        }
-                    }
-                    #endif
-                
-                    //when this is changed, attempts to update the temp player's balance
-                    .onChange(of: balanceText)
-                    { _, newValue in
-                        //only updates it if its a double
-                        if let balance = Double(newValue)
-                        {
-                            //makes the balance negative if the button is set to negative
-                            tempPlayer.balance = isNegative ? -abs(balance): abs(balance)
-                        }
-                        //otherwise, default to 0
-                        else
-                        {
-                            tempPlayer.balance = 0
-                        }
-                    }
-                
-                Spacer()
             }
+            label:
+            {
+                Image(systemName: symbol)
+                    .font(.largeTitle)
+                    .foregroundStyle(Color.titleColor)
+                    .bold()
+            }
+            
+            TextField("Balance", text: $balanceText)
+                .frame(width: 100)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(Color.titleColor)
+                .tint(Color.titleColor)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 6)
+                .frame(width: 110)
+                .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
+            
+                //only implements this if opening on a real device
+                #if !targetEnvironment(simulator)
+                //use decimal pad because a number is being entered
+                .keyboardType(.decimalPad)
+                //when not on a simulator, the decimal pad has no button to dismiss it, so add one
+                .toolbar
+                {
+                    ToolbarItemGroup(placement: .keyboard)
+                    {
+                        Spacer()
+                        Button("Done")
+                        {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                    }
+                }
+                #endif
+            
+                //when this is changed, attempts to update the temp player's balance
+                .onChange(of: balanceText)
+                { _, newValue in
+                    //only updates it if its a double
+                    if let balance = Double(newValue)
+                    {
+                        //makes the balance negative if the button is set to negative
+                        tempPlayer.balance = isNegative ? -abs(balance): abs(balance)
+                    }
+                    //otherwise, default to 0
+                    else
+                    {
+                        tempPlayer.balance = 0
+                    }
+                }
+            
+            Spacer()
         }
     }
 }
