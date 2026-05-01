@@ -53,7 +53,7 @@ enum CardValue: String, Codable, CaseIterable
     case queen  = "Q"
     case king   = "K"
     case ace    = "A"
-    case funny = "67"
+    case funny  = "67"
     
 }
 

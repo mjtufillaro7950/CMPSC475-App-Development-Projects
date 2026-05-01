@@ -82,7 +82,6 @@ struct HostGameButtonView: View
             //move to the view for the host's room
             gameSessionManager.phase = .room
         }
-        //TODO: replace placeholder button design
         label:
         {
             ZStack
@@ -123,13 +122,12 @@ struct JoinGameButtonView: View
             //pull up the search screen Sheet
             showSearchSheet = true
         }
-        //TODO: replace placeholder button design
         label:
         {
             ZStack
             {
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.titleColor)
                     .frame(width: 150, height: 40)
                 HStack
                 {
@@ -140,21 +138,14 @@ struct JoinGameButtonView: View
                     Text("Join Game")
                         .bold()
                 }
-                .foregroundStyle(Color.titleColor)
+                .foregroundStyle(.white)
             }
         }
     }
 }
+
 #Preview
 {
-    VStack
-    {
-        DealerView()
-            .environment(GameSessionManager())
-        LobbyView()
-            .environment(GameSessionManager())
-    }
-    .background(Color.tableColor)
-    .ignoresSafeArea()
-    
+    MainView()
+        .environment(GameSessionManager())
 }

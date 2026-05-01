@@ -32,7 +32,7 @@ struct CardCustomizationView: View
         
         ScrollView
         {
-            VStack(spacing: 5)
+            VStack(spacing: 10)
             {
                 Text("Enter Info:")
                     .font(.title)
@@ -89,14 +89,15 @@ struct CardDataEntryView: View
     
     var body: some View
     {
-        HStack(spacing: 2)
+        HStack(spacing: 5)
         {
             Spacer()
             
             TextField("Name", text: $nameText)
                 .frame(width: 100)
             
-                //TODO: make a custom text field style so it doesn't look weird when swapping between light and dark mode
+                //custom text field design so it doesn't look weird when swapping between light and dark mode
+                .bold()
                 .multilineTextAlignment(.center)
                 .foregroundStyle(Color.titleColor)
                 .tint(Color.titleColor)
@@ -138,11 +139,14 @@ struct CardDataEntryView: View
             {
                 Image(systemName: symbol)
                     .font(.largeTitle)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
                     .foregroundStyle(Color.titleColor)
                     .bold()
             }
             
             TextField("Balance", text: $balanceText)
+                .bold()
                 .frame(width: 100)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(Color.titleColor)
