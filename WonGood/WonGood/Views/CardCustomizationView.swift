@@ -171,7 +171,8 @@ struct CardDataEntryView: View
                         //only updates it if its a double
                         if let balance = Double(newValue)
                         {
-                            tempPlayer.balance = balance
+                            //makes the balance negative if the button is set to negative
+                            tempPlayer.balance = isNegative ? -abs(balance): abs(balance)
                         }
                         //otherwise, default to 0
                         else
