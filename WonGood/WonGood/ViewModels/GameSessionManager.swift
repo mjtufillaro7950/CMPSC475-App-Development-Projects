@@ -31,6 +31,9 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     {
         players.filter { $0.id != localPlayer?.id }
     }
+    //tracks whether a card is leaving the dealer's hand in animation, used for dealerview
+    var isDealingCard: Bool = false
+    
     
     //vars used for Multipeer Connectivity stuff
     
@@ -280,6 +283,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         self.isHost = false
         self.phase = .lobby
         self.hostPeerID = nil
+        self.isDealingCard = false
         
         //rebuild the session var so it can be used again
         self.session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)

@@ -41,8 +41,12 @@ struct DealerView: View
                 //animate card shuffling
                 ImageAnimation(firstImage: "ShuffleA", secondImage: "ShuffleB")
             case .results:
-                //animate card dealing
-                ImageAnimation(firstImage: "ShuffleA", secondImage: "Dealing")
+                //animate card dealing- shows the dealing pose when a card is being dealt
+                Image(gameSessionManager.isDealingCard ? "Dealing" : "ShuffleA")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+                    .ignoresSafeArea()
             }
         }
     }

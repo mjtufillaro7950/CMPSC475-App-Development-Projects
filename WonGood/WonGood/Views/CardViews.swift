@@ -165,6 +165,7 @@ struct PlayerMiddleText: View
                     .minimumScaleFactor(0.5)
                     .lineLimit(2)
             }
+            .frame(height: layout.cardHeight * 0.75)
             .padding(.horizontal, layout.paddingSize)
             .bold()
             .font(.system(size: cardWidth * 0.15, design: .serif))
@@ -239,6 +240,7 @@ struct TransactionMiddleText: View
                     .bold()
                     .font(.system(size: cardWidth * 0.2, design: .serif))
             }
+            .frame(height: layout.cardHeight * 0.75)
             .padding(.horizontal, layout.paddingSize)
         }
     }
@@ -328,35 +330,35 @@ struct RoomCardView: View
 
 #Preview
 {
-    let cardWidthSmall: CGFloat = 40
-    let cardWidthLarge: CGFloat = 220
+    let cardWidthSmall: CGFloat = 50
+    let cardWidthLarge: CGFloat = 150
     
     let creditor = Player(
         id: UUID(),
-        name: "Michael",
-        balance: 500.00,
+        name: "John",
+        balance: 1.50,
         cardCustomizationOptions: CardCustomizationOptions()
     )
     
     let debtor = Player(
         id: UUID(),
-        name: "Fair Game",
-        balance: -500.00,
+        name: "Joe. Q",
+        balance: -1.50,
         cardCustomizationOptions: CardCustomizationOptions(color: CardColor.red, value: CardValue.king, suit: CardSuit.spades)
     )
     
-    let previewTransaction: Transaction = Transaction(id: UUID(), debtor: debtor, creditor: creditor, balance: 500)
+    let previewTransaction: Transaction = Transaction(id: UUID(), debtor: debtor, creditor: creditor, balance: 1.50)
     
     VStack
     {
-//        HStack
-//        {
-//
-//            PlayerCardView(cardWidth: cardWidthLarge, player: creditor)
-//            //Spacer()
-//            PlayerCardView(cardWidth: cardWidthSmall, player: creditor)
-//
-//        }
+        HStack
+        {
+
+            PlayerCardView(cardWidth: cardWidthLarge, player: creditor)
+            //Spacer()
+            PlayerCardView(cardWidth: cardWidthSmall, player: creditor)
+
+        }
         //TransactionCardView(cardWidth: cardWidthLarge, transaction: previewTransaction)
         HStack
         {

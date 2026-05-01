@@ -18,9 +18,28 @@ struct ResultsView: View
         //call this to handle the animation of the dealing
         DealingTableView(transactions: gameSessionManager.resolvedTransactions)
         
-        Button("Leave Room")
+        Button
         {
             gameSessionManager.leaveGame()
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(Color.titleColor)
+                    .frame(width: 150, height: 40)
+                HStack
+                {
+                    Image(systemName: "arrowshape.turn.up.left.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 20)
+                    Text("Leave Room")
+                        .bold()
+                }
+                .foregroundStyle(.white)
+            }
         }
         Spacer()
     }

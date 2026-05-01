@@ -15,6 +15,9 @@ struct DealingTableView: View
 {
     let transactions: [Transaction]
     
+    //declare to access the viewmodel
+    @Environment(GameSessionManager.self) var gameSessionManager
+    
     //how many cards have completed their deal animation
     @State private var dealtCount: Int = 0
     //the card index currently mid-animation (nil between cards)
@@ -43,19 +46,6 @@ struct DealingTableView: View
             geo in
             ZStack
             {
-                //add a black background when a card is brought to the front
-                //TODO: figure out how to get this to cover the whole thing
-                if selectedID != nil
-                {
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .onTapGesture
-                    {
-                        withAnimation(.spring(duration: 0.4))
-                        { selectedID = nil }
-                    }
-                }
-                
                 //show each transaction with animation- use enumerated to get index for each
                 ForEach(Array(transactions.enumerated()), id: \.element.id)
                 {
@@ -93,49 +83,63 @@ struct DealingTableView: View
         }
     }
     
-    
-    //sequence dealing task
+
+    //sequence the dealing task
     private func startDealing()
     {
-        //don't restart if dealing is already in progress or finished
-        guard dealtCount == 0, currentlyDealingIndex == nil else { return }
+        //prevents the animation from running multiple times simultaneously
+        guard dealtCount == 0 && currentlyDealingIndex == nil else { return }
         
         dealTask = Task
         {
+            //loop through all transactions
             let count = transactions.count
-            //loop through each transaction
             for index in 0..<count
             {
                 if Task.isCancelled { return }
                 
-                //card appears at the dealer
+                //first, make dealer show dealing pose and let card appear at the dealer
                 await MainActor.run
                 {
+                    gameSessionManager.isDealingCard = true
                     currentlyDealingIndex = index
                     dealingStage = .atDealer
                 }
+                //wait until starting next part
                 try? await Task.sleep(for: .milliseconds(150))
-                if Task.isCancelled { return }
-                
-                //card moves to center and gets big
+                if Task.isCancelled
+                {
+                    //stop dealing card animation if its interrupted
+                    await MainActor.run { gameSessionManager.isDealingCard = false }
+                    return
+                }
+
+                //move the card to the center and hold there
                 await MainActor.run
                 {
                     withAnimation(.easeOut(duration: 0.5))
                     { dealingStage = .showcase }
                 }
-                try? await Task.sleep(for: .milliseconds(900))
-                if Task.isCancelled { return }
+                //wait through the movement and the showcase
+                try? await Task.sleep(for: .milliseconds(1500))
+                if Task.isCancelled
+                {
+                    //stop dealing card animation if its interrupted
+                    await MainActor.run { gameSessionManager.isDealingCard = false }
+                    return
+                }
                 
-                //card shrinks and lands in its slot on the table
+                //dealer returns to idle as the card shrinks and lands in slot on table
                 await MainActor.run
                 {
+                    gameSessionManager.isDealingCard = false
                     withAnimation(.easeIn(duration: 0.45))
                     { dealingStage = .landing }
                 }
                 try? await Task.sleep(for: .milliseconds(450))
                 if Task.isCancelled { return }
                 
-                //finish animating
+                //finish, increment dealer count and set dealing index to nil so next card can start
                 await MainActor.run
                 {
                     dealtCount = index + 1
@@ -147,13 +151,13 @@ struct DealingTableView: View
     }
     
     
-    //helper funcs to find visual state
+    //calculate the position of the current card
     private func positionCalc(index: Int, transaction: Transaction, geometry: GeometryProxy) -> CGPoint
     {
-        //tapped/showcased card sits in the center
+        //tapped/showcased card sits just above the center
         if selectedID == transaction.id
         {
-            return CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+            return CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.4)
         }
         
         //currently animating
@@ -165,8 +169,8 @@ struct DealingTableView: View
                 //top edge of the dealing area, just below the dealer's hand
                 return CGPoint(x: geometry.size.width / 2, y: 0)
             case .showcase:
-                //middle of screen
-                return CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                //middle of screen (little bit up to avoid intersecting with button)
+                return CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.4)
             case .landing:
                 //call helper to get the position on the table
                 return tableSlot(index: index, geometry: geometry)
