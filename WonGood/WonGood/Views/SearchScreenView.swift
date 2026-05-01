@@ -60,7 +60,7 @@ struct SearchScreenView: View
         .background(Color.screenColor)
         .onDisappear
         {
-            //when leaving this view, stop searching for rooms
+            //when leaving this view, stop searching for rooms and clear the list of found hosts
             gameSessionManager.stopSearching()
         }
     }

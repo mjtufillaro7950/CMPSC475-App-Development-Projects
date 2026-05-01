@@ -50,12 +50,16 @@ struct CardCustomizationView: View
                 CustomizationOptionsView(tempPlayer: $tempPlayer)
                     .padding(.bottom, 20)
                 
-                EntryButtonView(
-                    showCustomizationSheet: $showCustomizationSheet,
-                    nameText: nameText,
-                    balanceText: balanceText,
-                    tempPlayer: tempPlayer
-                )
+                HStack
+                {
+                    RandomizeOptionsButtonView(tempPlayer: $tempPlayer)
+                    EntryButtonView(
+                        showCustomizationSheet: $showCustomizationSheet,
+                        nameText: nameText,
+                        balanceText: balanceText,
+                        tempPlayer: tempPlayer
+                    )
+                }
                 .padding(.bottom, 50)
                 
                 PlayerCardView(cardWidth: cardWidth, player: tempPlayer)
@@ -74,11 +78,13 @@ struct CardDataEntryView: View
     @Binding var nameText: String
     @Binding var balanceText: String
     @Binding var tempPlayer: Player
+    //tracks the desired sign independently so it works even when no balance is entered yet
+    @State private var isNegative: Bool = false
     
     //return + if positive balance or - if negative
     var symbol: String
     {
-        return tempPlayer.balance >= 0 ? "plus.rectangle": "minus.rectangle.fill"
+        return !isNegative ? "plus.rectangle": "minus.rectangle.fill"
     }
     
     var body: some View
@@ -121,7 +127,12 @@ struct CardDataEntryView: View
                 //Button that changes whether the balance entered is positive or negative
                 Button
                 {
-                    tempPlayer.balance *= -1
+                    isNegative.toggle()
+                    //re-apply the new sign to whatever's already in the text field
+                    if let balance = Double(balanceText)
+                    {
+                        tempPlayer.balance = isNegative ? -abs(balance) : abs(balance)
+                    }
                 }
                 label:
                 {
@@ -278,6 +289,43 @@ struct EntryButtonView: View
     }
 }
 
+
+//button that randomizes card options
+struct RandomizeOptionsButtonView: View
+{
+    @Binding var tempPlayer: Player
+    //declare to access the viewmodel
+    @Environment(GameSessionManager.self) var gameSessionManager
+    var body: some View
+    {
+        //randomly pick color, value, and suit for the card
+        Button
+        {
+            tempPlayer.cardCustomizationOptions.color = CardColor.allCases.randomElement()!
+            tempPlayer.cardCustomizationOptions.value = CardValue.allCases.randomElement()!
+            tempPlayer.cardCustomizationOptions.suit  = CardSuit.allCases.randomElement()!
+        }
+        label:
+        {
+            ZStack
+            {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(Color.titleColor)
+                    .frame(width: 150, height: 40)
+                HStack
+                {
+                    Image(systemName: "questionmark.diamond.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 20)
+                    Text("Randomize")
+                        .bold()
+                }
+                .foregroundStyle(.white)
+            }
+        }
+    }
+}
 
 #Preview
 {

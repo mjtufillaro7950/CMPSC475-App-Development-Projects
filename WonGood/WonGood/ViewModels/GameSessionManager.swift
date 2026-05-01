@@ -263,6 +263,8 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     {
         self.browser?.stopBrowsingForPeers()
         self.browser = nil
+        //clear the list of found hosts so they don't repeat
+        self.foundHosts = []
     }
     
     //leaves the game, resetting all relavent funcs and values
