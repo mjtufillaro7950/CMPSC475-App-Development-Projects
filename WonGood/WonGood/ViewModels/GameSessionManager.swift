@@ -125,13 +125,6 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     }
     
     
-    //update the player's info
-//    func updatePlayerInfo(name: String, amount: Double)
-//    {
-//        let player = Player(id: UUID(), name: name, balance: amount)
-//        self.localPlayer = player
-//    }
-    
     //send player information to host
     func submitPlayer(player: Player)
     {
@@ -153,6 +146,24 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
             guard let encoded = try? JSONEncoder().encode(player) else { return }
             self.broadcast(type: .playerSubmit, payload: encoded)
         }
+    }
+    
+    
+    //remove a player's card from the room and notify all peers
+    func removePlayer(player: Player)
+    {
+        //remove from local players list
+        self.players.removeAll { $0.id == player.id }
+        
+        //if host removed their own card, clear their localPlayer reference
+        if self.localPlayer?.id == player.id
+        {
+            self.localPlayer = nil
+        }
+        
+        //re-broadcast the updated list; peers will detect if their own card was removed
+        guard let encoded = try? JSONEncoder().encode(self.players) else { return }
+        self.broadcast(type: .syncPlayerList, payload: encoded)
     }
     
     
@@ -195,6 +206,11 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
                 case .syncPlayerList:
                     guard let updatedPlayers = try? JSONDecoder().decode([Player].self, from: message.payload) else { return }
                     self.players = updatedPlayers
+                    //if the host removed the peer's LocalPlayer, update it to nil
+                    if let localID = self.localPlayer?.id, !updatedPlayers.contains(where: {$0.id == localID})
+                    {
+                        self.localPlayer = nil
+                    }
                 
                 //set the flag to start calculating/shuffling
                 case .startCalculation:

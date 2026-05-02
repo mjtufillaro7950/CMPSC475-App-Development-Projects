@@ -20,9 +20,7 @@ struct RoomView: View
         }
         return "Tap to Enter\n  Card Info:"
     }
-    //TODO: two VStacks
-        //One has space for 9 submitted player names, possibly their card- tapping pulls up their card design
-        //One has a button to add a card, then the calculate and leave room buttons
+
         
     var body: some View
     {
@@ -31,6 +29,7 @@ struct RoomView: View
             Spacer()
             VStack
             {
+                //display all the connected players cards in a grid
                 PlayerCardSlotsView()
                     .offset(y: -25)
                 Spacer()
@@ -41,7 +40,6 @@ struct RoomView: View
             
             VStack
             {
-                //Spacer()
                 Text(cardText)
                     .minimumScaleFactor(0.5)
                     .lineLimit(3)
@@ -67,6 +65,25 @@ struct RoomView: View
                 //disable adding more cards if the max is reached
                 .disabled(gameSessionManager.players.count >= 9)
                 .opacity(gameSessionManager.players.count >= 9 ? 0.4: 1)
+                //add ability for host to long press on card view to remove it
+                .contextMenu
+                {
+                    //ensure that only the host can remove cards, and that the card being tapped on exists
+                    if gameSessionManager.isHost, let player = gameSessionManager.localPlayer
+                    {
+                        Button(role: .destructive)
+                        {
+                            gameSessionManager.removePlayer(player: player)
+                        }
+                        label:
+                        {
+                            //TODO: this is default form from documentation, change later?
+                            Label("Remove \(player.name)'s Card", systemImage: "trash")
+                        }
+                    }
+                
+                }
+                
                 
                 Spacer()
                 
@@ -144,7 +161,6 @@ struct PlayerCardSlotsView: View
     @Environment(GameSessionManager.self) var gameSessionManager
     var body: some View
     {
-        //TODO: move all the card stuff into its own view
         let slotCardWidth: CGFloat = 65
         let layout = CardLayout(cardWidth: slotCardWidth)
         
@@ -159,10 +175,27 @@ struct PlayerCardSlotsView: View
         LazyHGrid(rows: rows)
         {
             ForEach(slots.indices, id: \.self)
-            { index in
-                //TODO: host needs ability to remove player from manager.players and resync player lists when clicking on one of the card views
-                //TODO: add a sheet that gets pulled up when clicking on a card- makes it big and has button to remove it once thats implemented
+            {
+                index in
                 RoomCardView(cardWidth: slotCardWidth, player: slots[index])
+                    //add ability for host to long press on card view to remove it
+                    .contextMenu
+                    {
+                        //ensure that only the host can remove cards, and that the card being tapped on exists
+                        if gameSessionManager.isHost, let player = slots[index]
+                        {
+                            Button(role: .destructive)
+                            {
+                                gameSessionManager.removePlayer(player: player)
+                            }
+                            label:
+                            {
+                                //TODO: this is default form from documentation, change later?
+                                Label("Remove \(player.name)'s Card", systemImage: "trash")
+                            }
+                        }
+                    
+                    }
             }
         }
     }
