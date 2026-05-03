@@ -13,8 +13,6 @@ struct CardCustomizationView: View
     //declare to access the viewmodel
     @Environment(GameSessionManager.self) var gameSessionManager
     
-    @State private var name: String = ""
-    
     @State private var balanceText: String = ""
     @State private var nameText: String = ""
     

@@ -302,6 +302,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         self.phase = .lobby
         self.hostPeerID = nil
         self.isDealingCard = false
+        self.resolvedTransactions = []
         
         //rebuild the session var so it can be used again
         self.session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)

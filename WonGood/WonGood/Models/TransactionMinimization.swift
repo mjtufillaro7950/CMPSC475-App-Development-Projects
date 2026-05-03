@@ -75,11 +75,33 @@ func transactionMinimization(playerList: [Player]) -> [Transaction]
         return transactionList
     }
     
-    //if one heap still has value(s) in it, then there must be a user error because poker is a zero-sum game. Alert user.
+    //if one heap still has value(s) in it, then there must be a user error because poker is a zero-sum game
     else
     {
-        //TODO: will eventually need to account for incorrect/leftover balances, but idk if that should go here or in the prior views
-        return []
+        //make a custom "UNACCOUNTED" player to alert the user that there was a mistake
+        let unaccounted = Player(id: UUID(), name: "UNACCOUNTED")
+        
+        //create transactions for any leftover values with the unaccounted player
+        for creditor in positiveHeap
+        {
+            transactionList.append(Transaction(
+                id: UUID(),
+                debtor: unaccounted,
+                creditor: creditor,
+                balance: abs(creditor.balance)
+            ))
+        }
+        for debtor in negativeHeap
+        {
+            transactionList.append(Transaction(
+                id: UUID(),
+                debtor: debtor,
+                creditor: unaccounted,
+                balance: abs(debtor.balance)
+            ))
+        }
+
+        return transactionList
     }
 }
 
