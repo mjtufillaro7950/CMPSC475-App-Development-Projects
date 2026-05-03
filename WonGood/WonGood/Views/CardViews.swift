@@ -7,13 +7,14 @@
 
 import SwiftUI
 
+//card representing a single player, with their customization options, name, and balance
 struct PlayerCardView: View
 {
     //pass in the size of the card and the player its for
     let cardWidth: CGFloat
     let player: Player
     
-    //initially, I rendered each view's size as a function of the passed in card width, but ran into issues when animating a size change, as each view changed size slightly differently, making the animation look disconnected. My fix is to render everything at a fixed size and then shrink the whole view based on the passed in cardWidth
+    //initially, I rendered each inner view's size as a function of the passed in card width, but ran into issues when animating a size change, as each view changed size slightly differently, making the animation look disconnected. My fix is to render everything at a fixed size and then shrink the whole view based on the passed in cardWidth
     private static let baseWidth: CGFloat = 250
     
     var body: some View
@@ -100,7 +101,7 @@ struct TransactionCardView: View
             
             HStack(spacing: 0)
             {
-                //the debtors card info is in top left, and the creditor's name is in the top right
+                //make the top left symbol use the debtor's customization options
                 VStack
                 {
                     CardCornerDesign(cardWidth: Self.baseWidth, player: transaction.debtor)
@@ -110,7 +111,7 @@ struct TransactionCardView: View
                 
                 TransactionMiddleText(cardWidth: Self.baseWidth, transaction: transaction, layout: layout)
                 
-                //the creditor's card info is in bottom right, and the debtor's name in bottom left
+                //make the bottom right symbol use the creditor's customization options
                 VStack
                 {
                     Spacer()
@@ -132,6 +133,7 @@ struct TransactionCardView: View
 }
 
 
+//render the text, symbol, and outline in the middle of a player card
 struct PlayerMiddleText: View
 {
     //pass in the size of the card and the player its for
@@ -158,11 +160,12 @@ struct PlayerMiddleText: View
             VStack(spacing: cardWidth * 0.01)
             {
                 Text(player.name)
-                //handles long names
                     .minimumScaleFactor(0.5)
                     .lineLimit(2)
-                //truncate to two decimal places
+                
                 Image(systemName: symbol)
+                
+                //truncate the balance to two decimal places
                 Text("$\(String(format: "%.2f", abs(player.balance)))")
                     .minimumScaleFactor(0.5)
                     .lineLimit(2)
@@ -176,6 +179,8 @@ struct PlayerMiddleText: View
     }
 }
 
+
+//render the text, symbol, and outline in the middle of a transaction card
 struct TransactionMiddleText: View
 {
     //pass in the size of the card and the player its for
@@ -198,44 +203,39 @@ struct TransactionMiddleText: View
                 .frame(height: layout.cardHeight * 0.75)
                 //gradient from debtor's color to creditor
                 .foregroundStyle(LinearGradient(
-                    gradient: Gradient(colors: [debtorColor, creditorColor]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
+                        gradient: Gradient(colors: [debtorColor, creditorColor]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     )
                 )
             
             VStack(spacing: cardWidth * 0.01)
             {
                 Text(transaction.debtor.name)
-                //handles long names by shrinking it down and going on two lines if they do not fit
                     .minimumScaleFactor(0.3)
                     .lineLimit(2)
                     .foregroundStyle(debtorColor)
                     .bold()
                     .font(.system(size: maxTransactionNameSize, design: .serif))
                 
-                //TODO: replace this with word "pays"
                 Image(systemName: "arrow.down.square.fill")
                     .font(.system(size: cardWidth * 0.2, design: .serif))
                     //gradient from debtor's color to creditor
                     .foregroundStyle(LinearGradient(
-                        gradient: Gradient(colors: [debtorColor, creditorColor]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+                            gradient: Gradient(colors: [debtorColor, creditorColor]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
                         )
                     )
                 
                 Text(transaction.creditor.name)
-                //handles long values by shrinking it down and going on two lines if they do not fit
                     .minimumScaleFactor(0.3)
                     .lineLimit(2)
                     .foregroundStyle(creditorColor)
                     .bold()
                     .font(.system(size: maxTransactionNameSize, design: .serif))
                 
-                
                 Text("$\(String(format: "%.2f", abs(transaction.balance)))")
-                //handles long values by shrinking it down and going on two lines if they do not fit
                     .minimumScaleFactor(0.5)
                     .lineLimit(2)
                     .foregroundStyle(creditorColor)
@@ -256,22 +256,10 @@ struct CardCornerDesign: View
     let cardWidth: CGFloat
     let player: Player
     
-    //computed properties that pull the relevant customizaton values out of the player object
-    var playerValue: String
-    {
-        return player.cardCustomizationOptions.value.rawValue
-    }
-    
-    var playerSuit: String
-    {
-        return player.cardCustomizationOptions.suit.imageName
-    }
-    
-    var playerColor: Color
-    {
-        return player.cardCustomizationOptions.color.color
-    }
-    
+    //pull the relevant customizaton values out of the player object
+    var playerValue: String { return player.cardCustomizationOptions.value.rawValue }
+    var playerSuit: String { return player.cardCustomizationOptions.suit.imageName }
+    var playerColor: Color { return player.cardCustomizationOptions.color.color }
     
     var body: some View
     {
@@ -295,16 +283,15 @@ struct CardCornerDesign: View
 }
 
 
-//translucent black card used to indicate a lack of player in room view
+//translucent black card used to indicate a lack of player in the room view
 struct EmptyPlaceholderCardView: View
 {
     let cardWidth: CGFloat
+    
     var body: some View
     {
-        //make a layout struct to calculate the necessary size of the different views
         let layout = CardLayout(cardWidth: cardWidth)
     
-        //subtle background gradient of card with a shadow
         RoundedRectangle(cornerRadius: layout.cardCornerRadius)
             .foregroundStyle(.black)
             .opacity(0.4)
@@ -312,7 +299,7 @@ struct EmptyPlaceholderCardView: View
     }
 }
 
-//struct that either returns a player card or an empty placeholder depending on if a player is passed in
+//view that either returns a player card or an empty placeholder depending on if a player is passed in
 struct RoomCardView: View
 {
     let cardWidth: CGFloat

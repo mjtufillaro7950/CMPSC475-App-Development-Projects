@@ -13,18 +13,15 @@ import SwiftUI
 //needs MultipeerConnectivity stuff (as well as NSObject which they depend on)
 class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate
 {
-    //vars used in views
     
     //controls which main view is being shown
     var phase: GamePhase = .lobby
-    //current list of players
     var players: [Player] = []
     //stores the list of transactions after algorithm runs
     var resolvedTransactions: [Transaction] = []
     //updates list of hosts that are found while looking for a game
     var foundHosts: [MCPeerID] = []
     var isHost = false
-    //this stores the Player object corresponding to the local user
     var localPlayer: Player?
     //computed property to get all non-local players
     var otherPlayers: [Player]
@@ -33,9 +30,6 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     }
     //tracks whether a card is leaving the dealer's hand in animation, used for dealerview
     var isDealingCard: Bool = false
-    
-    
-    //vars used for Multipeer Connectivity stuff
     
     //ID representing this device
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
@@ -116,7 +110,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     }
     
     
-    //send invitation to host to join
+    //join host's room
     func connectToHost(_ hostPeerID: MCPeerID)
     {
         //update peer id and join
@@ -262,11 +256,12 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
     }
     
     
-    //add hosts to list of found hosts when they start advertising
+    //add hosts to list of found hosts when they are detected as advertising
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?)
     {
         DispatchQueue.main.async { self.foundHosts.append(peerID) }
     }
+    
     
     //remove hosts from list of found hosts when they stop advertising
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID)
@@ -274,16 +269,18 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         DispatchQueue.main.async { self.foundHosts.removeAll { $0 == peerID } }
     }
     
+    
     //get rid of the current browser when stopping searching for joinable games
     func stopSearching()
     {
         self.browser?.stopBrowsingForPeers()
         self.browser = nil
-        //clear the list of found hosts so they don't repeat
+        //reset the list of found hosts
         self.foundHosts = []
     }
     
-    //leaves the game, resetting all relavent funcs and values
+    
+    //leave the game, resetting all relavent funcs and values
     func leaveGame()
     {
         //disconnect from other players
@@ -294,6 +291,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         self.advertiser = nil
         self.browser?.stopBrowsingForPeers()
         self.browser = nil
+        
         //reset states
         self.players = []
         self.localPlayer = nil
@@ -308,6 +306,7 @@ class GameSessionManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiser
         self.session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
         self.session.delegate = self
     }
+    
     
     //return self.otherPlayers but padded out to 8 for room view
     func returnRoomSlotArray(others: [Player]) -> [Player?]

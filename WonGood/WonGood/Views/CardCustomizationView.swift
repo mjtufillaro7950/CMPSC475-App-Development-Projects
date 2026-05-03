@@ -7,22 +7,28 @@
 
 import SwiftUI
 
+
+//view for the card customization sheet
 struct CardCustomizationView: View
 {
     @Binding var showCustomizationSheet: Bool
+    
     //declare to access the viewmodel
     @Environment(GameSessionManager.self) var gameSessionManager
     
+    //store contents of text fields
     @State private var balanceText: String = ""
     @State private var nameText: String = ""
     
+    //modify a temporary player object for view
     @State private var tempPlayer = Player(id: UUID())
     
     var body: some View
     {
+        //set size of card view
         let cardWidth: CGFloat = 250
         
-        
+        //computed property that checks to see if an invalid name or balance has been entered
         var entryIsInvalid: Bool
         {
             return nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0
@@ -71,15 +77,16 @@ struct CardCustomizationView: View
 }
 
 
+//enter name and balance
 struct CardDataEntryView: View
 {
     @Binding var nameText: String
     @Binding var balanceText: String
     @Binding var tempPlayer: Player
-    //tracks the desired sign independently so it works even when no balance is entered yet
+    //tracks the desired sign of the balance independently so it works even when no balance is entered yet
     @State private var isNegative: Bool = false
     
-    //return + if positive balance or - if negative
+    //return name for + image if positive balance or - if negative
     var symbol: String
     {
         return !isNegative ? "plus.rectangle": "minus.rectangle.fill"
@@ -93,7 +100,6 @@ struct CardDataEntryView: View
             
             TextField("Name", text: $nameText)
                 .frame(width: 100)
-            
                 //custom text field design so it doesn't look weird when swapping between light and dark mode
                 .bold()
                 .multilineTextAlignment(.center)
@@ -195,8 +201,10 @@ struct CardDataEntryView: View
 }
 
 
+//enter card color, value, and suit
 struct CustomizationOptionsView: View
 {
+    //need to pass in the temporary player to adjust values
     @Binding var tempPlayer: Player
     
     var body: some View
@@ -253,6 +261,7 @@ struct CustomizationOptionsView: View
 }
 
 
+//button to submit player card
 struct EntryButtonView: View
 {
     @Binding var showCustomizationSheet: Bool
@@ -266,32 +275,16 @@ struct EntryButtonView: View
     {
         Button
         {
-            //submit the name and balance
+            //pass the temp player into the viewmodel to be processed
             gameSessionManager.submitPlayer(player: tempPlayer)
             //close the sheet when submit is pressed
             showCustomizationSheet = false
         }
         label:
         {
-            ZStack
-            {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(Color.titleColor)
-                    .frame(width: 150, height: 40)
-                HStack
-                {
-                    Image(systemName: "checkmark.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 20)
-                    Text("Add Player")
-                        .bold()
-                }
-                .foregroundStyle(.white)
-            }
+            GenericButtonLabel(buttonText: "Add Player", systemImageName: "checkmark.circle.fill")
         }
-        //ensure the button can only be hit when both text fields are filled and valid. Also check to make sure there's not the max number of players
-        //transparent when inactive
+        //ensure the button can only be hit when both text fields are filled and valid. Also check to make sure there's not the max number of players. Make the button transparent when inactive
         .opacity(nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0 || gameSessionManager.players.count >= 9 ? 0.4: 1)
         .disabled(nameText.isEmpty || Double(balanceText) == nil || Double(balanceText) == 0 || gameSessionManager.players.count >= 9)
     }
@@ -315,22 +308,7 @@ struct RandomizeOptionsButtonView: View
         }
         label:
         {
-            ZStack
-            {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(Color.titleColor)
-                    .frame(width: 150, height: 40)
-                HStack
-                {
-                    Image(systemName: "questionmark.diamond.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 20)
-                    Text("Randomize")
-                        .bold()
-                }
-                .foregroundStyle(.white)
-            }
+            GenericButtonLabel(buttonText: "Randomize", systemImageName: "questionmark.diamond.fill")
         }
     }
 }
