@@ -16,9 +16,9 @@ struct RoomView: View
     {
         if let _ = gameSessionManager.localPlayer
         {
-            return "   Tap to Enter\nAdditional Card:"
+            return "Tap to Enter\nAdditional Card:"
         }
-        return "Tap to Enter\n  Card Info:"
+        return "Tap to Enter\nCard Info:"
     }
 
         
@@ -44,6 +44,7 @@ struct RoomView: View
                     .minimumScaleFactor(0.5)
                     .lineLimit(3)
                     .bold()
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(Color.dealerGray)
                     .font(.title3)
                     //need to adjust frame so it fits on two lines

@@ -11,35 +11,69 @@ struct ResultsView: View
 {
     //declare to access the viewmodel
     @Environment(GameSessionManager.self) var gameSessionManager
-    
+    @State private var showTransactionSheet: Bool = false
     var body: some View
     {
-        //TODO: this is gonna be the animated one. one at a time, transactions represented by cards are "dealt" out, moving from the dealer to the middle of the screen. highlight the
         //call this to handle the animation of the dealing
         DealingTableView(transactions: gameSessionManager.resolvedTransactions)
         
-        Button
+        //TODO: make a dedicated sheet for plain-text transactions
+        HStack
         {
-            gameSessionManager.leaveGame()
-        }
-        label:
-        {
-            ZStack
+            //button to pull up sheet of plain text transactions
+            Button
             {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(Color.titleColor)
-                    .frame(width: 150, height: 40)
-                HStack
-                {
-                    Image(systemName: "arrowshape.turn.up.left.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 20)
-                    Text("Leave Room")
-                        .bold()
-                }
-                .foregroundStyle(.white)
+                showTransactionSheet = true
             }
+            label:
+            {
+                ZStack
+                {
+                    RoundedRectangle(cornerRadius: 15)
+                        .foregroundStyle(Color.titleColor)
+                        .frame(width: 150, height: 40)
+                    HStack
+                    {
+                        Image(systemName: "list.bullet.rectangle")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 20)
+                        Text("Transactions")
+                            .bold()
+                    }
+                    .foregroundStyle(.white)
+                }
+            }
+            
+            Button
+            {
+                gameSessionManager.leaveGame()
+            }
+            label:
+            {
+                ZStack
+                {
+                    RoundedRectangle(cornerRadius: 15)
+                        .foregroundStyle(Color.titleColor)
+                        .frame(width: 150, height: 40)
+                    HStack
+                    {
+                        Image(systemName: "arrowshape.turn.up.left.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 20)
+                        Text("Leave Room")
+                            .bold()
+                    }
+                    .foregroundStyle(.white)
+                }
+            }
+        }
+        .sheet(isPresented: $showTransactionSheet)
+        {
+            TransactionsListView()
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
         Spacer()
     }
