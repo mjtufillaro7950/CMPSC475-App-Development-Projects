@@ -36,9 +36,9 @@ enum GamePhase: String, Codable
     case lobby
     //in the game room
     case room
-    //calculating results (shuffling animation?)
+    //shuffle animation + quote
     case shuffle
-    //display results
+    //animate results
     case results
 }
 

@@ -106,7 +106,7 @@ struct CardDataEntryView: View
                 .frame(width: 110)
                 .background(RoundedRectangle(cornerRadius: 8).fill(Color.dealerGray))
                 .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 2))
-                //.textFieldStyle(.roundedBorder)
+                .autocorrectionDisabled(true)
 
                 .onChange(of: nameText)
                 {

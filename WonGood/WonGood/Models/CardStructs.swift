@@ -29,6 +29,7 @@ enum CardColor: String, Codable, CaseIterable
             case .black:    return Color.black
             case .red:      return Color.red
             case .orange:   return Color.orange
+            //default yellow was hard to see on white, so use darker yellow
             case .yellow:   return Color( #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1) )
             case .green:    return Color.green
             case .blue:     return Color.blue
