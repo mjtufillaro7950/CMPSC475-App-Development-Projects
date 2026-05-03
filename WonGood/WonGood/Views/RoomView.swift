@@ -85,7 +85,6 @@ struct RoomView: View
                 
                 }
                 
-                
                 Spacer()
                 
                 //calculate button is only enabled for host
@@ -95,22 +94,7 @@ struct RoomView: View
                 }
                 label:
                 {
-                    ZStack
-                    {
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundStyle(Color.titleColor)
-                            .frame(width: 150, height: 40)
-                        HStack
-                        {
-                            Image(systemName: "pencil.and.outline")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 20)
-                            Text("Get Results")
-                                .bold()
-                        }
-                        .foregroundStyle(.white)
-                    }
+                    GenericButtonLabel(buttonText: "Get Results", systemImageName: "pencil.and.outline")
                 }
                 .disabled(!gameSessionManager.isHost)
                 .opacity(!gameSessionManager.isHost ? 0.4: 1)
@@ -121,22 +105,7 @@ struct RoomView: View
                 }
                 label:
                 {
-                    ZStack
-                    {
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundStyle(Color.titleColor)
-                            .frame(width: 150, height: 40)
-                        HStack
-                        {
-                            Image(systemName: "arrowshape.turn.up.left.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 20)
-                            Text("Leave Room")
-                                .bold()
-                        }
-                        .foregroundStyle(.white)
-                    }
+                    GenericButtonLabel(buttonText: "Leave Room", systemImageName: "arrowshape.turn.up.left.fill")
                 }
                 
                 Spacer()
@@ -156,6 +125,7 @@ struct RoomView: View
 }
 
 
+//create visual representation of all submitted players
 struct PlayerCardSlotsView: View
 {
     //declare to access the viewmodel
@@ -165,14 +135,15 @@ struct PlayerCardSlotsView: View
         let slotCardWidth: CGFloat = 65
         let layout = CardLayout(cardWidth: slotCardWidth)
         
-        //need to declare this here so the view properly resets when manager.players changes
+        //need to declare this here so the view properly updates when manager.players changes
         let others = gameSessionManager.otherPlayers
         //make an array of other players, padded out to 8 if fewer
         let slots = gameSessionManager.returnRoomSlotArray(others: others)
         
         //make rows of GridItem for LazyHGrid
         let rows = [GridItem(.fixed(layout.cardHeight)), GridItem(.fixed(layout.cardHeight)), GridItem(.fixed(layout.cardHeight)), GridItem(.fixed(layout.cardHeight))]
-        //show all other players cards on left, or a blank placeholder if there's not a player there
+        
+        //show all other players cards or a blank placeholder in a 2x4 row
         LazyHGrid(rows: rows)
         {
             ForEach(slots.indices, id: \.self)
@@ -191,7 +162,6 @@ struct PlayerCardSlotsView: View
                             }
                             label:
                             {
-                                //TODO: this is default form from documentation, change later?
                                 Label("Remove \(player.name)'s Card", systemImage: "trash")
                             }
                         }

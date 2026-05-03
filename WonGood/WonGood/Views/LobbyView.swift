@@ -84,22 +84,7 @@ struct HostGameButtonView: View
         }
         label:
         {
-            ZStack
-            {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(Color.titleColor)
-                    .frame(width: 150, height: 40)
-                HStack
-                {
-                    Image(systemName: "house.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 20)
-                    Text("Host Game")
-                        .bold()
-                }
-                .foregroundStyle(.white)
-            }
+            GenericButtonLabel(buttonText: "Host Game", systemImageName: "house.fill")
         }
     }
 }
@@ -117,29 +102,14 @@ struct JoinGameButtonView: View
     {
         Button
         {
-            //call join game from viewmodel
+            //call join game from viewmodel to start searching for rooms
             gameSessionManager.joinGame()
             //pull up the search screen Sheet
             showSearchSheet = true
         }
         label:
         {
-            ZStack
-            {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(Color.titleColor)
-                    .frame(width: 150, height: 40)
-                HStack
-                {
-                    Image(systemName: "arrowshape.turn.up.right.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 20)
-                    Text("Join Game")
-                        .bold()
-                }
-                .foregroundStyle(.white)
-            }
+            GenericButtonLabel(buttonText: "Join Game", systemImageName: "arrowshape.turn.up.right.fill")
         }
     }
 }

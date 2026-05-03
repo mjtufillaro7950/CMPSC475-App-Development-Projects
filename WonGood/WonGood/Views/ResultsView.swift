@@ -14,10 +14,9 @@ struct ResultsView: View
     @State private var showTransactionSheet: Bool = false
     var body: some View
     {
-        //call this to handle the animation of the dealing
+        //call this to handle the view of the cards being dealt with animation
         DealingTableView(transactions: gameSessionManager.resolvedTransactions)
         
-        //TODO: make a dedicated sheet for plain-text transactions
         HStack
         {
             //button to pull up sheet of plain text transactions
@@ -27,46 +26,17 @@ struct ResultsView: View
             }
             label:
             {
-                ZStack
-                {
-                    RoundedRectangle(cornerRadius: 15)
-                        .foregroundStyle(Color.titleColor)
-                        .frame(width: 150, height: 40)
-                    HStack
-                    {
-                        Image(systemName: "list.bullet.rectangle")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 20)
-                        Text("Transactions")
-                            .bold()
-                    }
-                    .foregroundStyle(.white)
-                }
+                GenericButtonLabel(buttonText: "Transactions", systemImageName: "list.bullet.rectangle")
             }
             
+            //button to leave game
             Button
             {
                 gameSessionManager.leaveGame()
             }
             label:
             {
-                ZStack
-                {
-                    RoundedRectangle(cornerRadius: 15)
-                        .foregroundStyle(Color.titleColor)
-                        .frame(width: 150, height: 40)
-                    HStack
-                    {
-                        Image(systemName: "arrowshape.turn.up.left.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 20)
-                        Text("Leave Room")
-                            .bold()
-                    }
-                    .foregroundStyle(.white)
-                }
+                GenericButtonLabel(buttonText: "Leave Room", systemImageName: "arrowshape.turn.up.left.fill")
             }
         }
         .sheet(isPresented: $showTransactionSheet)

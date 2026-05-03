@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-//handles the card-dealing animation: cards fly out from the dealer's hand,
-//pause large in the center, then shrink and land in a fanned row at the bottom.
-//tapping a landed card brings it back to the front, tapping it again returns it.
+//handles the card-dealing animation
+    //cards fly out from the dealer's hand,
+    //pause large in the center, then shrink and land in a row at the bottom
+    //tapping a landed card brings it back to the front, tapping it again returns it.
 
 struct DealingTableView: View
 {
@@ -22,13 +23,13 @@ struct DealingTableView: View
     @State private var dealtCount: Int = 0
     //the card index currently mid-animation (nil between cards)
     @State private var currentlyDealingIndex: Int? = nil
-    @State private var dealingStage: DealingStage = .atDealer
     //the card the user has tapped to bring forward (nil when nothing is showcased)
     @State private var selectedID: UUID? = nil
     //holds the dealing task so it can be cancelled if the view goes away
     @State private var dealTask: Task<Void, Never>? = nil
     
     //which stage of the deal the currently dealing card is in
+    @State private var dealingStage: DealingStage = .atDealer
     enum DealingStage
     {
         case atDealer, showcase, landing
@@ -52,14 +53,15 @@ struct DealingTableView: View
                     index, transaction in
                     
                     TransactionCardView(
-                        //get current width from helper func
+                        //the width of the card changes depending on the stage of the animation, so calculate with helper func
                         cardWidth: widthCalc(index: index, transaction: transaction),
                         transaction: transaction
                     )
-                    //determine these values with helper funcs
+                    //position, opacity, and position in zstack also depend on stage of animation so calculate with helpers
                     .position(positionCalc(index: index, transaction: transaction, geometry: geo))
                     .opacity(opacityCalc(index: index))
                     .zIndex(zIndexCalc(index: index, transaction: transaction))
+                    
                     //tap gesture to bring card up to front
                     .onTapGesture
                     {
@@ -84,12 +86,9 @@ struct DealingTableView: View
     }
     
 
-    //sequence the dealing task
+    //sequence out the different steps of the dealing task
     private func startDealing()
     {
-        //prevents the animation from running multiple times simultaneously
-        guard dealtCount == 0 && currentlyDealingIndex == nil else { return }
-        
         dealTask = Task
         {
             //loop through all transactions
@@ -117,10 +116,9 @@ struct DealingTableView: View
                 //move the card to the center and hold there
                 await MainActor.run
                 {
-                    withAnimation(.easeOut(duration: 0.5))
-                    { dealingStage = .showcase }
+                    withAnimation(.easeOut(duration: 0.5)) { dealingStage = .showcase }
                 }
-                //wait through the movement and the showcase
+                //wait for the movement and the showcase
                 try? await Task.sleep(for: .milliseconds(1500))
                 if Task.isCancelled
                 {
@@ -133,8 +131,7 @@ struct DealingTableView: View
                 await MainActor.run
                 {
                     gameSessionManager.isDealingCard = false
-                    withAnimation(.easeIn(duration: 0.45))
-                    { dealingStage = .landing }
+                    withAnimation(.easeIn(duration: 0.45)) { dealingStage = .landing }
                 }
                 try? await Task.sleep(for: .milliseconds(450))
                 if Task.isCancelled { return }
@@ -154,54 +151,55 @@ struct DealingTableView: View
     //calculate the position of the current card
     private func positionCalc(index: Int, transaction: Transaction, geometry: GeometryProxy) -> CGPoint
     {
-        //tapped/showcased card sits just above the center
+        //tapped/showcased cards sit just above the center
         if selectedID == transaction.id
         {
             return CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.4)
         }
         
-        //currently animating
+        //currently animating cards' positions depend on their dealing stage
         if currentlyDealingIndex == index
         {
             switch dealingStage
             {
-            case .atDealer:
-                //top edge of the dealing area, just below the dealer's hand
-                return CGPoint(x: geometry.size.width / 2, y: 0)
-            case .showcase:
-                //middle of screen (little bit up to avoid intersecting with button)
-                return CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.4)
-            case .landing:
-                //call helper to get the position on the table
-                return tableSlot(index: index, geometry: geometry)
+                case .atDealer:
+                    //top edge of the dealing area, just below the dealer's hand
+                    return CGPoint(x: geometry.size.width / 2, y: 0)
+                case .showcase:
+                    //middle of screen (little bit up to avoid intersecting with button)
+                    return CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.4)
+                case .landing:
+                    //call helper to get the position on the table
+                    return tableSlot(index: index, geometry: geometry)
             }
         }
         
-        //already dealt
+        //already dealt cards rest on the table in their calculated position
         if index < dealtCount
         {
             return tableSlot(index: index, geometry: geometry)
         }
         
-        //not yet dealt, so stay hidden on top of screen
+        //undealt cards stay hidden on top of screen
         return CGPoint(x: geometry.size.width / 2, y: 0)
     }
     
-    // resting position for a given card index, cards overlap a bit for a fanned-out look
+    
+    //calculate the location of a card on the table based on its index
     private func tableSlot(index: Int, geometry: GeometryProxy) -> CGPoint
     {
-        //prevents / 0 error
-        let count = max(transactions.count, 1)
+        let count = transactions.count
         let spacing: CGFloat = cardWidthOnTable * 0.6
         let totalWidth = CGFloat(count - 1) * spacing
         let startX = (geometry.size.width - totalWidth) / 2
         let cardHeightOnTable = cardWidthOnTable * 1.4
         return CGPoint(
             x: startX + CGFloat(index) * spacing,
-            //add some extra room on bottom for leave room button
+            //add some extra room on bottom for buttons
             y: geometry.size.height - cardHeightOnTable / 2 - 10
         )
     }
+    
     
     //width is large when the card is selected or in the showcase stage of dealing, otherwise small
     private func widthCalc(index: Int, transaction: Transaction) -> CGFloat
@@ -211,6 +209,7 @@ struct DealingTableView: View
         return cardWidthOnTable
     }
     
+    
     //hide cards that haven't been dealt yet
     private func opacityCalc(index: Int) -> Double
     {
@@ -218,6 +217,7 @@ struct DealingTableView: View
         if index < dealtCount { return 1 }
         return 0
     }
+    
     
     //make newer cards/inspected cards sit on top of the older ones in the ZStack
     private func zIndexCalc(index: Int, transaction: Transaction) -> Double
@@ -227,8 +227,8 @@ struct DealingTableView: View
         if currentlyDealingIndex == index { return 99 }
         return Double(index)
     }
-    
 }
+
 
 #Preview
 {

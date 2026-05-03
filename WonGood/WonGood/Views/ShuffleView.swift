@@ -7,23 +7,27 @@
 
 import SwiftUI
 
+
+//show a random quote from the dealer and a progress view while shuffle animation plays
 struct ShuffleView: View
 {
     @Environment(GameSessionManager.self) var gameSessionManager
     
     var body: some View
     {
-        //display a random quote from the dealer
         Text("\"\(gameSessionManager.randomDealerQuote())\"")
             .font(.system(size: 30, design: .serif))
             .bold()
             .foregroundStyle(Color.dealerGray)
             .padding(.horizontal)
+        
         Spacer()
+        
         ProgressView()
             .progressViewStyle(.circular)
             .tint(Color.dealerGray)
             .scaleEffect(3.0)
+        
         Spacer()
     }
 }

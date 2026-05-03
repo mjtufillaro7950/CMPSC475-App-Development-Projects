@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+//make a consistent button design used across views
 struct GenericButtonLabel: View
 {
     //pass in the text and image name
     let buttonText: String
     let systemImageName: String
+    
     var body: some View
     {
         ZStack

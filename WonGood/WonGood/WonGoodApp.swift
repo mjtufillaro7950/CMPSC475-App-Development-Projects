@@ -2,7 +2,7 @@
 //  WonGoodApp.swift
 //  WonGood
 //
-//  Created by LiasPub on 4/13/26.
+//  Created by Michael Tufillaro on 4/13/26.
 //
 
 import SwiftUI
@@ -11,6 +11,7 @@ import SwiftUI
 struct WonGoodApp: App
 {
     @State var gameSessionManager = GameSessionManager()
+    
     var body: some Scene
     {
         WindowGroup

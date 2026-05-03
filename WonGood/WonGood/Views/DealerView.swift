@@ -16,8 +16,6 @@ struct DealerView: View
     var body: some View
     {
         //the view of the dealer at the top of the screen. There are several different images it will pull from, depending on the phase of the game
-        //It needs to be the exact same size and position in each view, to give the illusion of animation.
-        //the final non-placeholder images will all be the exact same size
         ZStack
         {
             //overlay the dealer and the background
@@ -25,28 +23,31 @@ struct DealerView: View
             
             switch gameSessionManager.phase
             {
-            case .lobby:
-                Image("Default")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea()
-            case .room:
-                Image("Thinking")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea()
-            case .shuffle:
-                //animate card shuffling
-                ImageAnimation(firstImage: "ShuffleA", secondImage: "ShuffleB")
-            case .results:
-                //animate card dealing- shows the dealing pose when a card is being dealt
-                Image(gameSessionManager.isDealingCard ? "Dealing" : "ShuffleA")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea()
+                case .lobby:
+                    Image("Default")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+                        .ignoresSafeArea()
+                
+                case .room:
+                    Image("Thinking")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+                        .ignoresSafeArea()
+                
+                case .shuffle:
+                    //animate card shuffling
+                    ImageAnimation(firstImage: "ShuffleA", secondImage: "ShuffleB")
+                
+                case .results:
+                    //shows the dealing pose when a card is actively being dealt during the deal phase
+                    Image(gameSessionManager.isDealingCard ? "Dealing" : "ShuffleA")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+                        .ignoresSafeArea()
             }
         }
     }

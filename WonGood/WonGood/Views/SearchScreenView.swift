@@ -8,6 +8,8 @@
 import SwiftUI
 import MultipeerConnectivity
 
+
+//Sheet that displays a list of all nearby Host games. Clicking on one leaves the sheet and updates game state, taking you to the room view
 struct SearchScreenView: View
 {
     //declare to access the viewmodel
@@ -15,7 +17,6 @@ struct SearchScreenView: View
     
     var body: some View
     {
-        //Sheet that displays a list of all nearby Host games. Clicking on one leaves the sheet and updates game state, taking you to the room view
 
         ScrollView(.vertical)
         {
@@ -23,6 +24,7 @@ struct SearchScreenView: View
                 .font(.title2)
                 .bold()
                 .foregroundStyle(Color.dealerGray)
+            
             //for all hosts that are found, make a button to join them
             ForEach(gameSessionManager.foundHosts, id: \.self)
             {

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-//list of transactions for sheet, for copying/screenshotting info from session
+//list of plain text transactions for results sheet
 struct TransactionsListView: View
 {
     //declare to access the viewmodel
@@ -45,22 +45,7 @@ struct TransactionsListView: View
                 }
                 label:
                 {
-                    ZStack
-                    {
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundStyle(Color.titleColor)
-                            .frame(width: 150, height: 40)
-                        HStack
-                        {
-                            Image(systemName: "doc.on.doc.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 20)
-                            Text("Copy All")
-                                .bold()
-                        }
-                        .foregroundStyle(.white)
-                    }
+                    GenericButtonLabel(buttonText: "Copy All", systemImageName: "doc.on.doc.fill")
                 }
                 
                 //make a row for every transaction in the resolved list
